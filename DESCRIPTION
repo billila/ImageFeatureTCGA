@@ -1,0 +1,33 @@
+Package: ImageFeatureTCGA
+Title: Import features from hovernet, provgigapath into a MultiAssayExperiment
+Version: 0.99.0
+Authors@R: c(
+    person("Marcel", "Ramos", , "marcel.ramos@sph.cuny.edu", c("aut", "cre"),
+        c(ORCID = "0000-0002-3242-0582")
+    ),
+    person("Ilaria", "Billato", , "ilaria.billato@phd.unipd.it",
+        c("aut"), c(ORCID = "0000-0002-3335-3254", 
+        affiliation = "Department of Biology, University of Padova")
+    ))
+Description: The package imports data from hovernet, provgigapath, and
+    other feature extraction technologies hosted online. It conveniently
+    incorporates these additional data into existing MultiAssayExperiment
+    instances from curatedTCGAData. 
+Depends: R (>= 4.6.0)
+Imports:
+    BiocBaseUtils,
+    BiocIO,
+    methods,
+    TENxIO
+Suggests:
+    BiocStyle,
+    knitr,
+    rmarkdown
+vignetteBuilder: knitr
+biocViews: Software, Infrastructure, DataImport, DataRepresentation
+BugReports: https://github.com/waldronlab/ImageFeatureTCGA/issues
+URL: https://github.com/waldronlab/ImageFeatureTCGA
+License: Artistic-2.0
+Encoding: UTF-8
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.3.3
