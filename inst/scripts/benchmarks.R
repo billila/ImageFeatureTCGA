@@ -1,23 +1,22 @@
 # timings for functions
 
-# HoverJSON
-hov_json_file <- system.file(
-    "extdata",
-    "TCGA-J4-A6M7-01Z-00-DX1.0B8011EA-86D2-4439-B8AA-C6EC3D5985A0.json",
-    mustWork = TRUE,
-    package = "ImageFeatureTCGA"
+hov_json_file <- paste0(
+    "https://store.cancerdatasci.org/hovernet/TCGA_OV/json/",
+    "TCGA-23-1121-01Z-00-DX1.E2F25441-32C3-46BF-A845-CB4FA787E8CB.json.gz"
 )
+dest_json <- file.path(tempdir(), basename(hov_json_file))
+download.file(hov_json_file, destfile = dest_json)
 
-HoverJSON(hov_json_file) |> import()
+# HoverJSON
+microbenchmark::microbenchmark(
+    HoverJSON(dest_json) |> import(),
+    times = 1L
+)
 ## 42.97212 secs
 
 # json_to_SpatialExperiment
-json_file <- system.file(
-    "extdata",
-    "TCGA-J4-A6M7-01Z-00-DX1.0B8011EA-86D2-4439-B8AA-C6EC3D5985A0.json",
-    mustWork = TRUE,
-    package = "ImageFeatureTCGA"
+microbenchmark::microbenchmark(
+    json_to_SpatialExperiment(dest_json),
+    times = 1L
 )
-
-json_to_SpatialExperiment(json_file)
 ## 325.0974 secs
