@@ -17,6 +17,7 @@ Depends: R (>= 4.6.0)
 Imports:
     BiocBaseUtils,
     BiocIO,
+    dplyr,
     methods,
     rjsoncons,
     TENxIO
