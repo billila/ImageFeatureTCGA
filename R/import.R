@@ -63,7 +63,7 @@ HoverJSON <- function(resource, contours = FALSE) {
 #'     import()
 #' @exportMethod import
 setMethod("import", "HoverJSON", function(con, format, text, ...) {
-    file_path <- path(con)
+    json_path <- path(con)
 
     jmespath_query_simple <- "nuc.*.{
       x: centroid[0],
@@ -72,11 +72,11 @@ setMethod("import", "HoverJSON", function(con, format, text, ...) {
       type_prob: type_prob
     }"
 
-    cell_ids <- j_query(file_path, "nuc | keys(@)", as = "R")
+    cell_ids <- j_query(json_path, "nuc | keys(@)", as = "R")
 
     # Extract the cell data values using the simplified query
     cell_data_list <- j_query(
-        file_path,
+        json_path,
         jmespath_query_simple,
         as = "R" # Output is a list of lists/vectors
     )
@@ -99,7 +99,7 @@ setMethod("import", "HoverJSON", function(con, format, text, ...) {
 
     if (con@contours) {
         contour_list <- j_query(
-            file_path,
+            json_path,
             "nuc.*.contour",
             as = "R"
         )
