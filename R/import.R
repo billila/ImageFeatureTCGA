@@ -45,7 +45,6 @@ HoverJSON <- function(resource) {
 #' @exportMethod import
 setMethod("import", "HoverJSON", function(con, format, text, ...) {
     checkInstalled("jsonlite")
-browser()
     file_path <- path(con)
 
     jmespath_query_simple <- "nuc.*.{
