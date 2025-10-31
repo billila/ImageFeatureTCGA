@@ -13,11 +13,15 @@ microbenchmark::microbenchmark(
     HoverJSON(dest_json) |> import(),
     times = 1L
 )
-## 42.97212 secs
+## 56 secs
+
+## file.edit("~/gh/ImageAnalysisR/share_function/import_json.R")
+## remove non-function code
+source("~/gh/ImageAnalysisR/share_function/import_json.R")
 
 # json_to_SpatialExperiment
 microbenchmark::microbenchmark(
     json_to_SpatialExperiment(dest_json),
     times = 1L
 )
-## 325.0974 secs
+## 559 secs
