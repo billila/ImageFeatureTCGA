@@ -1,4 +1,5 @@
 # timings for functions
+library(ImageFeatureTCGA)
 
 hov_json_file <- paste0(
     "https://store.cancerdatasci.org/hovernet/TCGA_OV/json/",
