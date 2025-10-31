@@ -14,15 +14,18 @@
 #' @exportClass HoverJSON
 .HoverJSON <- setClass(
     Class = "HoverJSON",
-    contains = "TENxFile"
+    contains = "TENxFile",
+    slots = c(
+        contours = "logical"
+    )
 )
 
 #' @importFrom TENxIO TENxFile
 #' @export
-HoverJSON <- function(resource) {
+HoverJSON <- function(resource, contours = FALSE) {
     if (!is(resource, "TENxFile"))
         resource <- TENxIO::TENxFile(resource)
-    .HoverJSON(resource)
+    .HoverJSON(resource, contours = contours)
 }
 
 #' @inheritParams BiocIO::import
@@ -80,9 +83,12 @@ setMethod("import", "HoverJSON", function(con, format, text, ...) {
         spatialCoords = as.matrix(cells[, c("x", "y")])
     )
 
-    if (!missing(include_contours)) {
-        message("Adding contour data to metadata...")
-        contour_list <- lapply(nuclei, function(n) n$contour)
+    if (con@contours) {
+        contour_list <- j_query(
+            file_path,
+            "nuc.*.contour",
+            as = "R"
+        )
         metadata(spe)$contours <- contour_list
     }
 
