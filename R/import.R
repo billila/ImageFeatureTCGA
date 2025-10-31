@@ -29,6 +29,8 @@ HoverJSON <- function(resource) {
 #'
 #' @importFrom BiocBaseUtils checkInstalled
 #' @importFrom BiocIO import path
+#' @importFrom rjsoncons j_query
+#' @importFrom S4Vectors metadata metadata<-
 #'
 #' @author Ilaria B., Marcel R.
 #'
@@ -44,7 +46,6 @@ HoverJSON <- function(resource) {
 #'     import()
 #' @exportMethod import
 setMethod("import", "HoverJSON", function(con, format, text, ...) {
-    checkInstalled("jsonlite")
     file_path <- path(con)
 
     jmespath_query_simple <- "nuc.*.{
