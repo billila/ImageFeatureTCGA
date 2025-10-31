@@ -20,6 +20,7 @@ Imports:
     dplyr,
     methods,
     rjsoncons,
+    SpatialExperiment,
     TENxIO
 Suggests:
     BiocStyle,
