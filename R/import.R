@@ -6,7 +6,7 @@
     B = c(0L, 0L, 0L, 255L, 0L, 0L)
 )
 
-#' Import JSON file
+#' @name HoverJSON
 #'
 #' @importClassesFrom TENxIO TENxFile
 #' @importFrom methods new is
@@ -20,6 +20,8 @@
     )
 )
 
+#' @rdname HoverJSON
+#'
 #' @importFrom TENxIO TENxFile
 #' @export
 HoverJSON <- function(resource, contours = FALSE) {
@@ -28,6 +30,18 @@ HoverJSON <- function(resource, contours = FALSE) {
     .HoverJSON(resource, contours = contours)
 }
 
+
+#' @rdname HoverJSON
+#'
+#' @title Import Hovernet JSON files into a SpatialExperiment object
+#'
+#' @description This function imports Hovernet JSON files and converts them into
+#'   a `SpatialExperiment` object. It extracts cell centroid coordinates, cell
+#'   types, and type probabilities, and optionally includes cell contours in the
+#'   metadata. The resulting `SpatialExperiment` object contains the cell data
+#'   in the `colData` slot and spatial coordinates in the `spatialCoords` slot
+#'   of the object.
+#'
 #' @inheritParams BiocIO::import
 #'
 #' @importFrom BiocBaseUtils checkInstalled
@@ -37,15 +51,15 @@ HoverJSON <- function(resource, contours = FALSE) {
 #'
 #' @author Ilaria B., Marcel R.
 #'
-#' @examples
-#' hov_json_file <- system.file(
-#'     "extdata",
-#'     "TCGA-J4-A6M7-01Z-00-DX1.0B8011EA-86D2-4439-B8AA-C6EC3D5985A0.json",
-#'     mustWork = TRUE,
-#'     package = "ImageFeatureTCGA"
+#' @examplesIf interactive()
+#' hov_json_file <- paste0(
+#'     "https://store.cancerdatasci.org/hovernet/TCGA_OV/json/",
+#'     "TCGA-23-1121-01Z-00-DX1.E2F25441-32C3-46BF-A845-CB4FA787E8CB.json.gz"
 #' )
+#' dest_json <- file.path(tempdir(), basename(hov_json_file))
+#' download.file(hov_json_file, destfile = dest_json)
 #'
-#' HoverJSON(hov_json_file) |>
+#' HoverJSON(dest_json) |>
 #'     import()
 #' @exportMethod import
 setMethod("import", "HoverJSON", function(con, format, text, ...) {
