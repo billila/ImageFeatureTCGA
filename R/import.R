@@ -8,6 +8,14 @@
 
 #' @name HoverJSON
 #'
+#' @title Import Hovernet JSON files into a SpatialExperiment object
+#'
+#' @description The `HoverJSON` class represents Hovernet JSON files used for
+#'   cell segmentation and classification in histopathology images. It extends
+#'   the `TENxFile` class from the `TENxIO` package, allowing for efficient
+#'   handling of large JSON files. The class includes a slot to indicate whether
+#'   cell contours should be included in the metadata when importing the data.
+#'
 #' @importClassesFrom TENxIO TENxFile
 #' @importFrom methods new is
 #'
@@ -22,6 +30,14 @@
 
 #' @rdname HoverJSON
 #'
+#' @description The `HoverJSON` constructor function creates an instance of the
+#'   `HoverJSON` class. It takes a file path or URL to a Hovernet JSON file and
+#'   an optional parameter to include cell contours in the metadata.
+#'
+#' @details Currently, the `HoverJSON` constructor function works on file paths
+#'   but not on URLs. To work with remote files, please download them locally
+#'   first. We are working to add direct URL support in future releases.
+#'
 #' @importFrom TENxIO TENxFile
 #' @export
 HoverJSON <- function(resource, contours = FALSE) {
@@ -33,14 +49,12 @@ HoverJSON <- function(resource, contours = FALSE) {
 
 #' @rdname HoverJSON
 #'
-#' @title Import Hovernet JSON files into a SpatialExperiment object
-#'
-#' @description This function imports Hovernet JSON files and converts them into
-#'   a `SpatialExperiment` object. It extracts cell centroid coordinates, cell
-#'   types, and type probabilities, and optionally includes cell contours in the
-#'   metadata. The resulting `SpatialExperiment` object contains the cell data
-#'   in the `colData` slot and spatial coordinates in the `spatialCoords` slot
-#'   of the object.
+#' @description The import method for `HoverJSON` reads the JSON file and
+#'   represents the data as a `SpatialExperiment` object. It extracts cell
+#'   centroid coordinates, cell types, and type probabilities, and optionally
+#'   includes cell contours in the metadata. The resulting `SpatialExperiment`
+#'   object contains the cell data in the `colData` slot and spatial coordinates
+#'   in the `spatialCoords` slot of the object.
 #'
 #' @inheritParams BiocIO::import
 #'

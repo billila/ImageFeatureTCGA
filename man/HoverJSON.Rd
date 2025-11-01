@@ -30,12 +30,27 @@ providing the string data to import.}
 \item{...}{Parameters to pass to the format-specific method.}
 }
 \description{
-This function imports Hovernet JSON files and converts them into
-a \code{SpatialExperiment} object. It extracts cell centroid coordinates, cell
-types, and type probabilities, and optionally includes cell contours in the
-metadata. The resulting \code{SpatialExperiment} object contains the cell data
-in the \code{colData} slot and spatial coordinates in the \code{spatialCoords} slot
-of the object.
+The \code{HoverJSON} class represents Hovernet JSON files used for
+cell segmentation and classification in histopathology images. It extends
+the \code{TENxFile} class from the \code{TENxIO} package, allowing for efficient
+handling of large JSON files. The class includes a slot to indicate whether
+cell contours should be included in the metadata when importing the data.
+
+The \code{HoverJSON} constructor function creates an instance of the
+\code{HoverJSON} class. It takes a file path or URL to a Hovernet JSON file and
+an optional parameter to include cell contours in the metadata.
+
+The import method for \code{HoverJSON} reads the JSON file and
+represents the data as a \code{SpatialExperiment} object. It extracts cell
+centroid coordinates, cell types, and type probabilities, and optionally
+includes cell contours in the metadata. The resulting \code{SpatialExperiment}
+object contains the cell data in the \code{colData} slot and spatial coordinates
+in the \code{spatialCoords} slot of the object.
+}
+\details{
+Currently, the \code{HoverJSON} constructor function works on file paths
+but not on URLs. To work with remote files, please download them locally
+first. We are working to add direct URL support in future releases.
 }
 \examples{
 \dontshow{if (interactive()) withAutoprint(\{ # examplesIf}
