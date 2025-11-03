@@ -137,7 +137,7 @@ setMethod("import", "HoverJSON", function(con, format, text, ...) {
     cell_data_list <- j_query(
         json_path,
         jmespath_query_simple,
-        as = "R" # Output is a list of lists/vectors
+        as = "R"
     )
 
     # Add the cell_id column
@@ -147,7 +147,7 @@ setMethod("import", "HoverJSON", function(con, format, text, ...) {
     # Join with labels/colors
     cells <- dplyr::left_join(cells, .TYPE_MAP, by = "type")
 
-    # Build SpatialExperiment
+    # Build assay
     assay_data <- matrix(0, nrow = 0, ncol = nrow(cells))
 
     outClass <- con@outClass
