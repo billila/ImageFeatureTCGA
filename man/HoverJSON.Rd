@@ -5,13 +5,21 @@
 \alias{HoverJSON}
 \alias{.HoverJSON}
 \alias{import,HoverJSON,ANY,ANY-method}
-\title{Import Hovernet JSON files into a SpatialExperiment object}
+\title{Import Hovernet JSON files into a Bioconductor class object}
 \usage{
-HoverJSON(resource, contours = FALSE)
+HoverJSON(
+  resource,
+  contours = FALSE,
+  outClass = c("SpatialExperiment", "SpatialFeatureExperiment")
+)
 
 \S4method{import}{HoverJSON,ANY,ANY}(con, format, text, ...)
 }
 \arguments{
+\item{outClass}{\code{character(1)} specifying the output class when importing the
+data. One of \code{"SpatialExperiment"} (default) or
+\code{"SpatialFeatureExperiment"}.}
+
 \item{con}{The connection from which data is loaded or to which data is
 saved. If this is a \code{character} vector, it is assumed to be a file name and
 a corresponding file connection is created and then closed after exporting
@@ -35,17 +43,15 @@ cell segmentation and classification in histopathology images. It extends
 the \code{TENxFile} class from the \code{TENxIO} package, allowing for efficient
 handling of large JSON files. The class includes a slot to indicate whether
 cell contours should be included in the metadata when importing the data.
+As well as a slot to specify the output class when importing the data,
+either \code{SpatialExperiment} or \code{SpatialFeatureExperiment}.
 
 The \code{HoverJSON} constructor function creates an instance of the
-\code{HoverJSON} class. It takes a file path or URL to a Hovernet JSON file and
-an optional parameter to include cell contours in the metadata.
-
-The import method for \code{HoverJSON} reads the JSON file and
-represents the data as a \code{SpatialExperiment} object. It extracts cell
-centroid coordinates, cell types, and type probabilities, and optionally
-includes cell contours in the metadata. The resulting \code{SpatialExperiment}
-object contains the cell data in the \code{colData} slot and spatial coordinates
-in the \code{spatialCoords} slot of the object.
+\code{HoverJSON} class. The \code{resource} argument can be either a file path or URL
+to a Hovernet JSON file. The \code{contours} parameter is optiona and can be
+used to include cell contours in the metadata. The \code{outClass} parameter
+specifies the output class when importing the data, either
+\code{SpatialExperiment} or \code{SpatialFeatureExperiment}.
 }
 \details{
 Currently, the \code{HoverJSON} constructor function works on file paths
@@ -61,7 +67,11 @@ hov_json_file <- paste0(
 dest_json <- file.path(tempdir(), basename(hov_json_file))
 download.file(hov_json_file, destfile = dest_json)
 
-HoverJSON(dest_json) |>
+HoverJSON(dest_json, outClass = "SpatialExperiment") |>
+    import()
+
+library(SpatialFeatureExperiment)
+HoverJSON(dest_json, outClass = "SpatialFeatureExperiment") |>
     import()
 \dontshow{\}) # examplesIf}
 }

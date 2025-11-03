@@ -8,13 +8,15 @@
 
 #' @name HoverJSON
 #'
-#' @title Import Hovernet JSON files into a SpatialExperiment object
+#' @title Import Hovernet JSON files into a Bioconductor class object
 #'
 #' @description The `HoverJSON` class represents Hovernet JSON files used for
 #'   cell segmentation and classification in histopathology images. It extends
 #'   the `TENxFile` class from the `TENxIO` package, allowing for efficient
 #'   handling of large JSON files. The class includes a slot to indicate whether
 #'   cell contours should be included in the metadata when importing the data.
+#'   As well as a slot to specify the output class when importing the data,
+#'   either `SpatialExperiment` or `SpatialFeatureExperiment`.
 #'
 #' @importClassesFrom TENxIO TENxFile
 #' @importFrom methods new is
@@ -24,15 +26,23 @@
     Class = "HoverJSON",
     contains = "TENxFile",
     slots = c(
-        contours = "logical"
+        contours = "logical",
+        outClass = "character"
     )
 )
 
 #' @rdname HoverJSON
 #'
 #' @description The `HoverJSON` constructor function creates an instance of the
-#'   `HoverJSON` class. It takes a file path or URL to a Hovernet JSON file and
-#'   an optional parameter to include cell contours in the metadata.
+#'   `HoverJSON` class. The `resource` argument can be either a file path or URL
+#'   to a Hovernet JSON file. The `contours` parameter is optiona and can be
+#'   used to include cell contours in the metadata. The `outClass` parameter
+#'   specifies the output class when importing the data, either
+#'   `SpatialExperiment` or `SpatialFeatureExperiment`.
+#'
+#' @param outClass `character(1)` specifying the output class when importing the
+#'   data. One of `"SpatialExperiment"` (default) or
+#'   `"SpatialFeatureExperiment"`.
 #'
 #' @details Currently, the `HoverJSON` constructor function works on file paths
 #'   but not on URLs. To work with remote files, please download them locally
@@ -40,21 +50,48 @@
 #'
 #' @importFrom TENxIO TENxFile
 #' @export
-HoverJSON <- function(resource, contours = FALSE) {
+HoverJSON <- function(
+    resource,
+    contours = FALSE,
+    outClass = c("SpatialExperiment", "SpatialFeatureExperiment")
+) {
     if (!is(resource, "TENxFile"))
         resource <- TENxIO::TENxFile(resource)
-    .HoverJSON(resource, contours = contours)
+    outClass <- match.arg(outClass)
+    .HoverJSON(resource, contours = contours, outClass = outClass)
 }
-
 
 #' @rdname HoverJSON
 #'
-#' @description The import method for `HoverJSON` reads the JSON file and
-#'   represents the data as a `SpatialExperiment` object. It extracts cell
-#'   centroid coordinates, cell types, and type probabilities, and optionally
-#'   includes cell contours in the metadata. The resulting `SpatialExperiment`
-#'   object contains the cell data in the `colData` slot and spatial coordinates
-#'   in the `spatialCoords` slot of the object.
+#' @section `show`: The `show` method for `HoverJSON` objects displays the
+#'   `resource`, `contours`, and `outClass` slots and vaules.
+#'
+#' @usage ## S4 method for signature 'HoverJSON'
+#' show(object)
+#'
+#' @param object An object of class `HoverJSON`.
+#'
+#' @importFrom methods show
+#'
+#' @exportMethod show
+setMethod("show", "HoverJSON", function(object) {
+    callNextMethod()
+    cat(
+        "contours: ", object@contours, "\n",
+        "outClass: ", object@outClass, "\n",
+        sep = ""
+    )
+})
+
+#' @rdname HoverJSON
+#'
+#' @section `import`: The import method for `HoverJSON` reads the JSON file and
+#'   represents the data as either a `SpatialExperiment` or
+#'   `SpatialFeatureExperiment` object. It extracts cell centroid coordinates,
+#'   cell types, and type probabilities, and optionally includes cell contours
+#'   in the metadata. The resulting `SpatialExperiment` object contains the cell
+#'   data in the `colData` slot and spatial coordinates in the `spatialCoords`
+#'   slot of the object.
 #'
 #' @inheritParams BiocIO::import
 #'
@@ -73,7 +110,11 @@ HoverJSON <- function(resource, contours = FALSE) {
 #' dest_json <- file.path(tempdir(), basename(hov_json_file))
 #' download.file(hov_json_file, destfile = dest_json)
 #'
-#' HoverJSON(dest_json) |>
+#' HoverJSON(dest_json, outClass = "SpatialExperiment") |>
+#'     import()
+#'
+#' library(SpatialFeatureExperiment)
+#' HoverJSON(dest_json, outClass = "SpatialFeatureExperiment") |>
 #'     import()
 #' @exportMethod import
 setMethod("import", "HoverJSON", function(con, format, text, ...) {
@@ -105,7 +146,14 @@ setMethod("import", "HoverJSON", function(con, format, text, ...) {
     # Build SpatialExperiment
     assay_data <- matrix(0, nrow = 0, ncol = nrow(cells))
 
-    spe <- SpatialExperiment::SpatialExperiment(
+    outClass <- con@outClass
+    FUN <- if (identical(outClass, "SpatialExperiment")) {
+        SpatialExperiment::SpatialExperiment
+    } else if (identical(outClass, "SpatialFeatureExperiment")) {
+        checkInstalled("SpatialFeatureExperiment")
+        SpatialFeatureExperiment::SpatialFeatureExperiment
+    }
+    out <- FUN(
         assays = list(counts = assay_data),
         colData = cells,
         spatialCoords = as.matrix(cells[, c("x", "y")])
@@ -117,10 +165,8 @@ setMethod("import", "HoverJSON", function(con, format, text, ...) {
             "nuc.*.contour",
             as = "R"
         )
-        metadata(spe)$contours <- contour_list
+        metadata(out)$contours <- contour_list
     }
-
-    metadata(spe)$type_map <- .TYPE_MAP
-
-    spe
+    metadata(out)$type_map <- .TYPE_MAP
+    out
 })
