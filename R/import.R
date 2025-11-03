@@ -160,9 +160,9 @@ setMethod("import", "HoverJSON", function(con, format, text, ...) {
     out <- FUN(
         assays = list(counts = assay_data),
         colData = cells,
-        spatialCoords = as.matrix(cells[, c("x", "y")])
+        spatialCoords = as.matrix(cells[, c("x", "y")]),
+        spatialCoordsNames = NULL
     )
-
     if (con@contours) {
         contour_list <- j_query(
             json_path,
