@@ -40,6 +40,10 @@
 #'   specifies the output class when importing the data, either
 #'   `SpatialExperiment` or `SpatialFeatureExperiment`.
 #'
+#' @param contours `logical(1)` whether to include cell contours in the metadata
+#'   of the resulting `SpatialExperiment` or `SpatialFeatureExperiment` object.
+#'   Default is `FALSE`.
+#'
 #' @param outClass `character(1)` specifying the output class when importing the
 #'   data. One of `"SpatialExperiment"` (default) or
 #'   `"SpatialFeatureExperiment"`.

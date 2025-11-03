@@ -20,6 +20,10 @@ show(object)
 \S4method{import}{HoverJSON,ANY,ANY}(con, format, text, ...)
 }
 \arguments{
+\item{contours}{\code{logical(1)} whether to include cell contours in the metadata
+of the resulting \code{SpatialExperiment} or \code{SpatialFeatureExperiment} object.
+Default is \code{FALSE}.}
+
 \item{outClass}{\code{character(1)} specifying the output class when importing the
 data. One of \code{"SpatialExperiment"} (default) or
 \code{"SpatialFeatureExperiment"}.}
