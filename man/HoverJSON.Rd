@@ -4,6 +4,7 @@
 \name{HoverJSON}
 \alias{HoverJSON}
 \alias{.HoverJSON}
+\alias{show,HoverJSON-method}
 \alias{import,HoverJSON,ANY,ANY-method}
 \title{Import Hovernet JSON files into a Bioconductor class object}
 \usage{
@@ -13,12 +14,17 @@ HoverJSON(
   outClass = c("SpatialExperiment", "SpatialFeatureExperiment")
 )
 
+## S4 method for signature 'HoverJSON'
+show(object)
+
 \S4method{import}{HoverJSON,ANY,ANY}(con, format, text, ...)
 }
 \arguments{
 \item{outClass}{\code{character(1)} specifying the output class when importing the
 data. One of \code{"SpatialExperiment"} (default) or
 \code{"SpatialFeatureExperiment"}.}
+
+\item{object}{An object of class \code{HoverJSON}.}
 
 \item{con}{The connection from which data is loaded or to which data is
 saved. If this is a \code{character} vector, it is assumed to be a file name and
@@ -58,6 +64,11 @@ Currently, the \code{HoverJSON} constructor function works on file paths
 but not on URLs. To work with remote files, please download them locally
 first. We are working to add direct URL support in future releases.
 }
+\section{\code{show}}{
+ The \code{show} method for \code{HoverJSON} objects displays the
+\code{resource}, \code{contours}, and \code{outClass} slots and vaules.
+}
+
 \examples{
 \dontshow{if (interactive()) withAutoprint(\{ # examplesIf}
 hov_json_file <- paste0(
