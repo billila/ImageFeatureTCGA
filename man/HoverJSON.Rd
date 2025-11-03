@@ -73,6 +73,16 @@ first. We are working to add direct URL support in future releases.
 \code{resource}, \code{contours}, and \code{outClass} slots and vaules.
 }
 
+\section{\code{import}}{
+ The import method for \code{HoverJSON} reads the JSON file and
+represents the data as either a \code{SpatialExperiment} or
+\code{SpatialFeatureExperiment} object. It extracts cell centroid coordinates,
+cell types, and type probabilities, and optionally includes cell contours
+in the metadata. The resulting \code{SpatialExperiment} object contains the cell
+data in the \code{colData} slot and spatial coordinates in the \code{spatialCoords}
+slot of the object.
+}
+
 \examples{
 \dontshow{if (interactive()) withAutoprint(\{ # examplesIf}
 hov_json_file <- paste0(
