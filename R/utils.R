@@ -3,5 +3,5 @@
     stopifnot(
         isScalarCharacter(url)
     )
-    grepl("^http[s]*://|^ftp://", url)
+    grepl("^https?://|^ftp://", url)
 }
