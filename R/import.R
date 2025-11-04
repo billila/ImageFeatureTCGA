@@ -77,6 +77,10 @@ HoverJSON <- function(
     contours = FALSE,
     outClass = c("SpatialExperiment", "SpatialFeatureExperiment")
 ) {
+    stopifnot(
+        isScalarLogical(contours),
+        isScalarCharacter(resource) || is(resource, "TENxFile")
+    )
     path_extract <- if (is(resource, "TENxFile")) path else I
     is_url <- .is_url(path_extract(resource))
     if (!is(resource, "TENxFile"))
