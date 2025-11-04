@@ -18,6 +18,13 @@
 #'   As well as a slot to specify the output class when importing the data,
 #'   either `SpatialExperiment` or `SpatialFeatureExperiment`.
 #'
+#' @slot contours `logical(1)` indicating whether to include cell contours in
+#'   the metadata of the resulting `SpatialExperiment` or
+#'   `SpatialFeatureExperiment` object.
+#'
+#' @slot outClass `character(1)` specifying the output class when importing the
+#'   data. One of `"SpatialExperiment"` or `"SpatialFeatureExperiment"`.
+#'
 #' @slot is_url `logical(1)` indicating whether the resource is a URL.
 #'
 #' @importClassesFrom TENxIO TENxFile
@@ -42,6 +49,9 @@
 #'   used to include cell contours in the metadata. The `outClass` parameter
 #'   specifies the output class when importing the data, either
 #'   `SpatialExperiment` or `SpatialFeatureExperiment`.
+#'
+#' @param resource `character(1)` the file path or URL to the Hovernet JSON
+#'   file.
 #'
 #' @param contours `logical(1)` whether to include cell contours in the metadata
 #'   of the resulting `SpatialExperiment` or `SpatialFeatureExperiment` object.

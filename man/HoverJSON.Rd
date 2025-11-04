@@ -20,6 +20,9 @@ show(object)
 \S4method{import}{HoverJSON,ANY,ANY}(con, format, text, ...)
 }
 \arguments{
+\item{resource}{\code{character(1)} the file path or URL to the Hovernet JSON
+file.}
+
 \item{contours}{\code{logical(1)} whether to include cell contours in the metadata
 of the resulting \code{SpatialExperiment} or \code{SpatialFeatureExperiment} object.
 Default is \code{FALSE}.}
@@ -72,6 +75,13 @@ files without the need to download them manually.
 \section{Slots}{
 
 \describe{
+\item{\code{contours}}{\code{logical(1)} indicating whether to include cell contours in
+the metadata of the resulting \code{SpatialExperiment} or
+\code{SpatialFeatureExperiment} object.}
+
+\item{\code{outClass}}{\code{character(1)} specifying the output class when importing the
+data. One of \code{"SpatialExperiment"} or \code{"SpatialFeatureExperiment"}.}
+
 \item{\code{is_url}}{\code{logical(1)} indicating whether the resource is a URL.}
 }}
 
