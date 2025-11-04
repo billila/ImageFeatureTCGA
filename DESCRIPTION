@@ -24,6 +24,7 @@ Imports:
     TENxIO
 Suggests:
     BiocStyle,
+    BiocFileCache,
     knitr,
     rmarkdown,
     SpatialFeatureExperiment

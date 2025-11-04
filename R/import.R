@@ -18,6 +18,8 @@
 #'   As well as a slot to specify the output class when importing the data,
 #'   either `SpatialExperiment` or `SpatialFeatureExperiment`.
 #'
+#' @slot is_url `logical(1)` indicating whether the resource is a URL.
+#'
 #' @importClassesFrom TENxIO TENxFile
 #' @importFrom methods new is
 #'
@@ -27,7 +29,8 @@
     contains = "TENxFile",
     slots = c(
         contours = "logical",
-        outClass = "character"
+        outClass = "character",
+        is_url = "logical"
     )
 )
 
@@ -48,21 +51,30 @@
 #'   data. One of `"SpatialExperiment"` (default) or
 #'   `"SpatialFeatureExperiment"`.
 #'
-#' @details Currently, the `HoverJSON` constructor function works on file paths
-#'   but not on URLs. To work with remote files, please download them locally
-#'   first. We are working to add direct URL support in future releases.
 #'
+#' @details The `HoverJSON` constructor function can import file paths and URLs.
+#'   Remote files are automatically cached using `BiocFileCache` when the
+#'   `import` method is called. This allows for efficient handling of large JSON
+#'   files without the need to download them manually.
+#'
+#' @importFrom BiocIO import path
 #' @importFrom TENxIO TENxFile
+#' @importFrom BiocBaseUtils isScalarLogical isScalarCharacter
+#'
 #' @export
 HoverJSON <- function(
     resource,
     contours = FALSE,
     outClass = c("SpatialExperiment", "SpatialFeatureExperiment")
 ) {
+    path_extract <- if (is(resource, "TENxFile")) path else I
+    is_url <- .is_url(path_extract(resource))
     if (!is(resource, "TENxFile"))
         resource <- TENxIO::TENxFile(resource)
     outClass <- match.arg(outClass)
-    .HoverJSON(resource, contours = contours, outClass = outClass)
+    .HoverJSON(
+        resource, contours = contours, outClass = outClass, is_url = is_url
+    )
 }
 
 #' @rdname HoverJSON
@@ -100,13 +112,13 @@ setMethod("show", "HoverJSON", function(object) {
 #' @inheritParams BiocIO::import
 #'
 #' @importFrom BiocBaseUtils checkInstalled
-#' @importFrom BiocIO import path
 #' @importFrom rjsoncons j_query
 #' @importFrom S4Vectors metadata metadata<-
 #'
 #' @author Ilaria B., Marcel R.
 #'
 #' @examplesIf interactive()
+#' ## Manual download and local file input
 #' hov_json_file <- paste0(
 #'     "https://store.cancerdatasci.org/hovernet/TCGA_OV/json/",
 #'     "TCGA-VG-A8LO-01A-01-DX1.B39A4D64-82A1-4A04-8AB6-918F3058B83B.json.gz"
@@ -117,12 +129,19 @@ setMethod("show", "HoverJSON", function(object) {
 #' HoverJSON(dest_json, outClass = "SpatialExperiment") |>
 #'     import()
 #'
+#' ## Direct URL input (with caching)
+#' HoverJSON(hov_json_file, outClass = "SpatialExperiment") |>
+#'     import()
+#'
 #' library(SpatialFeatureExperiment)
 #' HoverJSON(dest_json, outClass = "SpatialFeatureExperiment") |>
 #'     import()
 #' @exportMethod import
 setMethod("import", "HoverJSON", function(con, format, text, ...) {
     json_path <- path(con)
+
+    if (con@is_url)
+        json_path <- .cache_url_file(json_path)
 
     jmespath_query_simple <- "nuc.*.{
       x: centroid[0],

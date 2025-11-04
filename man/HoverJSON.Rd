@@ -64,10 +64,17 @@ specifies the output class when importing the data, either
 \code{SpatialExperiment} or \code{SpatialFeatureExperiment}.
 }
 \details{
-Currently, the \code{HoverJSON} constructor function works on file paths
-but not on URLs. To work with remote files, please download them locally
-first. We are working to add direct URL support in future releases.
+The \code{HoverJSON} constructor function can import file paths and URLs.
+Remote files are automatically cached using \code{BiocFileCache} when the
+\code{import} method is called. This allows for efficient handling of large JSON
+files without the need to download them manually.
 }
+\section{Slots}{
+
+\describe{
+\item{\code{is_url}}{\code{logical(1)} indicating whether the resource is a URL.}
+}}
+
 \section{\code{show}}{
  The \code{show} method for \code{HoverJSON} objects displays the
 \code{resource}, \code{contours}, and \code{outClass} slots and vaules.
@@ -85,6 +92,7 @@ slot of the object.
 
 \examples{
 \dontshow{if (interactive()) withAutoprint(\{ # examplesIf}
+## Manual download and local file input
 hov_json_file <- paste0(
     "https://store.cancerdatasci.org/hovernet/TCGA_OV/json/",
     "TCGA-VG-A8LO-01A-01-DX1.B39A4D64-82A1-4A04-8AB6-918F3058B83B.json.gz"
@@ -93,6 +101,10 @@ dest_json <- file.path(tempdir(), basename(hov_json_file))
 download.file(hov_json_file, destfile = dest_json)
 
 HoverJSON(dest_json, outClass = "SpatialExperiment") |>
+    import()
+
+## Direct URL input (with caching)
+HoverJSON(hov_json_file, outClass = "SpatialExperiment") |>
     import()
 
 library(SpatialFeatureExperiment)
