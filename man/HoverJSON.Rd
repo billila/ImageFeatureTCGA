@@ -117,6 +117,7 @@ HoverJSON(dest_json, outClass = "SpatialExperiment") |>
 HoverJSON(hov_json_file, outClass = "SpatialExperiment") |>
     import()
 
+## Import as SpatialFeatureExperiment
 library(SpatialFeatureExperiment)
 HoverJSON(dest_json, outClass = "SpatialFeatureExperiment") |>
     import()
