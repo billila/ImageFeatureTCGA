@@ -21,6 +21,7 @@ Imports:
     methods,
     readr,
     rjsoncons,
+    S4Vectors,
     SpatialExperiment,
     TENxIO,
     tibble
