@@ -81,9 +81,6 @@ ProvGiga <- function(
 #' @section `show`: The `show` method for `ProvGiga` objects displays
 #'   information about the object, including the resource path and tumor type.
 #'
-#' @usage ## S4 method for signature 'ProvGiga'
-#' show(object)
-#'
 #' @param object An object of class `ProvGiga`.
 #'
 #' @importFrom methods setMethod show callNextMethod

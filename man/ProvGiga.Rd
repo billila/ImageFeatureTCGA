@@ -10,8 +10,7 @@
 \usage{
 ProvGiga(resource, tumorType)
 
-## S4 method for signature 'ProvGiga'
-show(object)
+\S4method{show}{ProvGiga}(object)
 
 \S4method{import}{ProvGiga,ANY,ANY}(con, format, text, ...)
 }

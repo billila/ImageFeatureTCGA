@@ -14,8 +14,7 @@ HoverJSON(
   outClass = c("SpatialExperiment", "SpatialFeatureExperiment")
 )
 
-## S4 method for signature 'HoverJSON'
-show(object)
+\S4method{show}{HoverJSON}(object)
 
 \S4method{import}{HoverJSON,ANY,ANY}(con, format, text, ...)
 }

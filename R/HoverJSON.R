@@ -101,9 +101,6 @@ HoverJSON <- function(
 #' @section `show`: The `show` method for `HoverJSON` objects displays the
 #'   `resource`, `contours`, and `outClass` slots and vaules.
 #'
-#' @usage ## S4 method for signature 'HoverJSON'
-#' show(object)
-#'
 #' @param object An object of class `HoverJSON`.
 #'
 #' @importFrom methods setMethod show callNextMethod
