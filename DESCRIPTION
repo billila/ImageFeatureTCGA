@@ -19,9 +19,11 @@ Imports:
     BiocIO,
     dplyr,
     methods,
+    readr,
     rjsoncons,
     SpatialExperiment,
-    TENxIO
+    TENxIO,
+    tibble
 Suggests:
     BiocStyle,
     BiocFileCache,
