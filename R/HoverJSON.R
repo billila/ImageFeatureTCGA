@@ -125,6 +125,7 @@ setMethod("show", "HoverJSON", function(object) {
 #'
 #' @inheritParams BiocIO::import
 #'
+#' @importFrom BiocIO import path
 #' @importFrom BiocBaseUtils checkInstalled
 #' @importFrom rjsoncons j_query
 #' @importFrom S4Vectors metadata metadata<-
