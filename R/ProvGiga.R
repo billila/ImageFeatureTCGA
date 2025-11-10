@@ -10,9 +10,6 @@
 #'   `SpatialFeatureExperiment`, the tumor type, and whether the resource is a
 #'   URL.
 #'
-#' @slot outClass `character(1)` specifying the output class when importing the
-#'   data. One of `"SpatialExperiment"` or `"SpatialFeatureExperiment"`.
-#'
 #' @slot tumorType `character(1)` specifying the tumor type associated with the
 #'   `ProvGiga` data.
 #'
@@ -26,7 +23,6 @@
     Class = "ProvGiga",
     contains = "TENxFile",
     slots = c(
-        outClass = "character",
         tumorType = "character",
         is_url = "logical"
     )
@@ -36,17 +32,11 @@
 #'
 #' @description The `ProvGiga` constructor function creates an instance of the
 #'   `ProvGiga` class. The `resource` argument can be either a file path or URL
-#'   to a ProvGiga CSV file. The `outClass` parameter specifies the output class
-#'   when importing the data, either `SpatialExperiment` or
-#'   `SpatialFeatureExperiment`. The `tumorType` parameter specifies the tumor
+#'   to a ProvGiga CSV file. The `tumorType` parameter specifies the tumor
 #'   type associated with the ProvGiga data.
 #'
 #' @param resource `character(1)` the file path or URL to the ProvGiga CSV file,
 #'   or a `TENxFile` object.
-#'
-#' @param outClass `character(1)` specifying the output class when importing the
-#'   data. One of `"SpatialExperiment"` (default) or
-#'   `"SpatialFeatureExperiment"`.
 #'
 #' @param tumorType `character(1)` specifying the tumor type associated with the
 #'   `ProvGiga` data. Required if `resource` is a local file (file path).
@@ -57,16 +47,22 @@
 #'   ProvGiga data. If a URL is provided, the tumor type is inferred from the
 #'   URL structure.
 #'
+#' @importFrom BiocBaseUtils isScalarCharacter
+#' @importFrom TENxIO TENxFile
+#' @importFrom methods is
+#'
+#' @returns * `ProvGiga`: An object of class `ProvGiga`.
+#' * `import`: A `tibble` containing slide-level embeddings along with slide
+#'   names and tumor type.
+#'
 #' @export
 ProvGiga <- function(
     resource,
-    outClass = c("SpatialExperiment", "SpatialFeatureExperiment"),
     tumorType
 ) {
     stopifnot(
         isScalarCharacter(resource) || is(resource, "TENxFile")
     )
-    outClass <- match.arg(outClass)
     path_extract <- if (is(resource, "TENxFile")) path else I
     is_url <- .is_url(path_extract(resource))
     if (!is_url && missing(tumorType))
@@ -76,7 +72,7 @@ ProvGiga <- function(
     if (!is(resource, "TENxFile"))
         resource <- TENxIO::TENxFile(resource)
     .ProvGiga(
-        resource, outClass = outClass, is_url = is_url, tumorType = tumorType
+        resource, is_url = is_url, tumorType = tumorType
     )
 }
 
@@ -103,12 +99,10 @@ ProvGiga <- function(
 #' prov_file <- file.path(tempdir(), basename(prov_url))
 #' download.file(prov_url, destfile = prov_file)
 #'
-#' ProvGiga(
-#'     prov_file, outClass = "SpatialExperiment", tumorType = "TCGA_ACC"
-#' ) |>
+#' ProvGiga(prov_file, tumorType = "TCGA_ACC") |>
 #'     import()
 #'
-#' ProvGiga(prov_url, outClass = "SpatialExperiment") |>
+#' ProvGiga(prov_url) |>
 #'     import()
 #' @exportMethod import
 setMethod("import", "ProvGiga", function(con, format, text, ...) {
