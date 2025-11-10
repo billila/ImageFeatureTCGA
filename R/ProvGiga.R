@@ -1,5 +1,7 @@
 #' @name ProvGiga
 #'
+#' @aliases ProvGiga-class
+#'
 #' @title Import ProvGiga slide-level data into a Bioconductor class object
 #'
 #' @description The `ProvGiga` class represents ProvGiga slide-level CSV files

@@ -8,6 +8,8 @@
 
 #' @name HoverJSON
 #'
+#' @aliases HoverJSON-class
+#'
 #' @title Import Hovernet JSON files into a Bioconductor class object
 #'
 #' @description The `HoverJSON` class represents Hovernet JSON files used for

@@ -4,6 +4,7 @@
 \name{HoverJSON}
 \alias{HoverJSON}
 \alias{.HoverJSON}
+\alias{HoverJSON-class}
 \alias{show,HoverJSON-method}
 \alias{import,HoverJSON,ANY,ANY-method}
 \title{Import Hovernet JSON files into a Bioconductor class object}

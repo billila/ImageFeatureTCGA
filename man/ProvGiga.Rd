@@ -4,6 +4,7 @@
 \name{ProvGiga}
 \alias{ProvGiga}
 \alias{.ProvGiga}
+\alias{ProvGiga-class}
 \alias{show,ProvGiga-method}
 \alias{import,ProvGiga,ANY,ANY-method}
 \title{Import ProvGiga slide-level data into a Bioconductor class object}
