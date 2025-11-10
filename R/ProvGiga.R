@@ -87,6 +87,7 @@ ProvGiga <- function(
 #'
 #'
 #' @importFrom BiocIO import path
+#' @importFrom utils read.table
 #'
 #' @author Ilaria B., Marcel R.
 #'

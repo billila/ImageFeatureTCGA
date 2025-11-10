@@ -24,7 +24,8 @@ Imports:
     S4Vectors,
     SpatialExperiment,
     TENxIO,
-    tibble
+    tibble,
+    utils
 Suggests:
     BiocStyle,
     BiocFileCache,
