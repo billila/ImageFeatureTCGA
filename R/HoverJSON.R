@@ -71,6 +71,11 @@
 #' @importFrom TENxIO TENxFile
 #' @importFrom BiocBaseUtils isScalarLogical isScalarCharacter
 #'
+#' @returns * `HoverJSON`: An object of class `HoverJSON`
+#' * `import`: An object of class `SpatialExperiment` or
+#'   `SpatialFeatureExperiment` containing the cell data and spatial
+#'   coordinates extracted from the Hovernet JSON file
+#'
 #' @export
 HoverJSON <- function(
     resource,

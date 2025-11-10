@@ -50,6 +50,14 @@ providing the string data to import.}
 
 \item{...}{Parameters to pass to the format-specific method.}
 }
+\value{
+\itemize{
+\item \code{HoverJSON}: An object of class \code{HoverJSON}
+\item \code{import}: An object of class \code{SpatialExperiment} or
+\code{SpatialFeatureExperiment} containing the cell data and spatial
+coordinates extracted from the Hovernet JSON file
+}
+}
 \description{
 The \code{HoverJSON} class represents Hovernet JSON files used for
 cell segmentation and classification in histopathology images. It extends
