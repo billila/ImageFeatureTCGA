@@ -4,10 +4,14 @@
 \name{ProvGiga}
 \alias{ProvGiga}
 \alias{.ProvGiga}
+\alias{show,ProvGiga-method}
 \alias{import,ProvGiga,ANY,ANY-method}
 \title{Import ProvGiga slide-level data into a Bioconductor class object}
 \usage{
 ProvGiga(resource, tumorType)
+
+## S4 method for signature 'ProvGiga'
+show(object)
 
 \S4method{import}{ProvGiga,ANY,ANY}(con, format, text, ...)
 }
@@ -17,6 +21,8 @@ or a \code{TENxFile} object.}
 
 \item{tumorType}{\code{character(1)} specifying the tumor type associated with the
 \code{ProvGiga} data. Required if \code{resource} is a local file (file path).}
+
+\item{object}{An object of class \code{ProvGiga}.}
 
 \item{con}{The connection from which data is loaded or to which data is
 saved. If this is a \code{character} vector, it is assumed to be a file name and
@@ -71,6 +77,11 @@ URL structure.
 
 \item{\code{is_url}}{\code{logical(1)} indicating whether the resource is a URL.}
 }}
+
+\section{\code{show}}{
+ The \code{show} method for \code{ProvGiga} objects displays
+information about the object, including the resource path and tumor type.
+}
 
 \section{\code{import}}{
  The \code{import} method for \code{ProvGiga} objects reads the

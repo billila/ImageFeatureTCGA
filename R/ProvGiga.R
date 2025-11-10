@@ -78,6 +78,24 @@ ProvGiga <- function(
 
 #' @rdname ProvGiga
 #'
+#' @section `show`: The `show` method for `ProvGiga` objects displays
+#'   information about the object, including the resource path and tumor type.
+#'
+#' @usage ## S4 method for signature 'ProvGiga'
+#' show(object)
+#'
+#' @param object An object of class `ProvGiga`.
+#'
+#' @importFrom methods setMethod show callNextMethod
+#'
+#' @exportMethod show
+setMethod("show", "ProvGiga", function(object) {
+    callNextMethod()
+    cat("tumorType:", object@tumorType, "\n")
+})
+
+#' @rdname ProvGiga
+#'
 #' @section `import`: The `import` method for `ProvGiga` objects reads the
 #'   ProvGiga CSV file and extracts slide-level embeddings along with the slide
 #'   names and tumor type. The embeddings are returned as a `tibble` with
