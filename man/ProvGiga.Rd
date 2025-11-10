@@ -73,10 +73,10 @@ URL structure.
 }}
 
 \section{\code{import}}{
- The \code{import} method for \code{ProvGiga} objects reads the ProvGiga
-CSV file and extracts slide-level embeddings along with the slide names and
-tumor type. The embeddings are returned as a \code{tibble} with columns for
-slide names, tumor type, and embedding values.
+ The \code{import} method for \code{ProvGiga} objects reads the
+ProvGiga CSV file and extracts slide-level embeddings along with the slide
+names and tumor type. The embeddings are returned as a \code{tibble} with
+columns for slide names, tumor type, and embedding values.
 }
 
 \examples{

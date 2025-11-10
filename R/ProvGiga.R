@@ -78,10 +78,10 @@ ProvGiga <- function(
 
 #' @rdname ProvGiga
 #'
-#' @section `import`: The `import` method for `ProvGiga` objects reads the ProvGiga
-#'  CSV file and extracts slide-level embeddings along with the slide names and
-#'  tumor type. The embeddings are returned as a `tibble` with columns for
-#'  slide names, tumor type, and embedding values.
+#' @section `import`: The `import` method for `ProvGiga` objects reads the
+#'   ProvGiga CSV file and extracts slide-level embeddings along with the slide
+#'   names and tumor type. The embeddings are returned as a `tibble` with
+#'   columns for slide names, tumor type, and embedding values.
 #'
 #' @inheritParams BiocIO::import
 #'
