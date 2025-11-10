@@ -106,7 +106,7 @@ HoverJSON <- function(
 #'
 #' @param object An object of class `HoverJSON`.
 #'
-#' @importFrom methods show
+#' @importFrom methods show callNextMethod
 #'
 #' @exportMethod show
 setMethod("show", "HoverJSON", function(object) {
