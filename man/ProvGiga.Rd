@@ -92,6 +92,7 @@ columns for slide names, tumor type, and embedding values.
 
 \examples{
 \dontshow{if (interactive()) withAutoprint(\{ # examplesIf}
+## Importing a ProvGiga CSV file from a local path
 prov_url <- paste0(
     "https://store.cancerdatasci.org/provgigapath/slide_level/",
     "TCGA_ACC/",
@@ -103,6 +104,7 @@ download.file(prov_url, destfile = prov_file)
 ProvGiga(prov_file, tumorType = "TCGA_ACC") |>
     import()
 
+## Importing a ProvGiga CSV file from a URL
 ProvGiga(prov_url) |>
     import()
 \dontshow{\}) # examplesIf}
