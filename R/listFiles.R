@@ -1,5 +1,25 @@
 .PROV_BASE_URL <- "https://store.cancerdatasci.org"
 
+#' @name listFiles
+#'
+#' @title List available HoVerNet and Prov-Giga-Path data for TCGA cancers
+#'
+#' @description Functions to list available HoverNet and ProvGiga data for TCGA
+#'   cancers. HoverNet data is only available for TCGA-OV, while ProvGiga data
+#'   is available for multiple TCGA cancer types at slide and tile levels. See
+#'   the `TCGAcodesAvailable` dataset for a summary of available data. These
+#'   functions return a `data.frame` with filenames and file sizes.
+#'
+#' @param diseaseCode `character(1L)` TCGA disease code (e.g., "TCGA_BRCA",
+#'   "TCGA_LUAD"). For `listHoverNet()`, only "TCGA_OV" is supported. Note that
+#'   the codes use an underscore ("_").
+#'
+#' @param format `character(1L)` One of "h5ad", "json", or "thumb" specifying
+#'   the desired HoverNet data format. Default is "h5ad".
+#'
+#' @param level `character(1L)` One of "slide_level" or "tile_level" specifying
+#'   the desired ProvGiga data level. Default is "slide_level".
+#'
 #' @examplesIf interactive()
 #' ## List available HoverNet data for TCGA-OV
 #' listHoverNet(format = "h5ad")
@@ -18,7 +38,10 @@ listHoverNet <- function(
 }
 
 
+#' @rdname listFiles
+#'
 #' @importFrom BiocBaseUtils isScalarCharacter
+#'
 #' @examplesIf interactive()
 #' ## List available ProvGiga slide-level data for TCGA-BRCA
 #' listProvGiga("TCGA_COAD", level = "slide_level")
