@@ -51,6 +51,12 @@ setClass(
     )
 )
 
+#' @exportClass HoverNetH5AD
+.HoverNetH5AD <- setClass(
+    Class = "HoverNetH5AD",
+    contains = "HoverNet"
+)
+
 #' @rdname HoverNet
 #'
 #' @description The `HoverNetJSON` constructor function creates an instance of the
@@ -100,12 +106,17 @@ HoverNet <- function(
     is_url <- .is_url(path_extract(resource))
     isJSON <-
         grepl("\\.json(\\.gz)?$", path_extract(resource), ignore.case = TRUE)
+    isH5AD <- identical(tools::file_ext(path_extract(resource)), "h5ad")
     if (!is(resource, "TENxFile"))
         resource <- TENxIO::TENxFile(resource)
     outClass <- match.arg(outClass)
     if (isJSON)
         .HoverNetJSON(
             resource, contours = contours, outClass = outClass, is_url = is_url
+        )
+    else if (isH5AD)
+        .HoverNetH5AD(
+            resource, outClass = outClass, is_url = is_url
         )
     else
         stop(
@@ -227,4 +238,54 @@ setMethod("import", "HoverNetJSON", function(con, format, text, ...) {
     }
     metadata(out)$type_map <- .TYPE_MAP
     out
+})
+
+#' @rdname HoverNet
+#'
+#' @section `import`: The import method for `HoverNetH5AD` reads the H5AD file
+#'   and represents the data as either a `SpatialExperiment` or
+#'   `SpatialFeatureExperiment` object. It extracts cell centroid coordinates,
+#'   cell types, mean intensity, and nearest neighbor distance. The resulting
+#'   `SpatialExperiment` object contains the cell data in the `colData` slot and
+#'   spatial coordinates in the `spatialCoords` slot of the object.
+#'
+#' @examplesIf interactive()
+#' hov_h5ad_file <- paste0(
+#'     "https://store.cancerdatasci.org/hovernet/TCGA_OV/h5ad/",
+#'     "TCGA-VG-A8LO-01A-01-DX1.B39A4D64-82A1-4A04-8AB6-918F3058B83B.h5ad"
+#' )
+#' dest_h5ad <- file.path(tempdir(), basename(hov_h5ad_file))
+#' download.file(hov_h5ad_file, destfile = dest_h5ad)
+#'
+#' HoverNet(dest_h5ad, outClass = "SpatialExperiment") |>
+#'     import()
+#' @exportMethod import
+setMethod("import", "HoverNetH5AD", function(con, format, text, ...) {
+    h5ad_path <- path(con)
+
+    if (con@is_url)
+        h5ad_path <- .cache_url_file(h5ad_path)
+
+    checkInstalled("zellkonverter")
+    res <-
+        zellkonverter::readH5AD(h5ad_path, use_hdf5 = TRUE, reader = "R")
+    scoords <- reducedDim(res, "spatial")
+    colnames(scoords) <- c("x_centroid", "y_centroid")
+
+    assay(res, "mean_intensity", withDimnames = FALSE) <-
+        matrix(colData(res)[["mean_intensity"]], nrow = 1L)
+    assay(res, "nnd", withDimnames = FALSE) <-
+        matrix(colData(res)[["nearest_neighbor_distance"]], nrow = 1L)
+
+    res <- SpatialExperiment::SpatialExperiment(
+        assays = SummarizedExperiment::assays(res),
+        colData = SummarizedExperiment::colData(res),
+        rowData = SummarizedExperiment::rowData(res),
+        spatialCoords = scoords
+    )
+
+    if (identical(con@outClass, "SpatialFeatureExperiment"))
+        res <- SpatialFeatureExperiment::toSpatialFeatureExperiment(res)
+
+    res
 })
