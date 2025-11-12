@@ -57,7 +57,9 @@ listProvGiga <- function(
     cname <- paste0(level, "_available")
 
     dataenv <- new.env(parent = emptyenv())
-    data("TCGAcodesAvailable", envir = dataenv, package = "ImageFeatureTCGA")
+    utils::data(
+        "TCGAcodesAvailable", envir = dataenv, package = "ImageFeatureTCGA"
+    )
     TCGAcodesAvailable <- dataenv[["TCGAcodesAvailable"]]
 
     prov_tumor_types <-
