@@ -2,7 +2,6 @@
 
 export(HoverJSON)
 export(ProvGiga)
-export(TCGAcodesAvailable)
 export(listHoverNet)
 export(listProvGiga)
 exportClasses(HoverJSON)

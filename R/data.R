@@ -15,7 +15,9 @@
 #'     \item{hover_available}{Logical indicator of availability of
 #'       HoVerNet data}
 #' }
-#' @source <https://store.cancerdatasci.org/>
 #' @usage data("TCGAcodesAvailable", package = "ImageFeatureTCGA")
-#' @export
+#'
+#' @docType data
+#'
+#' @source <https://store.cancerdatasci.org/>
 "TCGAcodesAvailable"
