@@ -3,17 +3,16 @@
 \docType{class}
 \name{ProvGiga}
 \alias{ProvGiga}
-\alias{.ProvGiga}
 \alias{ProvGiga-class}
 \alias{show,ProvGiga-method}
-\alias{import,ProvGiga,ANY,ANY-method}
+\alias{import,ProvGigaCSV,ANY,ANY-method}
 \title{Import ProvGiga slide-level data into a Bioconductor class object}
 \usage{
 ProvGiga(resource, tumorType)
 
 \S4method{show}{ProvGiga}(object)
 
-\S4method{import}{ProvGiga,ANY,ANY}(con, format, text, ...)
+\S4method{import}{ProvGigaCSV,ANY,ANY}(con, format, text, ...)
 }
 \arguments{
 \item{resource}{\code{character(1)} the file path or URL to the ProvGiga CSV file,

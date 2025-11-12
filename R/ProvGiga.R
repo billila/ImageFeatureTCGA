@@ -21,13 +21,19 @@
 #' @importFrom methods new is
 #'
 #' @exportClass ProvGiga
-.ProvGiga <- setClass(
+setClass(
     Class = "ProvGiga",
-    contains = "TENxFile",
+    contains = c("TENxFile", "VIRTUAL"),
     slots = c(
         tumorType = "character",
         is_url = "logical"
     )
+)
+
+#' @exportClass ProvGigaCSV
+.ProvGigaCSV <- setClass(
+    Class = "ProvGigaCSV",
+    contains = "ProvGiga"
 )
 
 #' @rdname ProvGiga
@@ -73,7 +79,7 @@ ProvGiga <- function(
         tumorType <- basename(dirname(path_extract(resource)))
     if (!is(resource, "TENxFile"))
         resource <- TENxIO::TENxFile(resource)
-    .ProvGiga(
+    .ProvGigaCSV(
         resource, is_url = is_url, tumorType = tumorType
     )
 }
@@ -125,7 +131,7 @@ setMethod("show", "ProvGiga", function(object) {
 #' ProvGiga(prov_url) |>
 #'     import()
 #' @exportMethod import
-setMethod("import", "ProvGiga", function(con, format, text, ...) {
+setMethod("import", "ProvGigaCSV", function(con, format, text, ...) {
     prov_path <- path(con)
     tumorType <- con@tumorType
 
