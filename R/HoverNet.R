@@ -6,13 +6,13 @@
     B = c(0L, 0L, 0L, 255L, 0L, 0L)
 )
 
-#' @name HoverJSON
+#' @name HoverNet
 #'
-#' @aliases HoverJSON-class
+#' @aliases HoverNet-class
 #'
 #' @title Import Hovernet JSON files into a Bioconductor class object
 #'
-#' @description The `HoverJSON` class represents Hovernet JSON files used for
+#' @description The `HoverNetJSON` class represents Hovernet JSON files used for
 #'   cell segmentation and classification in histopathology images. It extends
 #'   the `TENxFile` class from the `TENxIO` package, allowing for efficient
 #'   handling of large JSON files. The class includes a slot to indicate whether
@@ -32,21 +32,29 @@
 #' @importClassesFrom TENxIO TENxFile
 #' @importFrom methods new is
 #'
-#' @exportClass HoverJSON
-.HoverJSON <- setClass(
-    Class = "HoverJSON",
-    contains = "TENxFile",
+#' @exportClass HoverNet
+setClass(
+    Class = "HoverNet",
+    contains = c("TENxFile", "VIRTUAL"),
     slots = c(
-        contours = "logical",
         outClass = "character",
         is_url = "logical"
     )
 )
 
-#' @rdname HoverJSON
+#' @exportClass HoverNetJSON
+.HoverNetJSON <- setClass(
+    Class = "HoverNetJSON",
+    contains = "HoverNet",
+    slots = c(
+        contours = "logical"
+    )
+)
+
+#' @rdname HoverNet
 #'
-#' @description The `HoverJSON` constructor function creates an instance of the
-#'   `HoverJSON` class. The `resource` argument can be either a file path or URL
+#' @description The `HoverNetJSON` constructor function creates an instance of the
+#'   `HoverNetJSON` class. The `resource` argument can be either a file path or URL
 #'   to a Hovernet JSON file. The `contours` parameter is optiona and can be
 #'   used to include cell contours in the metadata. The `outClass` parameter
 #'   specifies the output class when importing the data, either
@@ -64,7 +72,7 @@
 #'   `"SpatialFeatureExperiment"`.
 #'
 #'
-#' @details The `HoverJSON` constructor function can import file paths and URLs.
+#' @details The `HoverNetJSON` constructor function can import file paths and URLs.
 #'   Remote files are automatically cached using `BiocFileCache` when the
 #'   `import` method is called. This allows for efficient handling of large JSON
 #'   files without the need to download them manually.
@@ -73,13 +81,13 @@
 #' @importFrom TENxIO TENxFile
 #' @importFrom BiocBaseUtils isScalarLogical isScalarCharacter
 #'
-#' @returns * `HoverJSON`: An object of class `HoverJSON`
+#' @returns * `HoverNetJSON`: An object of class `HoverNetJSON`
 #' * `import`: An object of class `SpatialExperiment` or
 #'   `SpatialFeatureExperiment` containing the cell data and spatial
 #'   coordinates extracted from the Hovernet JSON file
 #'
 #' @export
-HoverJSON <- function(
+HoverNet <- function(
     resource,
     contours = FALSE,
     outClass = c("SpatialExperiment", "SpatialFeatureExperiment")
@@ -90,25 +98,32 @@ HoverJSON <- function(
     )
     path_extract <- if (is(resource, "TENxFile")) path else I
     is_url <- .is_url(path_extract(resource))
+    isJSON <-
+        grepl("\\.json(\\.gz)?$", path_extract(resource), ignore.case = TRUE)
     if (!is(resource, "TENxFile"))
         resource <- TENxIO::TENxFile(resource)
     outClass <- match.arg(outClass)
-    .HoverJSON(
-        resource, contours = contours, outClass = outClass, is_url = is_url
-    )
+    if (isJSON)
+        .HoverNetJSON(
+            resource, contours = contours, outClass = outClass, is_url = is_url
+        )
+    else
+        stop(
+            "Unsupported file format. Provide a JSON or H5AD file for HoverNet."
+        )
 }
 
-#' @rdname HoverJSON
+#' @rdname HoverNet
 #'
-#' @section `show`: The `show` method for `HoverJSON` objects displays the
+#' @section `show`: The `show` method for `HoverNetJSON` objects displays the
 #'   `resource`, `contours`, and `outClass` slots and vaules.
 #'
-#' @param object An object of class `HoverJSON`.
+#' @param object An object of class `HoverNetJSON`.
 #'
 #' @importFrom methods setMethod show callNextMethod
 #'
 #' @exportMethod show
-setMethod("show", "HoverJSON", function(object) {
+setMethod("show", "HoverNetJSON", function(object) {
     callNextMethod()
     cat(
         "contours: ", object@contours, "\n",
@@ -117,9 +132,9 @@ setMethod("show", "HoverJSON", function(object) {
     )
 })
 
-#' @rdname HoverJSON
+#' @rdname HoverNet
 #'
-#' @section `import`: The import method for `HoverJSON` reads the JSON file and
+#' @section `import`: The import method for `HoverNetJSON` reads the JSON file and
 #'   represents the data as either a `SpatialExperiment` or
 #'   `SpatialFeatureExperiment` object. It extracts cell centroid coordinates,
 #'   cell types, and type probabilities, and optionally includes cell contours
@@ -145,19 +160,19 @@ setMethod("show", "HoverJSON", function(object) {
 #' dest_json <- file.path(tempdir(), basename(hov_json_file))
 #' download.file(hov_json_file, destfile = dest_json)
 #'
-#' HoverJSON(dest_json, outClass = "SpatialExperiment") |>
+#' HoverNet(dest_json, outClass = "SpatialExperiment") |>
 #'     import()
 #'
 #' ## Direct URL input (with caching)
-#' HoverJSON(hov_json_file, outClass = "SpatialExperiment") |>
+#' HoverNet(hov_json_file, outClass = "SpatialExperiment") |>
 #'     import()
 #'
 #' ## Import as SpatialFeatureExperiment
 #' library(SpatialFeatureExperiment)
-#' HoverJSON(dest_json, outClass = "SpatialFeatureExperiment") |>
+#' HoverNet(dest_json, outClass = "SpatialFeatureExperiment") |>
 #'     import()
 #' @exportMethod import
-setMethod("import", "HoverJSON", function(con, format, text, ...) {
+setMethod("import", "HoverNetJSON", function(con, format, text, ...) {
     json_path <- path(con)
 
     if (con@is_url)
