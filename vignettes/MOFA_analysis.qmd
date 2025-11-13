@@ -1,0 +1,62 @@
+---
+title: "MOFA_analysis"
+author: "Eslam Abousamra"
+format: html
+editor: visual
+---
+
+# Libraries
+```{r}
+library(MOFA2)
+```
+
+
+# Get slide data
+```{bash eval=FALSE}
+## All colon cancer Prov-GigaPath outputs
+wget -r -np -nH -R index.html https://u24-cancer-genomics.seandavi.workers.dev/provgigapath/TCGA_COAD/
+
+```
+
+# Load data
+```{r}
+dir <- "../TCGA_COAD_READ_provgigapath"
+# slide names
+fnames <- list.files(dir, pattern = "\\.csv$", full.names = TRUE)
+# participants
+participant_ids <- gsub(".csv$", "", basename(fnames)) %>% 
+  strsplit(., "-") %>% 
+  sapply(., function(x) paste(x[1:3], collapse = "-"))
+
+```
+
+# Import Prov-gigapath Last embedding Layer
+```{r embedding_layer_last}
+# function to get embedding layer
+structure_last <- getEmbeddingLayer(fnames, participant_ids, layer = "last_layer_embed" )
+```
+
+
+# Read Colon Cancer assay with curatedTCGA
+
+```{r}
+#------------------------------------------
+# 1. Load COAD + READ RNASeq assays
+#------------------------------------------
+# Load COAD
+coad_mae <- curatedTCGAData(
+  diseaseCode = "COAD",
+  assays = "RNASeq2GeneNorm",
+  version = "2.1.1",
+  dry.run = FALSE
+)
+
+rna_coad <- coad_mae[["COAD_RNASeq2GeneNorm-20160128"]]
+```
+
+
+
+```{r}
+
+```
+
