@@ -249,6 +249,8 @@ setMethod("import", "HoverNetJSON", function(con, format, text, ...) {
 #'   `SpatialExperiment` object contains the cell data in the `colData` slot and
 #'   spatial coordinates in the `spatialCoords` slot of the object.
 #'
+#' @author Sehyun O.
+#'
 #' @examplesIf interactive()
 #' hov_h5ad_file <- paste0(
 #'     "https://store.cancerdatasci.org/hovernet/TCGA_OV/h5ad/",

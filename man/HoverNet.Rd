@@ -153,4 +153,6 @@ HoverNet(dest_h5ad, outClass = "SpatialExperiment") |>
 }
 \author{
 Ilaria B., Marcel R.
+
+Sehyun O.
 }
