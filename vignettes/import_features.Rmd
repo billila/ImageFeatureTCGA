@@ -15,11 +15,11 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
-```{r,include=FALSE}
-knitr::opts_chunk$set(cache = TRUE)
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(cache = TRUE, echo = TRUE)
 ```
 
-```{r}
+```{r load_packages, include=TRUE, results="hide", message=FALSE, warning=FALSE}
 library(ImageFeatureTCGA)
 library(dplyr)
 ```
@@ -40,7 +40,7 @@ facilitating downstream integration with TCGA omics and clinical data.
 # Available Data
 
 To see which TCGA tumor types are supported:
-```{r echo=TRUE}
+```{r loadTCGAcodes}
 data("TCGAcodesAvailable", package = "ImageFeatureTCGA")
 TCGAcodesAvailable
 ```
@@ -56,7 +56,7 @@ TCGAcodesAvailable
 ### HoVerNet data
 
 
-```{r echo=TRUE}
+```{r listhover}
 listHoverNet(diseaseCode = "TCGA_OV", format = "h5ad")
 ```
 
@@ -64,11 +64,9 @@ listHoverNet(diseaseCode = "TCGA_OV", format = "h5ad")
 ### ProvGigaPath data
 
 
-```{r echo=TRUE}
+```{r listprovgiga}
 listProvGiga("TCGA_OV", level = "slide_level")
 ```
-
-
 
 
 # Importing HoVerNet data
@@ -78,7 +76,7 @@ You can import HoVerNet segmentation results as a
 `SpatialExperiment` or `SpatialFeatureExperiment`.
 
 
-```{r echo=TRUE}
+```{r importHover}
 hov_file <- paste0(
     "https://store.cancerdatasci.org/hovernet/TCGA_OV/json/",
     "TCGA-VG-A8LO-01A-01-DX1.B39A4D64-82A1-4A04-8AB6-918F3058B83B.json.gz"
@@ -101,7 +99,7 @@ Each cell is represented with:
 ProvGigaPath embeddings summarize tile or slide-level image features.
 
 
-```{r echo=TRUE}
+```{r importProvGiga}
 prov_url <- paste0(
     "https://store.cancerdatasci.org/provgigapath/slide_level/TCGA_OV/",
     "TCGA-VG-A8LO-01A-01-DX1.B39A4D64-82A1-4A04-8AB6-918F3058B83B.csv.gz"
@@ -122,7 +120,7 @@ image-derived features.
 
 <details>
     <summary>Click here for Session Info</summary>
-```{r}
+```{r sessioninfo}
 sessionInfo()
 ```
 </details>
