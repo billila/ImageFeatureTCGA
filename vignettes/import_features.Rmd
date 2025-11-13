@@ -26,9 +26,8 @@ library(dplyr)
 
 # Overview
 
-`ImageFeatureTCGA` (`imageTCGA`) provides convenient access to histopathology-derived data
-from **TCGA** through two complementary pipelines:
-
+`ImageFeatureTCGA` (`imageTCGA`) provides convenient access to
+histopathology-derived data from **TCGA** through two complementary pipelines:
 
 - **HoVerNet** → cell segmentation and classification
 - **ProvGigaPath** → slide- and tile-level embeddings
@@ -81,16 +80,12 @@ You can import HoVerNet segmentation results as a
 
 ```{r echo=TRUE}
 hov_file <- paste0(
-"https://store.cancerdatasci.org/hovernet/TCGA_OV/json/",
-"TCGA-VG-A8LO-01A-01-DX1.B39A4D64-82A1-4A04-8AB6-918F3058B83B.json.gz"
+    "https://store.cancerdatasci.org/hovernet/TCGA_OV/json/",
+    "TCGA-VG-A8LO-01A-01-DX1.B39A4D64-82A1-4A04-8AB6-918F3058B83B.json.gz"
 )
 
-
-hov_obj <- HoverNet(hov_file, outClass = "SpatialExperiment") |>
-import()
-
-
-hov_obj
+HoverNet(hov_file, outClass = "SpatialExperiment") |>
+    import()
 ```
 
 Each cell is represented with:
@@ -108,14 +103,12 @@ ProvGigaPath embeddings summarize tile or slide-level image features.
 
 ```{r echo=TRUE}
 prov_url <- paste0(
-"https://store.cancerdatasci.org/provgigapath/slide_level/TCGA_OV/", "TCGA-VG-A8LO-01A-01-DX1.B39A4D64-82A1-4A04-8AB6-918F3058B83B.csv.gz"
+    "https://store.cancerdatasci.org/provgigapath/slide_level/TCGA_OV/",
+    "TCGA-VG-A8LO-01A-01-DX1.B39A4D64-82A1-4A04-8AB6-918F3058B83B.csv.gz"
 )
 
-
-prov_obj <- ProvGiga(prov_url) |> import()
-
-
-head(prov_obj)
+ProvGiga(prov_url) |>
+    import()
 ```
 
 
