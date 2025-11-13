@@ -10,7 +10,7 @@ output:
     toc_depth: 3
 package: ImageFeatureTCGA
 vignette: >
-  %\VignetteIndexEntry{TCIAAPI}
+  %\VignetteIndexEntry{ImageFeatureTCGA}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---

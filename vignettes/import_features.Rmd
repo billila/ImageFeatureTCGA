@@ -10,7 +10,7 @@ output:
     toc_depth: 3
 package: ImageFeatureTCGA
 vignette: >
-  %\VignetteIndexEntry{TCIAAPI}
+  %\VignetteIndexEntry{ImageFeatureTCGA}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -18,3 +18,118 @@ vignette: >
 ```{r,include=FALSE}
 knitr::opts_chunk$set(cache = TRUE)
 ```
+
+```{r}
+library(ImageFeatureTCGA)
+library(dplyr)
+```
+
+# Overview
+
+`ImageFeatureTCGA` (`imageTCGA`) provides convenient access to histopathology-derived data
+from **TCGA** through two complementary pipelines:
+
+
+- **HoVerNet** → cell segmentation and classification
+- **ProvGigaPath** → slide- and tile-level embeddings
+
+
+These datasets can be imported directly into R as **Bioconductor objects**,
+facilitating downstream integration with TCGA omics and clinical data.
+
+
+# Available Data
+
+To see which TCGA tumor types are supported:
+```{r echo=TRUE}
+data("TCGAcodesAvailable", package = "ImageFeatureTCGA")
+TCGAcodesAvailable
+```
+
+
+- `slide_level_available`: ProvGigaPath slide-level embeddings
+- `tile_level_available`: ProvGigaPath tile-level embeddings
+- `hover_available`: HoVerNet segmentation data
+
+# Listing Available Files
+
+
+### HoVerNet data
+
+
+```{r echo=TRUE}
+listHoverNet(diseaseCode = "TCGA_OV", format = "h5ad")
+```
+
+
+### ProvGigaPath data
+
+
+```{r echo=TRUE}
+listProvGiga("TCGA_OV", level = "slide_level")
+```
+
+
+
+
+# Importing HoVerNet data
+
+
+You can import HoVerNet segmentation results as a
+`SpatialExperiment` or `SpatialFeatureExperiment`.
+
+
+```{r echo=TRUE}
+hov_file <- paste0(
+"https://store.cancerdatasci.org/hovernet/TCGA_OV/json/",
+"TCGA-VG-A8LO-01A-01-DX1.B39A4D64-82A1-4A04-8AB6-918F3058B83B.json.gz"
+)
+
+
+hov_obj <- HoverNet(hov_file, outClass = "SpatialExperiment") |>
+import()
+
+
+hov_obj
+```
+
+Each cell is represented with:
+
+- `x`, `y` spatial coordinates
+- cell type and type probabilities
+- optional contours stored in metadata
+
+
+# Importing ProvGigaPath embeddings
+
+
+ProvGigaPath embeddings summarize tile or slide-level image features.
+
+
+```{r echo=TRUE}
+prov_url <- paste0(
+"https://store.cancerdatasci.org/provgigapath/slide_level/TCGA_OV/", "TCGA-VG-A8LO-01A-01-DX1.B39A4D64-82A1-4A04-8AB6-918F3058B83B.csv.gz"
+)
+
+
+prov_obj <- ProvGiga(prov_url) |> import()
+
+
+head(prov_obj)
+```
+
+
+Each row corresponds to a slide, with an embedding vector describing the
+image-derived features.
+
+
+
+
+# Session Info
+
+<details>
+    <summary>Click here for Session Info</summary>
+```{r}
+sessionInfo()
+```
+</details>
