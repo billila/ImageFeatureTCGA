@@ -33,7 +33,8 @@ Suggests:
     BiocFileCache,
     knitr,
     rmarkdown,
-    SpatialFeatureExperiment
+    SpatialFeatureExperiment,
+    zellkonverter
 vignetteBuilder: knitr
 biocViews: Software, Infrastructure, DataImport, DataRepresentation
 BugReports: https://github.com/waldronlab/ImageFeatureTCGA/issues
