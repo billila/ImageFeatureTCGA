@@ -18,3 +18,31 @@ vignette: >
 ```{r,include=FALSE}
 knitr::opts_chunk$set(cache = TRUE)
 ```
+
+
+```{r}
+library(ImageFeatureTCGA)
+```
+
+# Import data from Hovernet as SpatialFeatureExperiment
+
+```{r echo=TRUE}
+hov_file <- paste0(
+"https://store.cancerdatasci.org/hovernet/TCGA_OV/json/",
+"TCGA-VG-A8LO-01A-01-DX1.B39A4D64-82A1-4A04-8AB6-918F3058B83B.json.gz"
+)
+
+sfe <- HoverNet(hov_file, outClass = "SpatialFeatureExperiment") |>
+import()
+
+
+sfe
+```
+
+
+```{r}
+coords <- spatialCoords(sfe)
+x <- colData(sfe)$mean_intensity
+y <- colData(sfe)$nnd  
+```
+
