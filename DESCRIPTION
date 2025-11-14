@@ -13,7 +13,7 @@ Description: The package imports data from hovernet, provgigapath, and
     other feature extraction technologies hosted online. It conveniently
     incorporates these additional data into existing MultiAssayExperiment
     instances from curatedTCGAData. 
-Depends: R (>= 4.6.0)
+Depends: R (>= 4.5.0)
 Imports:
     BiocBaseUtils,
     BiocIO,
@@ -33,7 +33,9 @@ Suggests:
     BiocFileCache,
     knitr,
     rmarkdown,
+    sfdep,
     SpatialFeatureExperiment,
+    spdep,
     zellkonverter
 vignetteBuilder: knitr
 biocViews: Software, Infrastructure, DataImport, DataRepresentation
