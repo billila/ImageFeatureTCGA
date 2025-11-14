@@ -61,7 +61,7 @@ setClass(
 #'
 #' @description The `HoverNetJSON` constructor function creates an instance of the
 #'   `HoverNetJSON` class. The `resource` argument can be either a file path or URL
-#'   to a Hovernet JSON file. The `contours` parameter is optiona and can be
+#'   to a Hovernet JSON file. The `contours` parameter is optional and can be
 #'   used to include cell contours in the metadata. The `outClass` parameter
 #'   specifies the output class when importing the data, either
 #'   `SpatialExperiment` or `SpatialFeatureExperiment`.
