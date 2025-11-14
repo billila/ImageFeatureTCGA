@@ -29,8 +29,24 @@ library(SpatialExperiment)
 library(ggplot2)
 ```
 
-# Import data from Hovernet as SpatialFeatureExperiment
+# Introduction
 
+
+Point pattern analysis provides a framework to investigate the spatial
+distribution of cells within histopathology images. When HoVerNet output
+is imported through `ImageFeatureTCGA`, each cell is represented with
+spatial coordinates and associated morphological or intensity features.
+These data allow the computation of global and local spatial autocorrelation
+metrics, such as Moran's I, Local Moran's I (LISA), Geary's C,
+and Local Spatial Heteroscedasticity (LOSH).
+
+
+In this vignette, we illustrate how to perform spatial autocorrelation
+analysis starting from a `SpatialFeatureExperiment` object created from
+HoVerNet segmentation results.
+
+
+# Importing HoVerNet Data as a SpatialFeatureExperiment
 ```{r echo=TRUE}
 hov_file <- paste0(
 "https://store.cancerdatasci.org/hovernet/TCGA_OV/h5ad/",
@@ -44,7 +60,8 @@ import()
 sfe
 ```
 
-
+We extract coordinates and select two example features: mean intensity
+and nearest-neighbor distance.
 ```{r}
 coords <- spatialCoords(sfe)
 x <- colData(sfe)$mean_intensity
@@ -52,7 +69,12 @@ y <- colData(sfe)$nearest_neighbor_distance
 ```
 
 
-# Moran’s I
+# Moran's I (Global Spatial Autocorrelation)
+
+
+Moran's I quantifies the degree to which similar values cluster spatially. 
+A positive Moran's I indicates spatial clustering, while negative values 
+indicate spatial dispersion.
 
 ```{r}
 nb <- knn2nb(knearneigh(coords, k = 6))
@@ -81,8 +103,9 @@ moran <- ggplot(df_lisa, aes(x = x, y = y, color = Ii)) +
 moran
 ```
 
-# Geary’s C (globale)
+# Geary’s C (Global Spatial Autocorrelation)
 
+Geary’s C is another measure of global autocorrelation but is more sensitive to local differences.
 ```{r}
 gc <- geary.test(x, lw)
 print(gc)
@@ -92,6 +115,9 @@ print(gc_mc)
 ```
 
 # Local Spatial Heteroscedasticity (LOSH)
+
+
+LOSH characterizes local variance in the spatial distribution of a variable.
 
 
 ```{r}
@@ -133,3 +159,11 @@ p_losh_z
 ```
 
 
+# Session Info
+
+<details>
+    <summary>Click here for Session Info</summary>
+```{r sessioninfo}
+sessionInfo()
+```
+</details>
