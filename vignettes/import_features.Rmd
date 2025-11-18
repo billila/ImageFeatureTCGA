@@ -15,6 +15,8 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
+# ImageFeatureTCGA
+
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(cache = TRUE, echo = TRUE)
 ```
@@ -35,6 +37,16 @@ histopathology-derived data from **TCGA** through two complementary pipelines:
 
 These datasets can be imported directly into R as **Bioconductor objects**,
 facilitating downstream integration with TCGA omics and clinical data.
+
+
+# Installation
+
+```{r install, eval=FALSE}
+if (!requireNamespace("BiocManager", quietly = TRUE))
+    install.packages("BiocManager")
+
+BiocManager::install("waldronlab/ImageFeatureTCGA")
+```
 
 
 # Available Data
@@ -114,7 +126,24 @@ Each row corresponds to a slide, with an embedding vector describing the
 image-derived features.
 
 
+# See also
 
+You can explore the full documentation through the package vignettes:
+
+- [MOFA](https://github.com/waldronlab/ImageFeatureTCGA/blob/devel/vignettes/MOFA_analysis.qmd)
+- [Point Pattern Analysis](https://github.com/waldronlab/ImageFeatureTCGA/blob/devel/vignettes/PPA.Rmd)
+
+Note. More vignettes will be added as new feature types and workflows become
+available.
+
+# Shiny App: *imageTCGA*
+
+The [imageTCGA](https://github.com/billila/imageTCGA) Shiny application
+provides an interactive interface for exploring TCGA Diagnostic Image Database
+metadata.
+
+Click here to explore the shiny app:
+[imageTCGA](https://shiny.sph.cuny.edu/app/imageTCGA/)
 
 # Session Info
 
