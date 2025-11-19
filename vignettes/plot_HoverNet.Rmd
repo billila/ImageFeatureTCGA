@@ -49,31 +49,16 @@ The package supports two main file formats:
 First, let's download an example HoverNet JSON file:
 
 ```{r download-json}
-json_url <- paste0(
+json_file <- paste0(
     "https://store.cancerdatasci.org/hovernet/TCGA_OV/json/",
-    "TCGA-VG-A8LO-01A-01-DX1.B39A4D64-82A1-4A04-8AB6-918F3058B83B.json.gz"
-)
-
-json_file <- file.path(tempdir(), basename(json_url))
-download.file(json_url, destfile = json_file)
+    "TCGA-23-1021-01Z-00-DX1.F07C221B-D401-47A5-9519-10DE59CA1E9D.json.gz")
 ```
 
-Import the JSON file into a `SpatialExperiment` object:
+## Import the JSON file into a `SpatialExperiment` object from URLs (with Automatic Caching)
+The file will be automatically cached using `BiocFileCache`:
 
-```{r import-json-local}
+```{r import-json-url}
 hn_spe <- HoverNet(json_file, outClass = "SpatialExperiment") |>
-    import()
-
-hn_spe
-```
-
-## From URLs (with Automatic Caching)
-
-You can also import directly from a URL. The file will be automatically cached 
-using `BiocFileCache`:
-
-```{r import-json-url, eval=FALSE}
-hn_spe <- HoverNet(json_url, outClass = "SpatialExperiment") |>
     import()
 ```
 
@@ -253,3 +238,12 @@ cowplot::plot_grid(p1, p2, ncol = 2)
 
 
 
+
+# Session Info
+
+<details>
+    <summary>Click here for Session Info</summary>
+```{r sessioninfo}
+sessionInfo()
+```
+</details>
