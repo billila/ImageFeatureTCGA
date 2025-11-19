@@ -291,3 +291,57 @@ setMethod("import", "HoverNetH5AD", function(con, format, text, ...) {
 
     res
 })
+
+
+#' Import HoverNet thumbnail PNG associated with a JSON file
+#'
+#' @param json_path Path or URL to a HoverNet JSON or JSON.GZ file.
+#'
+#' @return A PNG image as an RGB array (from png::readPNG),
+#'   or NULL if the thumbnail does not exist.
+#'
+#' @export
+importHoverNetThumbnail <- function(json_path) {
+    BiocBaseUtils::checkInstalled("png")
+    BiocBaseUtils::checkInstalled("BiocFileCache")
+    
+    # Normalize .json or .json.gz
+    base <- basename(json_path)
+    base <- sub("\\.gz$", "", base)
+    png_name <- sub("\\.json$", ".png", base)
+    
+    # Build thumbnail path
+    png_url <- sub("/json/", "/thumb/", json_path)
+    png_url <- sub(basename(json_path), png_name, png_url)
+    
+    # Use BiocFileCache if URL
+    is_url <- grepl("^https?://", png_url)
+    if (is_url) {
+        bfc <- BiocFileCache::BiocFileCache(ask = FALSE)
+        
+        # Check if already cached
+        query_result <- BiocFileCache::bfcquery(bfc, png_name, field = "rname")
+        
+        if (BiocFileCache::bfccount(query_result) > 0) {
+            # Resource exists, get its path
+            rid <- query_result$rid[1]
+            png_path <- BiocFileCache::bfcrpath(bfc, rids = rid)
+        } else {
+            # Download the file directly
+            png_path <- BiocFileCache::bfcadd(bfc, png_name, fpath = png_url, 
+                                              download = TRUE)
+        }
+    } else {
+        png_path <- png_url
+    }
+    
+    # Check existence
+    if (!file.exists(png_path)) {
+        message("Thumbnail not found: ", png_url)
+        return(NULL)
+    }
+    
+    # Read png file
+    img <- png::readPNG(png_path)
+    return(img)
+}
