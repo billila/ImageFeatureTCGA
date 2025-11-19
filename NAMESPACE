@@ -2,6 +2,7 @@
 
 export(HoverNet)
 export(ProvGiga)
+export(importHoverNetThumbnail)
 export(listHoverNet)
 export(listProvGiga)
 exportClasses(HoverNet)
