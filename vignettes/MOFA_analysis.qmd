@@ -17,8 +17,8 @@ vignette: >
 
 # Libraries
 
-
 ```{r load_packages, message=FALSE}
+library(ImageFeatureTCGA)
 library(curatedTCGAData)
 library(SummarizedExperiment)
 library(MultiAssayExperiment)
