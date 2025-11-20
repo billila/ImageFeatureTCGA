@@ -107,10 +107,7 @@ getEmbeddingLayer <- function(fnames, participant_ids = NULL, cancer = "TCGA_COA
 ```
 
 
-
-
 # Load data
-
 
 ```{r load embeddings}
 
