@@ -33,7 +33,6 @@ devtools::load_all()
 ```{bash eval=FALSE}
 ## All colon cancer Prov-GigaPath outputs
 wget -r -np -nH -R index.html https://u24-cancer-genomics.seandavi.workers.dev/provgigapath/TCGA_COAD/
-
 ```
 
 # List slide prov-gigapath
@@ -45,64 +44,57 @@ listProvGiga("TCGA_READ", level = "slide_level")
 ```
 
 
-
+# Get embedding layer
 ```{r}
-getEmbeddingLayer <- function(fnames, participant_ids = NULL, layer = NULL) {
+getEmbeddingLayer <- function(fnames, participant_ids = NULL, cancer = "TCGA_COAD", layer = NULL) {
   
-  # If single file (character scalar), convert to vector for consistent handling
-  single_file <- FALSE
-  if (is.character(fnames) && length(fnames) == 1) {
-    fnames <- list(fnames)
-    single_file <- TRUE
-    if (is.null(participant_ids)) participant_ids <- "sample1"
-  }
+  # Base URL for TCGA image embeddings
+  base_url <- paste0(
+    "https://store.cancerdatasci.org/provgigapath/slide_level/",
+    cancer,
+    "/"
+  )
   
+  urls <- paste0(base_url, fnames)
   embeddings_list <- vector("list", length(fnames))
-  
-  # Use participant_ids as names if provided
   if (!is.null(participant_ids)) {
     names(embeddings_list) <- make.unique(participant_ids)
   } else {
     names(embeddings_list) <- paste0("sample", seq_along(fnames))
   }
   
-  # Loop over files
-  for (i in seq_along(fnames)) {
-    if (file.exists(fnames[i])) {
-      # Load CSV
-      x <- readr::read_csv(fnames[[i]], show_col_types = FALSE)
-      if (nrow(x) == 0) {
-        embeddings_list[[i]] <- NA
-        next
-      }
-      
-      # Determine column index
-      layer_ind <- if (is.null(layer)) {
-        ncol(x)                  # last column
-      } else if (is.character(layer)) {
-        match(layer, colnames(x)) # find column by name
-      } else {
-        layer + 1                 # numeric index (0-based)
-      }
-      
-      # Extract tensor string
-      tensor_string <- x[[1, layer_ind]]
-      # Clean string and convert to numeric
-      clean_string <- gsub("tensor\\(\\[\\[|\\]\\]\\)", "", tensor_string)
-      embeddings_list[[i]] <- as.numeric(unlist(strsplit(clean_string, ",\\s*")))
-      
-    } else {
+  for (i in seq_along(urls)) {
+    url <- urls[i]
+    
+    # Use ProvGiga to import the remote CSV
+    x <- tryCatch({
+      ProvGiga(url) |> import()
+    }, error = function(e) {
+      warning(paste("Failed to import", url, ":", e$message))
+      return(NULL)
+    })
+    
+    if (is.null(x) || nrow(x) == 0) {
       embeddings_list[[i]] <- NA
+      next
     }
+    
+    # the embedding features start from the 3rd column (V1).
+    start_col_index <- 3
+    # Extract all columns from start_col_index to the end, and flatten into a vector
+    # We use x[1, ] to get the first (and only) row of data
+    embedding_vector <- unlist(x[1, start_col_index:ncol(x)])
+    
+    # Assign the numeric vector directly
+    embeddings_list[[i]] <- as.numeric(embedding_vector)
+    
   }
   
-  # Remove fully NA entries
+  # --- (Original list-to-matrix conversion logic remains the same) ---
   embeddings_list <- embeddings_list[!sapply(embeddings_list, function(x) all(is.na(x)))]
   
-  # If only one file, return the vector
-  if (single_file) return(embeddings_list[[1]])
+  if (length(embeddings_list) == 0) return(NULL)
   
-  # Convert list to matrix (pad with NA if needed)
   max_len <- max(sapply(embeddings_list, length))
   tensor_matrix <- t(sapply(embeddings_list, function(x) {
     if (length(x) < max_len) c(x, rep(NA, max_len - length(x))) else x
@@ -114,20 +106,34 @@ getEmbeddingLayer <- function(fnames, participant_ids = NULL, layer = NULL) {
 }
 ```
 
+
+
+
 # Load data
-```{r load_embeddings}
 
-dir <- "/Users/eslamabousamra/Cancer Image Analysis/TCGA_COAD_READ_provgigapath"
-# slide names
-fnames <- list.files(dir, pattern = "\\.csv$", full.names = TRUE)
-# participants
-participant_ids <- gsub(".csv$", "", basename(fnames)) %>% 
-  strsplit(., "-") %>% 
-  sapply(., function(x) paste(x[1:3], collapse = "-"))
 
-# Get last embedding layer
-structure_last <- getEmbeddingLayer(fnames, participant_ids, layer = "last_layer_embed" )
+```{r load embeddings}
+
+coad_slides_df <- listProvGiga("TCGA_COAD", level = "slide_level")
+
+# Select a small subset of the *slide-level* files for the vignette
+# We use the Filename column to get the full path
+slide_files_to_load <- coad_slides_df$Filename[1:5] # Select the first 5 slides
+
+# Extract the unique participant IDs (first 3 parts of the file name)
+participant_ids_to_load <- gsub("\\..*", "", basename(slide_files_to_load)) |>
+  strsplit("-") |>
+  sapply(function(x) paste(x[1:3], collapse = "-"))
+
+structure_last <- getEmbeddingLayer(
+  fnames = slide_files_to_load,
+  participant_ids = participant_ids_to_load,
+  cancer = "TCGA_COAD", # Must match the cancer type
+  layer = "last_layer_embed"
+)
 ```
+
+
 
 # Import Prov-gigapath Last embedding Layer using ProvGiga
 
