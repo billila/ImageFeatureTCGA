@@ -35,6 +35,15 @@ wget -r -np -nH -R index.html https://u24-cancer-genomics.seandavi.workers.dev/p
 
 ```
 
+# List slide prov-gigapath
+```{r}
+# Colon
+listProvGiga("TCGA_COAD", level = "slide_level")
+# Rectal
+listProvGiga("TCGA_READ", level = "slide_level")
+```
+
+
 # Load data
 ```{r load_embeddings}
 
@@ -46,12 +55,28 @@ participant_ids <- gsub(".csv$", "", basename(fnames)) %>%
   strsplit(., "-") %>% 
   sapply(., function(x) paste(x[1:3], collapse = "-"))
 
+# Get last embedding layer
+structure_last <- getEmbeddingLayer(fnames, participant_ids, layer = "last_layer_embed" )
 ```
 
-# Import Prov-gigapath Last embedding Layer
+# Import Prov-gigapath Last embedding Layer using ProvGiga
+
+
 ```{r embedding_layer_last}
 # function to get embedding layer
-structure_last <- getEmbeddingLayer(fnames, participant_ids, layer = "last_layer_embed" )
+
+prov_url <- paste0(
+    "https://store.cancerdatasci.org/provgigapath/slide_level/TCGA_OV/",
+    "TCGA-VG-A8LO-01A-01-DX1.B39A4D64-82A1-4A04-8AB6-918F3058B83B.csv.gz"
+)
+
+ProvGiga(prov_url) |>
+    import()
+
+
+
+
+
 ```
 
 
