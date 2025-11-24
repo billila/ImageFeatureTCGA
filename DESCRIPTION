@@ -19,6 +19,7 @@ Imports:
     BiocIO,
     cowplot,
     dplyr,
+    ggplot2,
     httr2,
     methods,
     png,
@@ -27,6 +28,7 @@ Imports:
     rvest,
     S4Vectors,
     SpatialExperiment,
+    SummarizedExperiment,
     TENxIO,
     tibble,
     utils
