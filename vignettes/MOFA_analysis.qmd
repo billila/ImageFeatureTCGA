@@ -25,7 +25,6 @@ library(MultiAssayExperiment)
 library(dplyr)
 library(stringr)
 library(MOFA2)
-devtools::load_all()
 ```
 
 
@@ -310,20 +309,48 @@ crc_mae <- MultiAssayExperiment(
 
 run_mofa_pipeline <- function(mae, num_factors = 15, seed = 42, outfile = NULL) {
   mofa_obj <- create_mofa_from_MultiAssayExperiment(mae)
-  
+
+  # data options (required)
+  data_opts <- get_default_data_options(mofa_obj)
+
+  # model options
   model_opts <- get_default_model_options(mofa_obj)
   model_opts$num_factors <- num_factors
-  
-  train_opts <- get_default_training_options(mofa_obj)
-  train_opts$convergence_mode <- "slow"
-  train_opts$seed <- seed
-  
-  mofa_obj <- prepare_mofa(mofa_obj, model_opts, train_opts)
-  mofa_obj.trained <- run_mofa(mofa_obj, outfile = outfile, use_basilisk = TRUE)
-  mofa_obj.trained
-}
 
+  # training options
+  train_opts <- get_default_training_options(mofa_obj)
+  train_opts$convergence_mode <- "fast"
+  train_opts$seed <- seed
+
+  # prepare model
+  mofa_obj <- prepare_mofa(
+    object = mofa_obj,
+    data_options = data_opts,
+    model_options = model_opts,
+    training_options = train_opts
+  )
+
+  # train model
+  mofa_obj.trained <- run_mofa(
+    mofa_obj,
+    outfile = outfile,
+    use_basilisk = TRUE
+  )
+
+  return(mofa_obj.trained)
+}
 ```
+
+```{r}
+run_mofa_pipeline(
+  mae = crc_mae,
+  num_factors = 15,
+  seed = 42,
+  outfile = "mofa_crc_test.hdf5"
+)
+```
+
+
 
 
 # Session Info
