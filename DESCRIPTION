@@ -41,7 +41,7 @@ Suggests:
     SpatialFeatureExperiment,
     spdep,
     zellkonverter
-vignetteBuilder: knitr
+VignetteBuilder: knitr
 biocViews: Software, Infrastructure, DataImport, DataRepresentation
 BugReports: https://github.com/waldronlab/ImageFeatureTCGA/issues
 URL: https://github.com/waldronlab/ImageFeatureTCGA
