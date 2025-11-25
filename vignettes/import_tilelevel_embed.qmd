@@ -1,0 +1,69 @@
+---
+title: "Import Provgiga tile level embeddings and summary"
+author: "Eslam Abousamra"
+date: "2025-11-13"
+output:
+  BiocStyle::html_document:
+    toc: true
+    number_sections: true
+    toc_float: true
+    toc_depth: 3
+package: ImageFeatureTCGA
+vignette: >
+  %\VignetteIndexEntry{MOFA_COAD_READ}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r}
+library(ImageFeatureTCGA)
+```
+
+
+
+```{r}
+import_tile_embedding <- function(slide_filenames, cancer = "TCGA_OV") {
+  purrr::map(
+    slide_filenames,
+    ~ {
+      url <- paste0(
+        "https://store.cancerdatasci.org/provgigapath/tile_level/",
+        cancer, "/", .x
+      )
+      df <- readr::read_csv(url, show_col_types = FALSE)
+      df$slide_id <- .x
+      df$source_file <- .x
+      return(df)
+    }
+  ) |> setNames(slide_filenames)
+}
+
+```
+
+
+
+```{r}
+
+# list slides
+ov_tile_files <- listProvGiga("TCGA_OV", level = "tile_level")$Filename
+
+# select 2 slides as an example
+ov_slides <- ov_tile_files[1:2]
+
+# 3. Run the final import function
+OV_tile_dfs <- import_tile_embedding(
+  ov_slides,
+  cancer = "TCGA_OV"
+)
+
+
+```
+
+
+```{r}
+
+```
+
+
+
+
