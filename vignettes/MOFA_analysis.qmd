@@ -90,7 +90,7 @@ getEmbeddingLayer <- function(fnames, participant_ids = NULL, cancer = "TCGA_COA
     
   }
   
-  # --- (Original list-to-matrix conversion logic remains the same) ---
+  # list-to-matrix conversion logic
   embeddings_list <- embeddings_list[!sapply(embeddings_list, function(x) all(is.na(x)))]
   
   if (length(embeddings_list) == 0) return(NULL)
@@ -158,12 +158,13 @@ ProvGiga(prov_url) |>
 #------------------------------------------
 coad_mae_all <- curatedTCGAData(
   diseaseCode = "COAD",
-  assays = "*",
+  assays = "RNASeq2GeneNorm",
   version = "2.1.1",
   dry.run = FALSE
 )
 
-assays_subset <- c("COAD_RNASeq2GeneNorm-20160128", "COAD_RPPAArray-20160128")
+
+assays_subset <- c("COAD_RNASeq2GeneNorm-20160128")
 coad_mae <- coad_mae_all[,, which(names(coad_mae_all) %in% assays_subset)]
 
 # Standardize patient IDs for all assays
