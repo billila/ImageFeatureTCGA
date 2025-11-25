@@ -28,20 +28,6 @@ library(MOFA2)
 ```
 
 
-# Get slide data
-```{bash eval=FALSE}
-## All colon cancer Prov-GigaPath outputs
-wget -r -np -nH -R index.html https://u24-cancer-genomics.seandavi.workers.dev/provgigapath/TCGA_COAD/
-```
-
-# List slide prov-gigapath
-```{r}
-# Colon
-listProvGiga("TCGA_COAD", level = "slide_level")
-# Rectal
-listProvGiga("TCGA_READ", level = "slide_level")
-```
-
 
 # Get embedding layer
 ```{r}
@@ -127,25 +113,6 @@ structure_last <- getEmbeddingLayer(
   cancer = "TCGA_COAD", # Must match the cancer type
   layer = "last_layer_embed"
 )
-```
-
-
-
-# Import Prov-gigapath Last embedding Layer using ProvGiga
-
-
-```{r embedding_layer_last}
-# function to get embedding layer
-
-prov_url <- paste0(
-    "https://store.cancerdatasci.org/provgigapath/slide_level/TCGA_OV/",
-    "TCGA-VG-A8LO-01A-01-DX1.B39A4D64-82A1-4A04-8AB6-918F3058B83B.csv.gz"
-)
-
-ProvGiga(prov_url) |>
-    import()
-
-
 ```
 
 
