@@ -341,7 +341,8 @@ run_mofa_pipeline <- function(mae, num_factors = 15, seed = 42, outfile = NULL) 
 }
 ```
 
-```{r}
+
+```{r execute mofa}
 run_mofa_pipeline(
   mae = crc_mae,
   num_factors = 15,
@@ -350,6 +351,13 @@ run_mofa_pipeline(
 )
 ```
 
+# Visualize MOFA results
+```{r load and visualize the model}
+mofa_object.trained <- load_model("mofa_crc_test.hdf5")
+
+plot_variance_explained(mofa_object.trained)
+
+```
 
 
 
