@@ -145,20 +145,20 @@ setMethod("show", "ProvGiga", function(object) {
 #' @author Ilaria B., Marcel R.
 #'
 #' @examplesIf interactive()
-#' ## Importing a ProvGiga CSV file from a local path
-#' prov_url <- paste0(
+#' ## Importing a slide_level ProvGiga CSV file from a local path
+#' slide_prov_url <- paste0(
 #'     "https://store.cancerdatasci.org/provgigapath/slide_level/",
 #'     "TCGA_ACC/",
 #'     "TCGA-OR-A5JJ-01Z-00-DX1.459B5DFE-47B1-426F-B009-7664C1B6FEEC.csv.gz"
 #' )
-#' prov_file <- file.path(tempdir(), basename(prov_url))
-#' download.file(prov_url, destfile = prov_file)
+#' slide_file <- file.path(tempdir(), basename(slide_prov_url))
+#' download.file(slide_prov_url, destfile = slide_file)
 #'
-#' ProvGiga(prov_file, tumorType = "TCGA_ACC") |>
+#' ProvGiga(slide_file, tumorType = "TCGA_ACC") |>
 #'     import()
 #'
 #' ## Importing a ProvGiga CSV file from a URL
-#' ProvGiga(prov_url) |>
+#' ProvGiga(slide_prov_url) |>
 #'     import()
 #' @exportMethod import
 setMethod("import", "ProvGigaCSV", function(con, format, text, ...) {
