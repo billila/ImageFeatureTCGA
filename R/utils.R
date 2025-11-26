@@ -62,3 +62,13 @@
         unlist(results, recursive = FALSE)
     )
 }
+.extract_project <- function(file_path) {
+    stopifnot(
+        isScalarCharacter(file_path)
+    )
+    path_parts <- strsplit(file_path, "/")[[1L]]
+    project <- grepv("^TCGA.[A-Z]{3,4}$", path_parts)
+    if (!identical(length(project), 1L))
+        stop("Cannot extract project from file path: ", file_path)
+    project
+}

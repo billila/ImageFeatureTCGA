@@ -79,7 +79,7 @@ ProvGiga <- function(
     if (!is_url && missing(tumorType))
         stop("'tumorType' must be provided for local files.")
     else if (is_url)
-        tumorType <- basename(dirname(path_extract(resource)))
+        tumorType <- .extract_project(filename)
 
     if (missing(level))
         levels <- vapply(
