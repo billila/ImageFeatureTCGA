@@ -27,6 +27,7 @@ Imports:
     rjsoncons,
     rvest,
     S4Vectors,
+    SingleCellExperiment,
     SpatialExperiment,
     SummarizedExperiment,
     TENxIO,

@@ -251,6 +251,8 @@ setMethod("import", "HoverNetJSON", function(con, format, text, ...) {
 #'
 #' @author Sehyun O.
 #'
+#' @importFrom SummarizedExperiment assay<- assays rowData colData
+#'
 #' @examplesIf interactive()
 #' hov_h5ad_file <- paste0(
 #'     "https://store.cancerdatasci.org/hovernet/TCGA_OV/h5ad/",
@@ -271,7 +273,7 @@ setMethod("import", "HoverNetH5AD", function(con, format, text, ...) {
     checkInstalled("zellkonverter")
     res <-
         zellkonverter::readH5AD(h5ad_path, use_hdf5 = TRUE, reader = "R")
-    scoords <- reducedDim(res, "spatial")
+    scoords <- SingleCellExperiment::reducedDim(res, "spatial")
     colnames(scoords) <- c("x_centroid", "y_centroid")
 
     assay(res, "mean_intensity", withDimnames = FALSE) <-
@@ -280,14 +282,16 @@ setMethod("import", "HoverNetH5AD", function(con, format, text, ...) {
         matrix(colData(res)[["nearest_neighbor_distance"]], nrow = 1L)
 
     res <- SpatialExperiment::SpatialExperiment(
-        assays = SummarizedExperiment::assays(res),
-        colData = SummarizedExperiment::colData(res),
-        rowData = SummarizedExperiment::rowData(res),
+        assays = assays(res),
+        colData = colData(res),
+        rowData = rowData(res),
         spatialCoords = scoords
     )
 
-    if (identical(con@outClass, "SpatialFeatureExperiment"))
+    if (identical(con@outClass, "SpatialFeatureExperiment")) {
+        checkInstalled("SpatialFeatureExperiment")
         res <- SpatialFeatureExperiment::toSpatialFeatureExperiment(res)
+    }
 
     res
 })
