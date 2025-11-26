@@ -81,7 +81,7 @@ ProvGiga <- function(
     else if (is_url)
         tumorType <- .extract_project(filename)
 
-    if (missing(level))
+    if (missing(level)) {
         levels <- vapply(
             level,
             function(x) any(
@@ -92,12 +92,18 @@ ProvGiga <- function(
             ),
             logical(1L)
         )
-    if (!any(levels))
-        warning(
-            "'level' could not be inferred from the file path. ",
-            "Defaulting to 'slide_level'."
-        )
-    level <- match.arg(level)
+        if (!any(levels)) {
+            warning(
+                "'level' could not be inferred from the file path. ",
+                "Defaulting to 'slide_level'."
+            )
+            level <- match.arg(level)
+        } else {
+            level <- level[levels]
+        }
+    } else {
+        level <- match.arg(level)
+    }
 
     if (!is(resource, "TENxFile"))
         resource <- TENxIO::TENxFile(resource)
