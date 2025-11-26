@@ -7,6 +7,9 @@
 \alias{show,HoverNetJSON-method}
 \alias{import,HoverNetJSON,ANY,ANY-method}
 \alias{import,HoverNetH5AD,ANY,ANY-method}
+\alias{HoverNetPNG-class}
+\alias{.HoverNetPNG}
+\alias{import,HoverNetPNG,ANY,ANY-method}
 \title{Import Hovernet JSON files into a Bioconductor class object}
 \usage{
 HoverNet(
@@ -20,6 +23,8 @@ HoverNet(
 \S4method{import}{HoverNetJSON,ANY,ANY}(con, format, text, ...)
 
 \S4method{import}{HoverNetH5AD,ANY,ANY}(con, format, text, ...)
+
+\S4method{import}{HoverNetPNG,ANY,ANY}(con, format, text, ...)
 }
 \arguments{
 \item{resource}{\code{character(1)} the file path or URL to the Hovernet JSON
@@ -58,6 +63,8 @@ providing the string data to import.}
 \item \code{import}: An object of class \code{SpatialExperiment} or
 \code{SpatialFeatureExperiment} containing the cell data and spatial
 coordinates extracted from the Hovernet JSON file
+\item \verb{import,HoverNetPNG-method}: A PNG image as an RGB array as given by
+\code{png::readPNG}.
 }
 }
 \description{
@@ -150,6 +157,13 @@ download.file(hov_h5ad_file, destfile = dest_h5ad)
 HoverNet(dest_h5ad, outClass = "SpatialExperiment") |>
     import()
 \dontshow{\}) # examplesIf}
+## Import HoverNetPNG thumbnail from URL
+hov_png_url <- paste0(
+   "https://store.cancerdatasci.org/hovernet/TCGA_OV/thumb/",
+   "TCGA-VG-A8LO-01A-02-DX2.9B58474C-DAC0-4D45-B13C-0A1EA9E1BC32.png"
+)
+HoverNetPNG(hov_png_url) |>
+  import()
 }
 \author{
 Ilaria B., Marcel R.

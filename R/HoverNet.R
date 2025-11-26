@@ -91,6 +91,8 @@ setClass(
 #' * `import`: An object of class `SpatialExperiment` or
 #'   `SpatialFeatureExperiment` containing the cell data and spatial
 #'   coordinates extracted from the Hovernet JSON file
+#' * `import,HoverNetPNG-method`: A PNG image as an RGB array as given by
+#'   `png::readPNG`.
 #'
 #' @export
 HoverNet <- function(
@@ -107,6 +109,7 @@ HoverNet <- function(
     isJSON <-
         grepl("\\.json(\\.gz)?$", path_extract(resource), ignore.case = TRUE)
     isH5AD <- identical(tools::file_ext(path_extract(resource)), "h5ad")
+    isPNG <- grepl("\\.png$", path_extract(resource), TRUE)
     if (!is(resource, "TENxFile"))
         resource <- TENxIO::TENxFile(resource)
     outClass <- match.arg(outClass)
@@ -118,6 +121,8 @@ HoverNet <- function(
         .HoverNetH5AD(
             resource, outClass = outClass, is_url = is_url
         )
+    else if (isPNG)
+        .HoverNetPNG(resource, is_url = is_url)
     else
         stop(
             "Unsupported file format. Provide a JSON or H5AD file for HoverNet."
@@ -296,56 +301,46 @@ setMethod("import", "HoverNetH5AD", function(con, format, text, ...) {
     res
 })
 
+#' @rdname HoverNet
+#'
+#' @exportClass HoverNetPNG
+.HoverNetPNG <- setClass(
+    Class = "HoverNetPNG",
+    contains = "HoverNet"
+)
 
-#' Import HoverNet thumbnail PNG associated with a JSON file
-#'
-#' @param json_path Path or URL to a HoverNet JSON or JSON.GZ file.
-#'
-#' @return A PNG image as an RGB array (from png::readPNG),
-#'   or NULL if the thumbnail does not exist.
-#'
-#' @export
-importHoverNetThumbnail <- function(json_path) {
-    BiocBaseUtils::checkInstalled("png")
-    BiocBaseUtils::checkInstalled("BiocFileCache")
-    
-    # Normalize .json or .json.gz
-    base <- basename(json_path)
-    base <- sub("\\.gz$", "", base)
-    png_name <- sub("\\.json$", ".png", base)
-    
-    # Build thumbnail path
-    png_url <- sub("/json/", "/thumb/", json_path)
-    png_url <- sub(basename(json_path), png_name, png_url)
-    
-    # Use BiocFileCache if URL
-    is_url <- grepl("^https?://", png_url)
-    if (is_url) {
-        bfc <- BiocFileCache::BiocFileCache(ask = FALSE)
-        
-        # Check if already cached
-        query_result <- BiocFileCache::bfcquery(bfc, png_name, field = "rname")
-        
-        if (BiocFileCache::bfccount(query_result) > 0) {
-            # Resource exists, get its path
-            rid <- query_result$rid[1]
-            png_path <- BiocFileCache::bfcrpath(bfc, rids = rid)
-        } else {
-            # Download the file directly
-            png_path <- BiocFileCache::bfcadd(bfc, png_name, fpath = png_url, 
-                                              download = TRUE)
-        }
+.validHoverNetPNG <- function(object) {
+    if (!object@is_url) {
+        if (!file.exists(path(object)))
+            "The specified PNG file does not exist"
+        else
+            TRUE
     } else {
-        png_path <- png_url
+           TRUE
     }
-    
-    # Check existence
-    if (!file.exists(png_path)) {
-        message("Thumbnail not found: ", png_url)
-        return(NULL)
-    }
-    
-    # Read png file
-    img <- png::readPNG(png_path)
-    return(img)
 }
+
+S4Vectors::setValidity2("HoverNetPNG", .validHoverNetPNG)
+
+#' @rdname HoverNet
+#'
+#' @author Ilaria B., Marcel R.
+#'
+#' @examples
+#' ## Import HoverNetPNG thumbnail from URL
+#' hov_png_url <- paste0(
+#'    "https://store.cancerdatasci.org/hovernet/TCGA_OV/thumb/",
+#'    "TCGA-VG-A8LO-01A-02-DX2.9B58474C-DAC0-4D45-B13C-0A1EA9E1BC32.png"
+#' )
+#' HoverNetPNG(hov_png_url) |>
+#'   import()
+#' @exportMethod import
+setMethod("import", "HoverNetPNG", function(con, format, text, ...) {
+    png_path <- path(con)
+
+    if (con@is_url)
+        png_path <- .cache_url_file(png_path)
+
+    BiocBaseUtils::checkInstalled("png")
+    png::readPNG(png_path)
+})
