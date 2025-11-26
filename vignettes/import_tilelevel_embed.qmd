@@ -21,6 +21,8 @@ library(ggplot2)
 library(dplyr)
 library(sfdep)
 library(spdep)
+library(SpatialExperiment)
+
 ```
 
 
@@ -111,7 +113,7 @@ ggplot(pca_example_slide, aes(tile_x, tile_y, color = PC1)) +
 
 ```
 
-# Spatial Exploration
+# Spatial Patterns
 
 To investigate spatial patterns in the tissue, we use the PCA-reduced embeddings for each tile. Each tile has a physical location (tile_x, tile_y) on the slide, which allows us to explore how similar embedding values cluster across space. We construct a k-nearest neighbor graph to define which tiles are spatially “connected,” and then compute global and local spatial autocorrelation metrics.
 
@@ -153,4 +155,52 @@ ggplot(df_lisa, aes(x = tile_x, y = tile_y, color = Ii)) +
   theme_minimal() +
   ggtitle("Local Moran's I (LISA) for PC1")
 ```
+
+
+
+# Adding HoverNet Nuclei Features
+
+You can import HoVerNet segmentation results as a
+`SpatialExperiment` or `SpatialFeatureExperiment`.
+
+
+```{r importHover}
+hov_file <- paste0(
+    "https://store.cancerdatasci.org/hovernet/TCGA_OV/json/",
+    "TCGA-13-A5FU-01Z-00-DX1.9AD9E4B9-3F87-4879-BC0F-148B12C09036.json.gz"
+)
+
+hn_spe <- HoverNet(hov_file, outClass = "SpatialExperiment") |>
+    import()
+
+```
+
+Each cell is represented with:
+
+- `x`, `y` spatial coordinates
+- cell type and type probabilities
+- optional contours stored in metadata
+
+
+```{r}
+# Extract cell coordinates from HoverNet
+cell_coords <- spatialCoords(hn_spe)
+
+# Extract nuclei metadata (types, intensity, etc.)
+cell_meta <- colData(hn_spe)
+
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
 
