@@ -6,7 +6,7 @@
     grepl("^https?://|^ftp://", url)
 }
 
-.cache_url_file <- function(url, redownload = TRUE) {
+.cache_url_file <- function(url, redownload = FALSE) {
     checkInstalled("BiocFileCache")
     bfc <- BiocFileCache::BiocFileCache()
     bquery <- BiocFileCache::bfcquery(bfc, url, "rname", exact = TRUE)

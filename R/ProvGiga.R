@@ -26,6 +26,7 @@ setClass(
     contains = c("TENxFile", "VIRTUAL"),
     slots = c(
         tumorType = "character",
+        level = "character",
         is_url = "logical"
     )
 )
@@ -66,21 +67,43 @@ setClass(
 #' @export
 ProvGiga <- function(
     resource,
+    level = c("slide_level", "tile_level"),
     tumorType
 ) {
     stopifnot(
         isScalarCharacter(resource) || is(resource, "TENxFile")
     )
     path_extract <- if (is(resource, "TENxFile")) path else I
-    is_url <- .is_url(path_extract(resource))
+    filename <- path_extract(resource)
+    is_url <- .is_url(filename)
     if (!is_url && missing(tumorType))
         stop("'tumorType' must be provided for local files.")
     else if (is_url)
         tumorType <- basename(dirname(path_extract(resource)))
+
+    if (missing(level))
+        levels <- vapply(
+            level,
+            function(x) any(
+                grepl(
+                    pattern = x,
+                    x = strsplit(filename, .Platform$file.sep)[[1L]]
+                )
+            ),
+            logical(1L)
+        )
+    if (!any(levels))
+        warning(
+            "'level' could not be inferred from the file path. ",
+            "Defaulting to 'slide_level'."
+        )
+    level <- match.arg(level)
+
     if (!is(resource, "TENxFile"))
         resource <- TENxIO::TENxFile(resource)
+
     .ProvGigaCSV(
-        resource, is_url = is_url, tumorType = tumorType
+        resource, is_url = is_url, tumorType = tumorType, level = level
     )
 }
 
@@ -97,6 +120,7 @@ ProvGiga <- function(
 setMethod("show", "ProvGiga", function(object) {
     callNextMethod()
     cat("tumorType:", object@tumorType, "\n")
+    cat("level:", object@level, "\n")
 })
 
 #' @rdname ProvGiga
@@ -135,8 +159,11 @@ setMethod("import", "ProvGigaCSV", function(con, format, text, ...) {
     prov_path <- path(con)
     tumorType <- con@tumorType
 
+    args <- list(...)
+    redownload <- args[["redownload"]] %||% FALSE
+
     if (con@is_url)
-        prov_path <- .cache_url_file(prov_path)
+        prov_path <- .cache_url_file(prov_path, redownload)
 
     df <- readr::read_csv(prov_path, show_col_types = FALSE)
     embedding <- df[["last_layer_embed"]][1L] |>
