@@ -17,7 +17,8 @@
         )
 
     BiocFileCache::bfcrpath(
-        bfc, rnames = url, exact = TRUE, download = TRUE, rtype = "web"
+        bfc, rnames = url, exact = TRUE, download = TRUE, rtype = "web",
+        fname = "exact"
     )
 }
 
