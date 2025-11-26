@@ -32,11 +32,11 @@ file.}
 
 \item{contours}{\code{logical(1)} whether to include cell contours in the metadata
 of the resulting \code{SpatialExperiment} or \code{SpatialFeatureExperiment} object.
-Default is \code{FALSE}.}
+Default is \code{FALSE} and used only when importing "JSON" data.}
 
-\item{outClass}{\code{character(1)} specifying the output class when importing the
-data. One of \code{"SpatialExperiment"} (default) or
-\code{"SpatialFeatureExperiment"}.}
+\item{outClass}{\code{character(1)} specifying the output class when importing
+either "JSON" or "H5AD" data into a Bioconductor class object. Must be one
+of \code{"SpatialExperiment"} (default) or \code{"SpatialFeatureExperiment"}.}
 
 \item{object}{An object of class \code{HoverNetJSON}.}
 
@@ -60,9 +60,12 @@ providing the string data to import.}
 \value{
 \itemize{
 \item \code{HoverNetJSON}: An object of class \code{HoverNetJSON}
-\item \code{import}: An object of class \code{SpatialExperiment} or
+\item \verb{import,HoverNetJSON-method}: An object of class \code{SpatialExperiment} or
 \code{SpatialFeatureExperiment} containing the cell data and spatial
 coordinates extracted from the Hovernet JSON file
+\item \verb{import,HoverNetH5AD-method}: An object of class \code{SpatialExperiment} or
+\code{SpatialFeatureExperiment} containing the cell data and spatial
+coordinates extracted from the Hovernet H5AD file
 \item \verb{import,HoverNetPNG-method}: A PNG image as an RGB array as given by
 \code{png::readPNG}.
 }

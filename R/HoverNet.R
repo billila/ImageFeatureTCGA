@@ -71,11 +71,11 @@ setClass(
 #'
 #' @param contours `logical(1)` whether to include cell contours in the metadata
 #'   of the resulting `SpatialExperiment` or `SpatialFeatureExperiment` object.
-#'   Default is `FALSE`.
+#'   Default is `FALSE` and used only when importing "JSON" data.
 #'
-#' @param outClass `character(1)` specifying the output class when importing the
-#'   data. One of `"SpatialExperiment"` (default) or
-#'   `"SpatialFeatureExperiment"`.
+#' @param outClass `character(1)` specifying the output class when importing
+#'   either "JSON" or "H5AD" data into a Bioconductor class object. Must be one
+#'   of `"SpatialExperiment"` (default) or `"SpatialFeatureExperiment"`.
 #'
 #'
 #' @details The `HoverNetJSON` constructor function can import file paths and URLs.
@@ -88,9 +88,12 @@ setClass(
 #' @importFrom BiocBaseUtils isScalarLogical isScalarCharacter
 #'
 #' @returns * `HoverNetJSON`: An object of class `HoverNetJSON`
-#' * `import`: An object of class `SpatialExperiment` or
+#' * `import,HoverNetJSON-method`: An object of class `SpatialExperiment` or
 #'   `SpatialFeatureExperiment` containing the cell data and spatial
 #'   coordinates extracted from the Hovernet JSON file
+#' * `import,HoverNetH5AD-method`: An object of class `SpatialExperiment` or
+#'   `SpatialFeatureExperiment` containing the cell data and spatial
+#'   coordinates extracted from the Hovernet H5AD file
 #' * `import,HoverNetPNG-method`: A PNG image as an RGB array as given by
 #'   `png::readPNG`.
 #'
