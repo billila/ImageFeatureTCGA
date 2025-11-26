@@ -99,3 +99,13 @@
         stop("Cannot extract project from file path: ", file_path)
     project
 }
+
+.extract_tcgabcode <- function(file_path) {
+    stopifnot(
+        isScalarCharacter(file_path)
+    )
+    utils::head(
+        strsplit(basename(file_path), "\\.")[[1L]],
+        1L
+    )
+}
