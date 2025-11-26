@@ -47,6 +47,10 @@ setClass(
 #' @param resource `character(1)` the file path or URL to the ProvGiga CSV file,
 #'   or a `TENxFile` object.
 #'
+#' @param level `character(1)` specifying the level of ProvGiga data to import.
+#'   Must be one of `"slide_level"` or `"tile_level"`. If not provided, the
+#'   level is inferred from the file path or URL.
+#'
 #' @param tumorType `character(1)` specifying the tumor type associated with the
 #'   `ProvGiga` data. Required if `resource` is a local file (file path).
 #'
@@ -157,9 +161,19 @@ setMethod("show", "ProvGiga", function(object) {
 #' ProvGiga(slide_file, tumorType = "TCGA_ACC") |>
 #'     import()
 #'
-#' ## Importing a ProvGiga CSV file from a URL
+#' ## Importing a slide_level ProvGiga CSV file from a URL
 #' ProvGiga(slide_prov_url) |>
 #'     import()
+#'
+#' ## Import tile_level ProvGiga CSV file from a URL
+#' tile_prov_url <- paste0(
+#'    "https://store.cancerdatasci.org/provgigapath/tile_level/",
+#'    "TCGA_COAD/",
+#'    "TCGA-AA-3556-01Z-00-DX1.63a74b91-44e8-4ffd-8737-bcf6992183c3.csv.gz"
+#' )
+#'
+#' ProvGiga(tile_prov_url) |>
+#'    import()
 #' @exportMethod import
 setMethod("import", "ProvGigaCSV", function(con, format, text, ...) {
     prov_path <- path(con)
@@ -171,16 +185,17 @@ setMethod("import", "ProvGigaCSV", function(con, format, text, ...) {
     if (con@is_url)
         prov_path <- .cache_url_file(prov_path, redownload)
 
-    df <- readr::read_csv(prov_path, show_col_types = FALSE)
-    embedding <- df[["last_layer_embed"]][1L] |>
-        gsub("tensor\\(\\[\\[|\\]\\]\\)", "", x = _) |>
-        gsub("\\n", "", x = _) |>
-        read.table(text = _, sep = ",")
+    .import_level <- switch(
+        con@level,
+        slide_level = .import_slide_level,
+        tile_level = .import_tile_level,
+        stop("Unknown level: ", con@level)
+    )
 
-    tibble::tibble(
-        slideName = df[["slide_name"]],
+    .import_level(
+        prov_path = prov_path,
         tumorType = tumorType,
-        embedding
+        filename = basename(prov_path)
     )
 })
 

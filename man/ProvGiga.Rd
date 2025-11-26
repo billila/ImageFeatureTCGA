@@ -8,7 +8,7 @@
 \alias{import,ProvGigaCSV,ANY,ANY-method}
 \title{Import ProvGiga slide-level data into a Bioconductor class object}
 \usage{
-ProvGiga(resource, tumorType)
+ProvGiga(resource, level = c("slide_level", "tile_level"), tumorType)
 
 \S4method{show}{ProvGiga}(object)
 
@@ -17,6 +17,10 @@ ProvGiga(resource, tumorType)
 \arguments{
 \item{resource}{\code{character(1)} the file path or URL to the ProvGiga CSV file,
 or a \code{TENxFile} object.}
+
+\item{level}{\code{character(1)} specifying the level of ProvGiga data to import.
+Must be one of \code{"slide_level"} or \code{"tile_level"}. If not provided, the
+level is inferred from the file path or URL.}
 
 \item{tumorType}{\code{character(1)} specifying the tumor type associated with the
 \code{ProvGiga} data. Required if \code{resource} is a local file (file path).}
@@ -103,9 +107,19 @@ download.file(slide_prov_url, destfile = slide_file)
 ProvGiga(slide_file, tumorType = "TCGA_ACC") |>
     import()
 
-## Importing a ProvGiga CSV file from a URL
+## Importing a slide_level ProvGiga CSV file from a URL
 ProvGiga(slide_prov_url) |>
     import()
+
+## Import tile_level ProvGiga CSV file from a URL
+tile_prov_url <- paste0(
+   "https://store.cancerdatasci.org/provgigapath/tile_level/",
+   "TCGA_COAD/",
+   "TCGA-AA-3556-01Z-00-DX1.63a74b91-44e8-4ffd-8737-bcf6992183c3.csv.gz"
+)
+
+ProvGiga(tile_prov_url) |>
+   import()
 \dontshow{\}) # examplesIf}
 }
 \author{

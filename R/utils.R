@@ -62,6 +62,33 @@
         unlist(results, recursive = FALSE)
     )
 }
+
+.import_slide_level <- function(prov_path, tumorType, ...) {
+    df <- readr::read_csv(prov_path, show_col_types = FALSE)
+    embedding <- df[["last_layer_embed"]][1L] |>
+        gsub("tensor\\(\\[\\[|\\]\\]\\)", "", x = _) |>
+        gsub("\\n", "", x = _) |>
+        read.table(text = _, sep = ",")
+
+    tibble::tibble(
+        slideName = df[["slide_name"]],
+        tumorType = tumorType,
+        embedding
+    )
+}
+
+.import_tile_level <- function(prov_path, tumorType, ...) {
+    args <- list(...)
+    filename <- args[["filename"]]
+
+    df <- readr::read_csv(prov_path, show_col_types = FALSE)
+    tibble::tibble(
+        df,
+        tumorType = tumorType,
+        fileName = filename
+    )
+}
+
 .extract_project <- function(file_path) {
     stopifnot(
         isScalarCharacter(file_path)
