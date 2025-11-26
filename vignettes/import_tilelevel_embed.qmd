@@ -15,8 +15,10 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
-```{r}
+```{r, message=FALSE}
 library(ImageFeatureTCGA)
+library(ggplot2)
+library(dplyr)
 ```
 
 
@@ -56,11 +58,39 @@ OV_tile_dfs <- import_tile_embedding(
   cancer = "TCGA_OV"
 )
 
+```
+
+# Embedding PCA
+```{r run PCA}
+example_slide = OV_tile_dfs$`TCGA-13-A5FU-01Z-00-DX1.9AD9E4B9-3F87-4879-BC0F-148B12C09036.csv.gz`
+# Extract embedding numbers for pca
+embedding_cols <- grep("^[0-9]+$", names(example_slide), value = TRUE)
+# Run PCA on each tile
+pca_res <- prcomp(example_slide[, embedding_cols], scale. = TRUE)
+# create pca df
+pca_example_slide <- bind_cols(
+  example_slide,
+  as_tibble(pca_res$x)[, 1:2] |> rename(PC1 = PC1, PC2 = PC2)
+)
 
 ```
 
 
-```{r}
+```{r visualize PC}
+
+
+ggplot(pca_example_slide, aes(PC1, PC2)) +
+  geom_point(alpha = 0.6, size = 1) +
+  theme_minimal() +
+  labs(title = "Tile-level PCA Ovarian Cancer Embedding: Single Slide")
+
+
+ggplot(pca_example_slide, aes(tile_x, tile_y, color = PC1)) +
+  geom_point(size = 1) +
+  scale_color_viridis_c() +
+  coord_equal() +
+  theme_minimal() +
+  labs(title = "Tissue layout colored by PCA1")
 
 ```
 
