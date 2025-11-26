@@ -188,8 +188,7 @@ setMethod("import", "ProvGigaCSV", function(con, format, text, ...) {
     .import_level <- switch(
         con@level,
         slide_level = .import_slide_level,
-        tile_level = .import_tile_level,
-        stop("Unknown level: ", con@level)
+        tile_level = .import_tile_level
     )
 
     .import_level(
