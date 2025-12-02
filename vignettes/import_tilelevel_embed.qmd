@@ -69,7 +69,7 @@ import_tile_embedding <- function(slide_filenames, cancer = "TCGA_OV") {
 ov_tile_files <- listProvGiga("TCGA_OV", level = "tile_level")$Filename
 
 # select 2 slides as an example
-ov_slides <- ov_tile_files[1:2]
+ov_slides <- ov_tile_files[3]
 
 # 3. Run the final import function
 OV_tile_dfs <- import_tile_embedding(
@@ -77,11 +77,12 @@ OV_tile_dfs <- import_tile_embedding(
   cancer = "TCGA_OV"
 )
 
+
 ```
 
 # Embedding PCA
 ```{r run PCA}
-example_slide = OV_tile_dfs$`TCGA-13-A5FU-01Z-00-DX1.9AD9E4B9-3F87-4879-BC0F-148B12C09036.csv.gz`
+example_slide = OV_tile_dfs$`TCGA-23-1021-01Z-00-DX1.F07C221B-D401-47A5-9519-10DE59CA1E9D.csv.gz`
 # Extract embedding numbers for pca
 embedding_cols <- grep("^[0-9]+$", names(example_slide), value = TRUE)
 # Run PCA on each tile
@@ -167,7 +168,7 @@ You can import HoVerNet segmentation results as a
 ```{r importHover}
 hov_file <- paste0(
     "https://store.cancerdatasci.org/hovernet/TCGA_OV/json/",
-    "TCGA-13-A5FU-01Z-00-DX1.9AD9E4B9-3F87-4879-BC0F-148B12C09036.json.gz"
+    "TCGA-23-1021-01Z-00-DX1.F07C221B-D401-47A5-9519-10DE59CA1E9D.json.gz"
 )
 
 hn_spe <- HoverNet(hov_file, outClass = "SpatialExperiment") |>
@@ -189,18 +190,27 @@ cell_coords <- spatialCoords(hn_spe)
 # Extract nuclei metadata (types, intensity, etc.)
 cell_meta <- colData(hn_spe)
 
+
+range(cell_meta$x); range(cell_meta$y)
+range(pca_example_slide$tile_x); range(pca_example_slide$tile_y)
 ```
 
 
+```{r}
+plot(cell_meta$x, cell_meta$y, pch=16, col="#0000FF20")
+points(pca_example_slide$tile_x, pca_example_slide$tile_y, pch=16, col="#FF000020")
+
+```
 
 
-
-
-
-
-
-
-
+# Scale factor between nuclei coordinates and tile coordinates
+```{r}
+sx <- diff(range(nuclei$x)) / diff(range(pca_example_slide$tile_x))
+sy <- diff(range(nuclei$y)) / diff(range(pca_example_slide$tile_y))
+sx; sy
+scale_factor <- mean(c(sx, sy))
+scale_factor
+```
 
 
 
