@@ -273,39 +273,36 @@ crc_mae <- MultiAssayExperiment(
 # Run MOFA
 
 ```{r run_mofa}
+# Create MOFA object from MultiAssayExperiment
+mofa_obj <- create_mofa_from_MultiAssayExperiment(mae)
 
-run_mofa_pipeline <- function(mae, num_factors = 15, seed = 42, outfile = NULL) {
-  mofa_obj <- create_mofa_from_MultiAssayExperiment(mae)
+# Set data options
+data_opts <- get_default_data_options(mofa_obj)
 
-  # data options (required)
-  data_opts <- get_default_data_options(mofa_obj)
+# Set model options
+model_opts <- get_default_model_options(mofa_obj)
+model_opts$num_factors <- 15  # the default
 
-  # model options
-  model_opts <- get_default_model_options(mofa_obj)
-  model_opts$num_factors <- num_factors
+# Set training options
+train_opts <- get_default_training_options(mofa_obj)
+train_opts$convergence_mode <- "fast" # currently set to fast for vignette rendering speed but slow is recommended
+train_opts$seed <- 42
 
-  # training options
-  train_opts <- get_default_training_options(mofa_obj)
-  train_opts$convergence_mode <- "fast"
-  train_opts$seed <- seed
+# Prepare the model
+mofa_obj <- prepare_mofa(
+  object = mofa_obj,
+  data_options = data_opts,
+  model_options = model_opts,
+  training_options = train_opts
+)
 
-  # prepare model
-  mofa_obj <- prepare_mofa(
-    object = mofa_obj,
-    data_options = data_opts,
-    model_options = model_opts,
-    training_options = train_opts
-  )
+# Train the model
+mofa_obj.trained <- run_mofa(
+  mofa_obj,
+  outfile = NULL,      # or specify a file path
+  use_basilisk = TRUE
+)
 
-  # train model
-  mofa_obj.trained <- run_mofa(
-    mofa_obj,
-    outfile = outfile,
-    use_basilisk = TRUE
-  )
-
-  return(mofa_obj.trained)
-}
 ```
 
 
