@@ -6,17 +6,13 @@
 \alias{listProvGiga}
 \title{List available HoVerNet and Prov-Giga-Path data for TCGA cancers}
 \usage{
-listHoverNet(diseaseCode = "TCGA_OV", format = c("h5ad", "json", "thumb"))
+listHoverNet(format = c("geojson", "h5ad", "json", "thumb"))
 
 listProvGiga(diseaseCode, level = c("slide_level", "tile_level"))
 }
 \arguments{
-\item{diseaseCode}{\code{character(1L)} TCGA disease code (e.g., "TCGA_BRCA",
-"TCGA_LUAD"). For \code{listHoverNet()}, only "TCGA_OV" is supported. Note that
-the codes use an underscore ("_").}
-
-\item{format}{\code{character(1L)} One of "h5ad", "json", or "thumb" specifying
-the desired HoverNet data format. Default is "h5ad".}
+\item{format}{\code{character(1L)} One of "geojson", "h5ad", "json", or "thumb"
+specifying the desired HoverNet data format. Default is "h5ad".}
 
 \item{level}{\code{character(1L)} One of "slide_level" or "tile_level" specifying
 the desired ProvGiga data level. Default is "slide_level".}

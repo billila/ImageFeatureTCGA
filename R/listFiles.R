@@ -10,12 +10,8 @@
 #'   the `TCGAcodesAvailable` dataset for a summary of available data. These
 #'   functions return a `data.frame` with filenames and file sizes.
 #'
-#' @param diseaseCode `character(1L)` TCGA disease code (e.g., "TCGA_BRCA",
-#'   "TCGA_LUAD"). For `listHoverNet()`, only "TCGA_OV" is supported. Note that
-#'   the codes use an underscore ("_").
-#'
-#' @param format `character(1L)` One of "h5ad", "json", or "thumb" specifying
-#'   the desired HoverNet data format. Default is "h5ad".
+#' @param format `character(1L)` One of "geojson", "h5ad", "json", or "thumb"
+#'   specifying the desired HoverNet data format. Default is "h5ad".
 #'
 #' @param level `character(1L)` One of "slide_level" or "tile_level" specifying
 #'   the desired ProvGiga data level. Default is "slide_level".
@@ -25,14 +21,11 @@
 #' listHoverNet(format = "h5ad")
 #' @export
 listHoverNet <- function(
-    diseaseCode = "TCGA_OV",
-    format = c("h5ad", "json", "thumb")
+    format = c("geojson", "h5ad", "json", "thumb")
 ) {
     format <- match.arg(format)
-    if (!identical(diseaseCode, "TCGA_OV"))
-        stop("HoverNet data is only available for diseaseCode: 'TCGA_OV'")
     hovernet_url <-
-        paste(.PROV_BASE_URL, "hovernet", diseaseCode, format, "", sep = "/")
+        paste(.PROV_BASE_URL, "hovernet", format, "", sep = "/")
     table <- .see_more_table(hovernet_url)
     table[!grepl("^\\.\\.", table[["Filename"]]), ]
 }
