@@ -23,6 +23,7 @@ library(dplyr)
 library(sfdep)
 library(spdep)
 library(SpatialExperiment)
+library(data.table)
 ```
 
 
@@ -196,8 +197,9 @@ range(cell_meta$x); range(cell_meta$y)
 range(pca_example_slide$tile_x); range(pca_example_slide$tile_y)
 ```
 
+# Visualizing Hovernet nuclei vs tile coordinates
 
-```{r}
+```{r plotting hovernet vs tiles PCA}
 plot(cell_meta$x, cell_meta$y, pch=16, col="#0000FF20")
 points(pca_example_slide$tile_x, pca_example_slide$tile_y, pch=16, col="#FF000020")
 
@@ -211,6 +213,89 @@ sy <- diff(range(cell_meta$y)) / diff(range(pca_example_slide$tile_y))
 sx; sy
 scale_factor <- mean(c(sx, sy))
 scale_factor
+```
+
+
+```{r}
+
+# Step 1: Compute scale factor
+# The nuclei coordinates (cell_meta$x/y) and tile coordinates (tile_x/y) may be on slightly
+# different scales. We compute a scale factor to align nuclei with tiles.
+sx <- diff(range(cell_meta$x)) / diff(range(pca_example_slide$tile_x))
+sy <- diff(range(cell_meta$y)) / diff(range(pca_example_slide$tile_y))
+scale_factor <- mean(c(sx, sy))
+
+# Step 2: Scale nuclei coordinates
+cell_meta_scaled <- as.data.frame(cell_meta) %>%
+  mutate(
+    x = x / scale_factor,
+    y = y / scale_factor
+  )
+
+# Step 3: Prepare tiles and nuclei data.tables
+tile_size <- 224  # pixels per tile
+
+# Tiles table: add bounding box coordinates for each tile
+dt_tiles <- as.data.table(
+  pca_example_slide %>%
+    mutate(
+      xmin = tile_x,
+      xmax = tile_x + tile_size,
+      ymin = tile_y,
+      ymax = tile_y + tile_size
+    )
+)
+
+# Nuclei table: each nucleus as a point (range start = range end)
+# Use the 'label' column for descriptive cell type names (inflamm, nec, etc)
+dt_nuc <- data.table(
+  x1 = cell_meta_scaled$x,
+  x2 = cell_meta_scaled$x,
+  y1 = cell_meta_scaled$y,
+  y2 = cell_meta_scaled$y,
+  cell_type = cell_meta_scaled$label
+)
+
+# Step 4: Assign nuclei to tiles
+# Use a non-equi join to match nuclei to tiles where the nucleus point falls within the tile bounds
+assigned <- dt_tiles[dt_nuc, 
+                     on = .(xmin <= x1, xmax >= x1, ymin <= y1, ymax >= y1), 
+                     nomatch = 0L]
+
+# Step 5: Compute per-tile dominant cell type
+# Count the number of each cell type per tile
+tile_counts <- assigned[, .N, by = .(tile_id, cell_type)]
+setnames(tile_counts, "cell_type", "cell_type_label")
+# Select the most frequent cell type in each tile
+tile_dominant <- tile_counts[tile_counts[, .I[which.max(N)], by = tile_id]$V1]
+setnames(tile_dominant, "cell_type_label", "dominant_cell_type")
+
+
+# Step 6: Merge hovernet cell type back to tiles
+pca_example_slide_hover <- merge(pca_example_slide, tile_counts, by = "tile_id", all.x = TRUE)
+pca_example_slide_hover <- merge(pca_example_slide_hover, 
+                            tile_dominant[, .(tile_id, dominant_cell_type)], 
+                            by = "tile_id", all.x = TRUE)
+
+```
+
+
+```{r visualizing tile level with hovernet}
+
+# Step 7: Plot per-tile cell types and dominant cell type
+ggplot(pca_example_slide_hover, aes(tile_x, tile_y, color = cell_type_label, size = N)) +
+  geom_point(alpha = 0.7) +
+  coord_equal() +
+  theme_minimal() +
+  labs(title = "All HoverNet cell types per tile")
+
+ggplot(pca_example_slide_hover, aes(tile_x, tile_y, color = dominant_cell_type)) +
+  geom_point(size = 2) +
+  coord_equal() +
+  theme_minimal() +
+  labs(title = "Per-tile dominant HoverNet cell type")
+
+
 ```
 
 
