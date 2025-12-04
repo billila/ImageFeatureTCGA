@@ -16,6 +16,7 @@ vignette: >
 ---
 
 ```{r, message=FALSE}
+library(BiocStyle)
 library(ImageFeatureTCGA)
 library(ggplot2)
 library(dplyr)
