@@ -18,6 +18,7 @@ vignette: >
 # Libraries
 
 ```{r load_packages, message=FALSE}
+devtools::load_all("..")
 library(ImageFeatureTCGA)
 library(curatedTCGAData)
 library(SummarizedExperiment)
@@ -113,6 +114,7 @@ structure_last <- getEmbeddingLayer(
   cancer = "TCGA_COAD", # Must match the cancer type
   layer = "last_layer_embed"
 )
+
 ```
 
 
@@ -145,15 +147,7 @@ for (i in seq_along(coad_mae)) {
   updated_coad_mae[[i]] <- mae
 }
 
-# Remove duplicate patients from assays (keep first occurrence)
-for (i in seq_along(updated_coad_mae)) {
-  mae <- updated_coad_mae[[i]]
-  dup_cols <- duplicated(colnames(mae))
-  if (any(dup_cols)) {
-    updated_coad_mae[[i]] <- mae[, !dup_cols, drop = FALSE]
-    print(paste("Removed", sum(dup_cols), "duplicate patients from", names(updated_coad_mae)[i]))
-  }
-}
+
 ```
 
 
@@ -267,6 +261,20 @@ crc_mae <- MultiAssayExperiment(
   colData = metadata_df
 )
 
+# Check if assay has any replicated measurement
+if (any(anyReplicated(crc_mae))) {
+  reps <- replicated(crc_mae)
+  # Extract all sample names except first for each assay
+  drops <- unlist(
+    lapply(reps, function(x) {
+      if (length(x) > 1) x[-1] else character(0)
+    }),
+    use.names = FALSE
+  )
+  # Drop replicated samples
+  crc_mae <- crc_mae[, !names(crc_mae) %in% drops]
+}
+
 ```
 
 
@@ -274,7 +282,7 @@ crc_mae <- MultiAssayExperiment(
 
 ```{r run_mofa}
 # Create MOFA object from MultiAssayExperiment
-mofa_obj <- create_mofa_from_MultiAssayExperiment(mae)
+mofa_obj <- create_mofa_from_MultiAssayExperiment(crc_mae)
 
 # Set data options
 data_opts <- get_default_data_options(mofa_obj)
@@ -299,25 +307,15 @@ mofa_obj <- prepare_mofa(
 # Train the model
 mofa_obj.trained <- run_mofa(
   mofa_obj,
-  outfile = NULL,      # or specify a file path
+  outfile = "test_model.hdf5",      # or specify a file path
   use_basilisk = TRUE
 )
-
 ```
 
-
-```{r execute mofa}
-run_mofa_pipeline(
-  mae = crc_mae,
-  num_factors = 15,
-  seed = 42,
-  outfile = "mofa_crc_test.hdf5"
-)
-```
 
 # Visualize MOFA results
 ```{r load and visualize the model}
-mofa_object.trained <- load_model("mofa_crc_test.hdf5")
+mofa_object.trained <- load_model("test_model.hdf5")
 
 plot_variance_explained(mofa_object.trained)
 
