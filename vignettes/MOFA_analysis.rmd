@@ -103,10 +103,9 @@ coad_slides_df <- listProvGiga("TCGA_COAD", level = "slide_level")
 # We use the Filename column to get the full path
 slide_files_to_load <- coad_slides_df$Filename[1:5] # Select the first 5 slides
 
-# Extract the unique participant IDs (first 3 parts of the file name)
-participant_ids_to_load <- gsub("\\..*", "", basename(slide_files_to_load)) |>
-  strsplit("-") |>
-  sapply(function(x) paste(x[1:3], collapse = "-"))
+# Extract the unique participant IDs
+participant_ids_to_load <- sapply(slide_files_to_load, .extract_tcgabcode)
+
 
 structure_last <- getEmbeddingLayer(
   fnames = slide_files_to_load,
