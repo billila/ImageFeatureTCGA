@@ -227,7 +227,6 @@ setMethod("import", "HoverNetJSON", function(con, format, text, ...) {
     FUN <- if (identical(outClass, "SpatialExperiment")) {
         SpatialExperiment::SpatialExperiment
     } else if (identical(outClass, "SpatialFeatureExperiment")) {
-        checkInstalled("SpatialFeatureExperiment")
         SpatialFeatureExperiment::SpatialFeatureExperiment
     }
     out <- FUN(
@@ -278,7 +277,6 @@ setMethod("import", "HoverNetH5AD", function(con, format, text, ...) {
     if (con@is_url)
         h5ad_path <- .cache_url_file(h5ad_path)
 
-    checkInstalled("zellkonverter")
     res <-
         zellkonverter::readH5AD(h5ad_path, use_hdf5 = TRUE, reader = "R")
     scoords <- SingleCellExperiment::reducedDim(res, "spatial")
@@ -297,7 +295,6 @@ setMethod("import", "HoverNetH5AD", function(con, format, text, ...) {
     )
 
     if (identical(con@outClass, "SpatialFeatureExperiment")) {
-        checkInstalled("SpatialFeatureExperiment")
         res <- SpatialFeatureExperiment::toSpatialFeatureExperiment(res)
     }
 

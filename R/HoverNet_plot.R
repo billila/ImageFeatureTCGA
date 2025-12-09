@@ -89,9 +89,7 @@ plotHoverNetOverlay <- function(
     title_size = 25,
     flip_image = TRUE
 ) {
-    # Check required packages
-    checkInstalled("ggplot2")
-    checkInstalled("cowplot")
+
     checkInstalled("magick")
     
     # Handle input: if hovernet is a path/URL, import it
@@ -141,8 +139,6 @@ plotHoverNetOverlay <- function(
             )
             names(color_palette) <- type_map$label
         } else {
-            # Fall back to RColorBrewer
-            checkInstalled("RColorBrewer")
             n_types <- length(unique(gg$label))
             color_palette <- RColorBrewer::brewer.pal(
                 min(n_types, 12), "Paired"
@@ -271,7 +267,6 @@ plotHoverNetOverlayGrid <- function(
     ncol = NULL,
     ...
 ) {
-    checkInstalled("cowplot")
     
     n <- length(hovernet_list)
     
