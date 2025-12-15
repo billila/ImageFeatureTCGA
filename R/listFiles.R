@@ -37,32 +37,15 @@ listHoverNet <- function(
 #'
 #' @examplesIf interactive()
 #' ## List available ProvGiga slide-level data for TCGA-BRCA
-#' listProvGiga("TCGA_COAD", level = "slide_level")
+#' listProvGiga(level = "slide_level")
 #' @export
 listProvGiga <- function(
-    diseaseCode,
     level = c("slide_level", "tile_level")
 ) {
-    if (missing(diseaseCode) || !isScalarCharacter(diseaseCode))
-        stop("Provide a TCGA 'diseaseCode'")
-
     level <- match.arg(level)
-    cname <- paste0(level, "_available")
-
-    dataenv <- new.env(parent = emptyenv())
-    utils::data(
-        "TCGAcodesAvailable", envir = dataenv, package = "ImageFeatureTCGA"
-    )
-    TCGAcodesAvailable <- dataenv[["TCGAcodesAvailable"]]
-
-    prov_tumor_types <-
-        TCGAcodesAvailable[TCGAcodesAvailable[[cname]], "diseaseCodes"]
-
-    if (!(diseaseCode %in% prov_tumor_types))
-        stop("No ProvGiga data available for diseaseCode: '", diseaseCode, "'")
 
     tumor_type_url <- paste(
-        .PROV_BASE_URL, "provgigapath", level, diseaseCode, "", sep = "/"
+        .PROV_BASE_URL, "provgigapath", level, "", sep = "/"
     )
     table <- .see_more_table(tumor_type_url)
     table[!grepl("^\\.\\.", table[["Filename"]]), ]

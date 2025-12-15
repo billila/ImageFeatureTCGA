@@ -8,7 +8,7 @@
 \usage{
 listHoverNet(format = c("geojson", "h5ad", "json", "thumb"))
 
-listProvGiga(diseaseCode, level = c("slide_level", "tile_level"))
+listProvGiga(level = c("slide_level", "tile_level"))
 }
 \arguments{
 \item{format}{\code{character(1L)} One of "geojson", "h5ad", "json", or "thumb"
@@ -31,6 +31,6 @@ listHoverNet(format = "h5ad")
 \dontshow{\}) # examplesIf}
 \dontshow{if (interactive()) withAutoprint(\{ # examplesIf}
 ## List available ProvGiga slide-level data for TCGA-BRCA
-listProvGiga("TCGA_COAD", level = "slide_level")
+listProvGiga(level = "slide_level")
 \dontshow{\}) # examplesIf}
 }
