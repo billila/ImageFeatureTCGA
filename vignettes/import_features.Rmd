@@ -69,7 +69,7 @@ TCGAcodesAvailable
 
 
 ```{r listhover}
-listHoverNet(diseaseCode = "TCGA_OV", format = "h5ad")
+listHoverNet(format = "h5ad")
 ```
 
 
