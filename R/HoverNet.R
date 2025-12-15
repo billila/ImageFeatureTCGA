@@ -262,8 +262,8 @@ setMethod("import", "HoverNetJSON", function(con, format, text, ...) {
 #'
 #' @examplesIf interactive()
 #' hov_h5ad_file <- paste0(
-#'     "https://store.cancerdatasci.org/hovernet/TCGA_OV/h5ad/",
-#'     "TCGA-VG-A8LO-01A-01-DX1.B39A4D64-82A1-4A04-8AB6-918F3058B83B.h5ad"
+#'     "https://store.cancerdatasci.org/hovernet/h5ad/",
+#'     "TCGA-VG-A8LO-01A-01-DX1.B39A4D64-82A1-4A04-8AB6-918F3058B83B.h5ad.gz"
 #' )
 #' dest_h5ad <- file.path(tempdir(), basename(hov_h5ad_file))
 #' download.file(hov_h5ad_file, destfile = dest_h5ad)
