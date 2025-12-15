@@ -111,7 +111,7 @@ HoverNet <- function(
     is_url <- .is_url(path_extract(resource))
     isJSON <-
         grepl("\\.json(\\.gz)?$", path_extract(resource), ignore.case = TRUE)
-    isH5AD <- identical(tools::file_ext(path_extract(resource)), "h5ad")
+    isH5AD <- grepl("\\.h5ad(\\.gz)$", path_extract(resource), TRUE)
     isPNG <- grepl("\\.png$", path_extract(resource), TRUE)
     if (!is(resource, "TENxFile"))
         resource <- TENxIO::TENxFile(resource)
