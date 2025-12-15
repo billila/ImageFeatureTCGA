@@ -276,9 +276,8 @@ setMethod("import", "HoverNetH5AD", function(con, format, text, ...) {
 
     if (con@is_url)
         h5ad_path <- .cache_url_file(h5ad_path)
-
-    res <-
-        zellkonverter::readH5AD(h5ad_path, use_hdf5 = TRUE, reader = "R")
+    BiocBaseUtils::checkInstalled("anndataR")
+    res <- anndataR::read_h5ad(path = h5ad_path, as = "SingleCellExperiment")
     scoords <- SingleCellExperiment::reducedDim(res, "spatial")
     colnames(scoords) <- c("x_centroid", "y_centroid")
 

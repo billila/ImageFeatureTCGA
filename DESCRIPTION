@@ -34,6 +34,7 @@ Imports:
     tibble,
     utils
 Suggests:
+    anndataR,
     BiocStyle,
     BiocFileCache,
     curatedTCGAData,
@@ -43,8 +44,7 @@ Suggests:
     rmarkdown,
     sfdep,
     SpatialFeatureExperiment,
-    spdep,
-    zellkonverter
+    spdep
 VignetteBuilder: knitr
 biocViews: Software, Infrastructure, DataImport, DataRepresentation
 BugReports: https://github.com/waldronlab/ImageFeatureTCGA/issues
