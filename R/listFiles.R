@@ -50,3 +50,12 @@ listProvGiga <- function(
     table <- .see_more_table(tumor_type_url)
     table[!grepl("^\\.\\.", table[["Filename"]]), ]
 }
+
+getCatalog <- function(pipeline = c("hovernet", "provgigapath")) {
+    pipeline <- match.arg(pipeline)
+    catalog_url <- paste(
+        .PROV_BASE_URL, pipeline, paste0(pipeline, "_catalog.tsv"),
+        sep = "/"
+    ) |>
+        readr::read_tsv(show_col_types = FALSE)
+}
