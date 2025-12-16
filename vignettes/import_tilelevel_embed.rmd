@@ -44,21 +44,22 @@ We then visualize the spatial layout of the tiles on the tissue slide, coloring 
 # Import tile level Embeddings. 
 
 ```{r}
-
 # list slides
-ov_tile_files <- listProvGiga("TCGA_OV", level = "tile_level")$Filename
+all_tile_files <- listProvGiga(level = "tile_level")[["Filename"]]
+
+## filter with catalog
+getCatalog("provgigapath") |>
+    dplyr::filter("Project.ID" == "TCGA-OV") |>
+    dplyr::pull(Filename)
 
 # select Ovarian Cancer Slide as an example
 tile_prov_url <- paste0(
    "https://store.cancerdatasci.org/provgigapath/tile_level/",
-   "TCGA_OV/",
    "TCGA-23-1021-01Z-00-DX1.F07C221B-D401-47A5-9519-10DE59CA1E9D.csv.gz"
 )
 
-
-example_slide = ProvGiga(tile_prov_url) |>
+example_slide <- ProvGiga(tile_prov_url) |>
    import()
-
 ```
 
 # Embedding PCA
