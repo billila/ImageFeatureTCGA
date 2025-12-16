@@ -19,7 +19,7 @@ ProvGiga(
 
 \S4method{import}{ProvGigaCSV,ANY,ANY}(con, format, text, ...)
 
-embedding(con)
+embedding(con, layer = "last_layer_embed")
 }
 \arguments{
 \item{resource}{\code{character(1)} the file path or URL to the ProvGiga CSV file,
@@ -50,6 +50,9 @@ unnecessary when \code{con} is a derivative of \link[BiocIO:BiocFile-class]{Bioc
 providing the string data to import.}
 
 \item{...}{Parameters to pass to the format-specific method.}
+
+\item{layer}{\code{character(1)} specifying the layer from which to extract the
+embedding. Default is \code{"last_layer_embed"}.}
 }
 \value{
 \itemize{

@@ -85,7 +85,7 @@ setMethod("import", "ProvGigaList", function(con, format, text, ...) {
 #'   embeddings from all `ProvGiga` objects within a `ProvGigaList`.
 #'
 #' @export
-getEmbeddings <- function(con) {
+getEmbeddings <- function(con, layer = "last_layer_embed") {
     if (!is(con, "ProvGigaList"))
         con <- ProvGigaList(con)
 

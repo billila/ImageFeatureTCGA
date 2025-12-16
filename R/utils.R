@@ -63,9 +63,9 @@
     )
 }
 
-.import_slide_level <- function(prov_path, tumorType, ...) {
+.import_slide_level <- function(prov_path, tumorType, layer = "last_layer_embed", ...) {
     df <- readr::read_csv(prov_path, show_col_types = FALSE)
-    embedding <- df[["last_layer_embed"]][1L] |>
+    embedding <- df[[layer]][1L] |>
         gsub("tensor\\(\\[\\[|\\]\\]\\)", "", x = _) |>
         gsub("\\n", "", x = _) |>
         read.table(text = _, sep = ",")

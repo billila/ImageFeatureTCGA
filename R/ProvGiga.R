@@ -198,8 +198,11 @@ setMethod("import", "ProvGigaCSV", function(con, format, text, ...) {
 #'   `ProvGiga` object. It reads the slide-level data and returns the embedding
 #'   as a numeric vector.
 #'
+#' @param layer `character(1)` specifying the layer from which to extract the
+#'   embedding. Default is `"last_layer_embed"`.
+#'
 #' @export
-embedding <- function(con) {
+embedding <- function(con, layer = "last_layer_embed") {
     if (!is(con, "ProvGigaCSV"))
         con <- ProvGiga(con)
 

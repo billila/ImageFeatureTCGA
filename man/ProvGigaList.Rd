@@ -16,7 +16,7 @@ ProvGigaList(...)
 
 \S4method{import}{ProvGigaList,ANY,ANY}(con, format, text, ...)
 
-getEmbeddings(con)
+getEmbeddings(con, layer = "last_layer_embed")
 }
 \arguments{
 \item{...}{Multiple \code{ProvGiga} objects, a vector of file paths or URLs, or a
