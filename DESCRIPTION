@@ -39,6 +39,7 @@ Suggests:
     BiocFileCache,
     curatedTCGAData,
     knitr,
+    MOFA2,
     png,
     RColorBrewer,
     rmarkdown,
