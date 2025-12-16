@@ -200,9 +200,9 @@ setMethod("import", "ProvGigaCSV", function(con, format, text, ...) {
 #'
 #' @export
 embedding <- function(con) {
-    stopifnot(
-        is(con, "ProvGigaCSV")
-    )
+    if (!is(con, "ProvGigaCSV"))
+        con <- ProvGiga(con)
+
     ldf <- .import_slide_level(path(con), tumorType = NA)
     stopifnot(
         identical(nrow(ldf), 1L)

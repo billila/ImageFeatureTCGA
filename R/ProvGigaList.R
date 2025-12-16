@@ -86,9 +86,9 @@ setMethod("import", "ProvGigaList", function(con, format, text, ...) {
 #'
 #' @export
 getEmbeddings <- function(con) {
-    stopifnot(
-        is(con, "ProvGigaList")
-    )
+    if (!is(con, "ProvGigaList"))
+        con <- ProvGigaList(con)
+
     emb_list <- lapply(
         con,
         embedding
