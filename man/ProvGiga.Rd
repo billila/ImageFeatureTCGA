@@ -8,7 +8,11 @@
 \alias{import,ProvGigaCSV,ANY,ANY-method}
 \title{Import ProvGiga slide-level data into a Bioconductor class object}
 \usage{
-ProvGiga(resource, level = c("slide_level", "tile_level"), tumorType)
+ProvGiga(
+  resource,
+  level = c("slide_level", "tile_level"),
+  tumorType = NA_character_
+)
 
 \S4method{show}{ProvGiga}(object)
 
@@ -98,7 +102,6 @@ columns for slide names, tumor type, and embedding values.
 ## Importing a slide_level ProvGiga CSV file from a local path
 slide_prov_url <- paste0(
     "https://store.cancerdatasci.org/provgigapath/slide_level/",
-    "TCGA_ACC/",
     "TCGA-OR-A5JJ-01Z-00-DX1.459B5DFE-47B1-426F-B009-7664C1B6FEEC.csv.gz"
 )
 slide_file <- file.path(tempdir(), basename(slide_prov_url))
@@ -108,17 +111,16 @@ ProvGiga(slide_file, tumorType = "TCGA_ACC") |>
     import()
 
 ## Importing a slide_level ProvGiga CSV file from a URL
-ProvGiga(slide_prov_url) |>
+ProvGiga(slide_prov_url, tumorType = "TCGA_ACC") |>
     import()
 
 ## Import tile_level ProvGiga CSV file from a URL
 tile_prov_url <- paste0(
    "https://store.cancerdatasci.org/provgigapath/tile_level/",
-   "TCGA_COAD/",
    "TCGA-AA-3556-01Z-00-DX1.63a74b91-44e8-4ffd-8737-bcf6992183c3.csv.gz"
 )
 
-ProvGiga(tile_prov_url) |>
+ProvGiga(tile_prov_url, tumorType = "TCGA_COAD") |>
    import()
 \dontshow{\}) # examplesIf}
 }

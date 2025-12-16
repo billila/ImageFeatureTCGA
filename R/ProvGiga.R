@@ -72,7 +72,7 @@ setClass(
 ProvGiga <- function(
     resource,
     level = c("slide_level", "tile_level"),
-    tumorType
+    tumorType = NA_character_
 ) {
     stopifnot(
         isScalarCharacter(resource) || is(resource, "TENxFile")
@@ -80,10 +80,6 @@ ProvGiga <- function(
     path_extract <- if (is(resource, "TENxFile")) path else I
     filename <- path_extract(resource)
     is_url <- .is_url(filename)
-    if (!is_url && missing(tumorType))
-        stop("'tumorType' must be provided for local files.")
-    else if (is_url)
-        tumorType <- .extract_project(filename)
 
     if (missing(level)) {
         levels <- vapply(
@@ -152,7 +148,6 @@ setMethod("show", "ProvGiga", function(object) {
 #' ## Importing a slide_level ProvGiga CSV file from a local path
 #' slide_prov_url <- paste0(
 #'     "https://store.cancerdatasci.org/provgigapath/slide_level/",
-#'     "TCGA_ACC/",
 #'     "TCGA-OR-A5JJ-01Z-00-DX1.459B5DFE-47B1-426F-B009-7664C1B6FEEC.csv.gz"
 #' )
 #' slide_file <- file.path(tempdir(), basename(slide_prov_url))
@@ -162,17 +157,16 @@ setMethod("show", "ProvGiga", function(object) {
 #'     import()
 #'
 #' ## Importing a slide_level ProvGiga CSV file from a URL
-#' ProvGiga(slide_prov_url) |>
+#' ProvGiga(slide_prov_url, tumorType = "TCGA_ACC") |>
 #'     import()
 #'
 #' ## Import tile_level ProvGiga CSV file from a URL
 #' tile_prov_url <- paste0(
 #'    "https://store.cancerdatasci.org/provgigapath/tile_level/",
-#'    "TCGA_COAD/",
 #'    "TCGA-AA-3556-01Z-00-DX1.63a74b91-44e8-4ffd-8737-bcf6992183c3.csv.gz"
 #' )
 #'
-#' ProvGiga(tile_prov_url) |>
+#' ProvGiga(tile_prov_url, tumorType = "TCGA_COAD") |>
 #'    import()
 #' @exportMethod import
 setMethod("import", "ProvGigaCSV", function(con, format, text, ...) {
