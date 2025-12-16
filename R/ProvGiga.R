@@ -192,3 +192,21 @@ setMethod("import", "ProvGigaCSV", function(con, format, text, ...) {
     )
 })
 
+#' @rdname ProvGiga
+#'
+#' @description The `embedding` function extracts the embedding vector from a
+#'   `ProvGiga` object. It reads the slide-level data and returns the embedding
+#'   as a numeric vector.
+#'
+#' @export
+embedding <- function(con) {
+    stopifnot(
+        is(con, "ProvGigaCSV")
+    )
+    ldf <- .import_slide_level(path(con), tumorType = NA)
+    stopifnot(
+        identical(nrow(ldf), 1L)
+    )
+    unlist(ldf[, names(ldf) != c("slideName", "tumorType")]) |>
+        as.numeric()
+}
