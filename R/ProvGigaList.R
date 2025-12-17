@@ -37,6 +37,16 @@
 #'   list of these elements. For `import`, futher arguments are passed to the
 #'   `import` method for the individual `ProvGiga` objects.
 #'
+#' @examples
+#' slides <- listProvGiga(level = "slide_level")
+#' twoslides <- slides[1:2, "Filename"] |> unlist() |> unname()
+#' slide_urls <- paste(
+#'     ImageFeatureTCGA:::.PROV_BASE_URL,
+#'     "provgigapath/slide_level",
+#'     twoslides, sep = "/"
+#' )
+#' ProvGigaList(slide_urls) |>
+#'    import()
 #' @export
 ProvGigaList <- function(...) {
     dots <- S4Vectors::SimpleList(...)

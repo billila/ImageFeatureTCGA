@@ -63,3 +63,14 @@ file paths or URLs of all contained \code{ProvGiga} objects.
 data from all contained \code{ProvGiga} objects and returns a list of \code{tibbles}.
 }
 
+\examples{
+slides <- listProvGiga(level = "slide_level")
+twoslides <- slides[1:2, "Filename"] |> unlist() |> unname()
+slide_urls <- paste(
+    ImageFeatureTCGA:::.PROV_BASE_URL,
+    "provgigapath/slide_level",
+    twoslides, sep = "/"
+)
+ProvGigaList(slide_urls) |>
+   import()
+}
