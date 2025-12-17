@@ -214,6 +214,6 @@ embedding <- function(con, layer = "last_layer_embed") {
     stopifnot(
         identical(nrow(ldf), 1L)
     )
-    unlist(ldf[, names(ldf) != c("slideName", "tumorType")]) |>
+    unlist(ldf[, grepl("^V[0-9]+$", names(ldf))]) |>
         as.numeric()
 }
