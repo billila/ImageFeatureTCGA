@@ -210,7 +210,7 @@ embedding <- function(con, layer = "last_layer_embed") {
     if (!is(con, "ProvGigaCSV"))
         con <- ProvGiga(con)
 
-    ldf <- .import_slide_level(path(con), tumorType = NA)
+    ldf <- import(con)
     stopifnot(
         identical(nrow(ldf), 1L)
     )
