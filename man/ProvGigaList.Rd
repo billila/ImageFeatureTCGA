@@ -20,7 +20,8 @@ getEmbeddings(con, layer = "last_layer_embed")
 }
 \arguments{
 \item{...}{Multiple \code{ProvGiga} objects, a vector of file paths or URLs, or a
-list of these elements.}
+list of these elements. For \code{import}, futher arguments are passed to the
+\code{import} method for the individual \code{ProvGiga} objects.}
 
 \item{object}{A \code{ProvGigaList} object.}
 

@@ -34,7 +34,8 @@
 #'   of file paths or URLs, or a list of these elements.
 #'
 #' @param ... Multiple `ProvGiga` objects, a vector of file paths or URLs, or a
-#'   list of these elements.
+#'   list of these elements. For `import`, futher arguments are passed to the
+#'   `import` method for the individual `ProvGiga` objects.
 #'
 #' @export
 ProvGigaList <- function(...) {
