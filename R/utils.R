@@ -63,7 +63,9 @@
     )
 }
 
-.import_slide_level <- function(prov_path, tumorType, layer = "last_layer_embed", ...) {
+.import_slide_level <- function(
+    prov_path, tumorType, fileName, layer = "last_layer_embed", ...
+) {
     df <- readr::read_csv(prov_path, show_col_types = FALSE)
     embedding <- df[[layer]][1L] |>
         gsub("tensor\\(\\[\\[|\\]\\]\\)", "", x = _) |>
@@ -73,19 +75,17 @@
     tibble::tibble(
         slideName = df[["slide_name"]],
         tumorType = tumorType,
+        fileName = fileName,
         embedding
     )
 }
 
-.import_tile_level <- function(prov_path, tumorType, ...) {
-    args <- list(...)
-    filename <- args[["filename"]]
-
+.import_tile_level <- function(prov_path, tumorType, fileName, ...) {
     df <- readr::read_csv(prov_path, show_col_types = FALSE)
     tibble::tibble(
         df,
         tumorType = tumorType,
-        fileName = filename
+        fileName = fileName
     )
 }
 
