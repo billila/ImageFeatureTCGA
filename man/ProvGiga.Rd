@@ -131,7 +131,7 @@ tile_prov_url <- paste0(
 )
 
 ProvGiga(tile_prov_url, tumorType = "TCGA_COAD") |>
-   import()
+    import()
 \dontshow{\}) # examplesIf}
 }
 \author{

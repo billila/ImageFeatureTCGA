@@ -167,7 +167,7 @@ setMethod("show", "ProvGiga", function(object) {
 #' )
 #'
 #' ProvGiga(tile_prov_url, tumorType = "TCGA_COAD") |>
-#'    import()
+#'     import()
 #' @exportMethod import
 setMethod("import", "ProvGigaCSV", function(con, format, text, ...) {
     prov_path <- path(con)
