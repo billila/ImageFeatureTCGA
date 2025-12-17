@@ -76,7 +76,7 @@ to a ProvGiga CSV file. The \code{tumorType} parameter specifies the tumor
 type associated with the ProvGiga data.
 
 The \code{embedding} function extracts the embedding vector from a
-\code{ProvGiga} object. It reads the slide-level data and returns the embedding
+\code{ProvGiga} object. It reads the slide_level data and returns the embedding
 as a numeric vector.
 }
 \details{

@@ -199,7 +199,7 @@ setMethod("import", "ProvGigaCSV", function(con, format, text, ...) {
 #' @rdname ProvGiga
 #'
 #' @description The `embedding` function extracts the embedding vector from a
-#'   `ProvGiga` object. It reads the slide-level data and returns the embedding
+#'   `ProvGiga` object. It reads the slide_level data and returns the embedding
 #'   as a numeric vector.
 #'
 #' @param layer `character(1)` specifying the layer from which to extract the
