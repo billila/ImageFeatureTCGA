@@ -175,6 +175,7 @@ setMethod("import", "ProvGigaCSV", function(con, format, text, ...) {
 
     args <- list(...)
     redownload <- args[["redownload"]] %||% FALSE
+    args <- args[names(args) != "redownload"]
 
     if (con@is_url)
         prov_path <- .cache_url_file(prov_path, redownload)
@@ -185,10 +186,13 @@ setMethod("import", "ProvGigaCSV", function(con, format, text, ...) {
         tile_level = .import_tile_level
     )
 
-    .import_level(
-        prov_path = prov_path,
-        tumorType = tumorType,
-        filename = basename(prov_path)
+    do.call(
+        .import_level,
+        list(
+            prov_path = prov_path,
+            tumorType = tumorType,
+            fileName = basename(prov_path)
+        ) |> c(args)
     )
 })
 

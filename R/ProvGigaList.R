@@ -74,7 +74,7 @@ setMethod("path", "ProvGigaList", function(object, ...) {
 #'
 #' @exportMethod import
 setMethod("import", "ProvGigaList", function(con, format, text, ...) {
-    result <- lapply(con, import)
+    result <- lapply(con, import, ...)
     names(result) <- basename(path(con))
     result
 })
