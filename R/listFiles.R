@@ -1,4 +1,5 @@
-.PROV_BASE_URL <- "https://store.cancerdatasci.org"
+.BASE_URL <- "https://store.cancerdatasci.org"
+.PROV_BASE_URL <- paste(.BASE_URL, "provgigapath")
 
 #' @name listFiles
 #'
@@ -25,7 +26,7 @@ listHoverNet <- function(
 ) {
     format <- match.arg(format)
     hovernet_url <-
-        paste(.PROV_BASE_URL, "hovernet", format, "", sep = "/")
+        paste(.BASE_URL, "hovernet", format, "", sep = "/")
     table <- .see_more_table(hovernet_url)
     table[!grepl("^\\.\\.", table[["Filename"]]), ]
 }
@@ -45,7 +46,7 @@ listProvGiga <- function(
     level <- match.arg(level)
 
     tumor_type_url <- paste(
-        .PROV_BASE_URL, "provgigapath", level, "", sep = "/"
+        .PROV_BASE_URL, level, "", sep = "/"
     )
     table <- .see_more_table(tumor_type_url)
     table[!grepl("^\\.\\.", table[["Filename"]]), ]
@@ -54,7 +55,7 @@ listProvGiga <- function(
 getCatalog <- function(pipeline = c("hovernet", "provgigapath")) {
     pipeline <- match.arg(pipeline)
     catalog_url <- paste(
-        .PROV_BASE_URL, pipeline, paste0(pipeline, "_catalog.tsv"),
+        .BASE_URL, pipeline, paste0(pipeline, "_catalog.tsv"),
         sep = "/"
     ) |>
         readr::read_tsv(show_col_types = FALSE)
