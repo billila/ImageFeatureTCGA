@@ -34,7 +34,6 @@ listHoverNet <- function(
     table[!grepl("^\\.\\.", table[["Filename"]]), ]
 }
 
-
 #' @rdname listFiles
 #'
 #' @importFrom BiocBaseUtils isScalarCharacter
@@ -67,6 +66,10 @@ listProvGiga <- function(
 #'   specifying which pipeline(s) to include in the catalog. Default includes
 #'   both.
 #'
+#' @param format `character()` One or more of "csv", "thumb", "h5ad", "geojson",
+#'   or "json" specifying which file formats to include in the catalog. Default
+#'   includes all.
+#'
 #' @param redownload `logical(1L)` Whether to redownload the catalog file even
 #'   if it is already cached locally. Default is `FALSE`.
 #'
@@ -75,15 +78,22 @@ listProvGiga <- function(
 #'
 #' @examplesIf interactive()
 #' ## Get the full catalog of available files
-#' getCatalog(pipeline = c("hovernet", "provgigapath"))
+#' getCatalog(pipeline = c("hovernet", "provgigapath"), format = "h5ad")
 #' @export
 getCatalog <-
-    function(pipeline = c("hovernet", "provgigapath"), redownload = FALSE)
+    function(
+        pipeline = c("hovernet", "provgigapath"),
+        format = c("csv", "thumb", "h5ad", "geojson", "json"),
+        redownload = FALSE
+    )
 {
     pipeline <- match.arg(pipeline, several.ok = TRUE)
-    catalog <- .download_catalog(redownload = redownload)
-    readr::read_tsv(catalog, col_types = .CATALOG_COL_TYPES) |>
-        subset(pipeline %in% pipeline)
+    format <- match.arg(format, several.ok = TRUE)
+    catalog <- .download_catalog(redownload = redownload) |>
+        readr::read_tsv(col_types = .CATALOG_COL_TYPES)
+    in_pipe <- catalog[["pipeline"]] %in% pipeline
+    in_format <- catalog[["format"]] %in% format
+    catalog[in_pipe & in_format, ]
 }
 
 #' @importFrom httr2 request req_headers req_perform resp_body_json
