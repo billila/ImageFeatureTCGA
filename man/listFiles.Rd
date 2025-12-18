@@ -4,11 +4,14 @@
 \alias{listFiles}
 \alias{listHoverNet}
 \alias{listProvGiga}
+\alias{getCatalog}
 \title{List available HoVerNet and Prov-Giga-Path data for TCGA cancers}
 \usage{
 listHoverNet(format = c("geojson", "h5ad", "json", "thumb"))
 
 listProvGiga(level = c("slide_level", "tile_level"))
+
+getCatalog(pipeline = c("hovernet", "provgigapath"), redownload = FALSE)
 }
 \arguments{
 \item{format}{\code{character(1L)} One of "geojson", "h5ad", "json", or "thumb"
@@ -16,6 +19,20 @@ specifying the desired HoverNet data format. Default is "h5ad".}
 
 \item{level}{\code{character(1L)} One of "slide_level" or "tile_level" specifying
 the desired ProvGiga data level. Default is "slide_level".}
+
+\item{pipeline}{\code{character()} One or both "hovernet" and/or "provgigapath"
+specifying which pipeline(s) to include in the catalog. Default includes
+both.}
+
+\item{redownload}{\code{logical(1L)} Whether to redownload the catalog file even
+if it is already cached locally. Default is \code{FALSE}.}
+}
+\value{
+\code{listHoverNet},\code{listProvGiga}: A \code{tibble} listing available HoverNet
+or ProvGigaPath files with \code{Filename}, \code{Modified}, and \code{Size} columns.
+
+\code{getCatalog}: A \code{tibble} containing the full catalog of available
+files for the specified pipeline(s).
 }
 \description{
 Functions to list available HoverNet and ProvGiga data for TCGA
@@ -23,6 +40,10 @@ cancers. HoverNet data is only available for TCGA-OV, while ProvGiga data
 is available for multiple TCGA cancer types at slide and tile levels. See
 the \code{TCGAcodesAvailable} dataset for a summary of available data. These
 functions return a \code{data.frame} with filenames and file sizes.
+
+The \code{getCatalog} function retrieves a catalog of all available
+HoVerNet and ProvGigaPath files, including filenames, sizes, pipelines
+used, tumor types, and data levels.
 }
 \examples{
 \dontshow{if (interactive()) withAutoprint(\{ # examplesIf}
@@ -32,5 +53,9 @@ listHoverNet(format = "h5ad")
 \dontshow{if (interactive()) withAutoprint(\{ # examplesIf}
 ## List available ProvGiga slide-level data for TCGA-BRCA
 listProvGiga(level = "slide_level")
+\dontshow{\}) # examplesIf}
+\dontshow{if (interactive()) withAutoprint(\{ # examplesIf}
+## Get the full catalog of available files
+getCatalog(pipeline = c("hovernet", "provgigapath"))
 \dontshow{\}) # examplesIf}
 }
