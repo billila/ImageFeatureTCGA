@@ -68,7 +68,7 @@ slides <- listProvGiga(level = "slide_level")
 twoslides <- slides[1:2, "Filename"] |> unlist() |> unname()
 slide_urls <- paste(
     ImageFeatureTCGA:::.PROV_BASE_URL,
-    "provgigapath/slide_level",
+    "slide_level",
     twoslides, sep = "/"
 )
 ProvGigaList(slide_urls) |>
