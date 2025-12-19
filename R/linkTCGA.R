@@ -1,3 +1,10 @@
+.PROV_ORDER <- c("pipeline", "level", "filename")
+.HOV_ORDER <- c("pipeline", "format", "filename")
+
+.build_urls <- function(catalog) {
+    paste(.BASE_URL, catalog[["fullpath"]], sep = "/")
+}
+
 #' Link MultiAssayExperiment object to TCGA data
 #'
 #' @param MultiAssayExperiment A `MultiAssayExperiment` object containing sample
@@ -15,9 +22,17 @@
 #' linked_mae <- linkTCGA(coad, catalog)
 #' @export
 linkTCGA <- function(
-    MultiAssayExperiment, catalog
+    MultiAssayExperiment, catalog, redownload = FALSE, parallel = TRUE
 ) {
     tcgabcodes <- TCGAutils::TCGAbarcode(catalog[["tcga_barcode"]])
-    catalog[tcgabcodes %in% rownames(colData(MultiAssayExperiment)), ]
-    ## WIP
+    catalog <-
+        catalog[tcgabcodes %in% rownames(colData(MultiAssayExperiment)), ]
+    catalog[["url"]] <- .build_urls(catalog)
+    ProvGigaList(
+        catalog[["url"]],
+        is_url = TRUE,
+        levels = catalog[["level"]],
+        parallel = parallel
+    ) |>
+        import(redownload = redownload, parallel = parallel)
 }
