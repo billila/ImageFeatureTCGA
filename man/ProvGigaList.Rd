@@ -10,13 +10,13 @@
 \alias{getEmbeddings}
 \title{ProvGigaList class for handling lists of ProvGiga objects}
 \usage{
-ProvGigaList(...)
+ProvGigaList(..., is_url = TRUE, levels = "slide_level", parallel = FALSE)
 
 \S4method{path}{ProvGigaList}(object, ...)
 
 \S4method{import}{ProvGigaList,ANY,ANY}(con, format, text, ...)
 
-getEmbeddings(con, layer = "last_layer_embed")
+getEmbeddings(con, parallel = TRUE, layer = "last_layer_embed", ...)
 }
 \arguments{
 \item{...}{Multiple \code{ProvGiga} objects, a vector of file paths or URLs, or a
@@ -72,5 +72,5 @@ slide_urls <- paste(
     twoslides, sep = "/"
 )
 ProvGigaList(slide_urls) |>
-   import()
+   import(redownload = TRUE, parallel = TRUE)
 }

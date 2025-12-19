@@ -12,7 +12,10 @@
 #' @exportClass ProvGigaList
 .ProvGigaList <- setClass(
     "ProvGigaList",
-    contains = "SimpleList"
+    contains = "SimpleList",
+    slots = c(
+        are_URLs = "logical"
+    )
 )
 
 .validProvGigaList <- function(object) {
@@ -46,9 +49,11 @@
 #'     twoslides, sep = "/"
 #' )
 #' ProvGigaList(slide_urls) |>
-#'    import()
+#'    import(redownload = TRUE, parallel = TRUE)
 #' @export
-ProvGigaList <- function(...) {
+ProvGigaList <- function(
+    ..., is_url = TRUE, levels = "slide_level", parallel = FALSE
+) {
     dots <- S4Vectors::SimpleList(...)
     undots <- dots[[1L]]
     if (identical(length(dots), 1L)) {
@@ -56,10 +61,28 @@ ProvGigaList <- function(...) {
             dots <- undots
         }
     }
-    elem_chars <- vapply(dots, is.character, logical(1L))
-    if (all(elem_chars))
-        dots <- lapply(undots, ProvGiga)
-    .ProvGigaList(dots)
+    if (missing(levels))
+        levels <- rep(levels, lengths(dots))
+
+    if (is.character(undots)) {
+        if (parallel) {
+            checkInstalled("BiocParallel")
+            mapplyFUN <- BiocParallel::bpmapply
+        } else {
+            mapplyFUN <- mapply
+        }
+        mapplyFUN(
+            ProvGiga,
+            resource = undots,
+            level = levels,
+            MoreArgs = list(is_url = is_url),
+            SIMPLIFY = FALSE
+        ) |>
+            unname() |>
+            .ProvGigaList(are_URLs = is_url)
+    } else {
+        .ProvGigaList(dots, are_URLs = is_url)
+    }
 }
 
 #' @rdname ProvGigaList
@@ -85,9 +108,30 @@ setMethod("path", "ProvGigaList", function(object, ...) {
 #'
 #' @exportMethod import
 setMethod("import", "ProvGigaList", function(con, format, text, ...) {
-    result <- lapply(con, import, ...)
-    names(result) <- basename(path(con))
-    result
+    prov_path <- path(con)
+
+    args <- list(...)
+    redownload <- args[["redownload"]] %||% FALSE
+    parallel <- args[["parallel"]] %||% FALSE
+    args <- args[names(args) != c("redownload", "parallel")]
+
+    if (con@are_URLs)
+        prov_path <- .cache_url_files(prov_path, redownload, parallel)
+
+    .import_level <- switch(
+        con@level,
+        slide_level = .import_slide_level,
+        tile_level = .import_tile_level
+    )
+
+    do.call(
+        .import_level,
+        list(
+            prov_path = prov_path,
+            tumorType = tumorType,
+            fileName = basename(prov_path)
+        ) |> c(args)
+    )
 })
 
 #' @rdname ProvGigaList
@@ -96,9 +140,9 @@ setMethod("import", "ProvGigaList", function(con, format, text, ...) {
 #'   embeddings from all `ProvGiga` objects within a `ProvGigaList`.
 #'
 #' @export
-getEmbeddings <- function(con, layer = "last_layer_embed") {
+getEmbeddings <- function(con, parallel = TRUE, layer = "last_layer_embed", ...) {
     if (!is(con, "ProvGigaList"))
-        con <- ProvGigaList(con)
+        con <- ProvGigaList(con, ...)
 
     emb_list <- lapply(
         con,
