@@ -1,5 +1,5 @@
 .BASE_URL <- "https://store.cancerdatasci.org"
-.PROV_BASE_URL <- paste(.BASE_URL, "provgigapath")
+.PROV_BASE_URL <- paste0(.BASE_URL, "/provgigapath")
 
 #' @name listFiles
 #'
