@@ -11,11 +11,16 @@ listHoverNet(format = c("geojson", "h5ad", "json", "thumb"))
 
 listProvGiga(level = c("slide_level", "tile_level"))
 
-getCatalog(pipeline = c("hovernet", "provgigapath"), redownload = FALSE)
+getCatalog(
+  pipeline = c("hovernet", "provgigapath"),
+  format = c("csv", "thumb", "h5ad", "geojson", "json"),
+  redownload = FALSE
+)
 }
 \arguments{
-\item{format}{\code{character(1L)} One of "geojson", "h5ad", "json", or "thumb"
-specifying the desired HoverNet data format. Default is "h5ad".}
+\item{format}{\code{character()} One or more of "csv", "thumb", "h5ad", "geojson",
+or "json" specifying which file formats to include in the catalog. Default
+includes all.}
 
 \item{level}{\code{character(1L)} One of "slide_level" or "tile_level" specifying
 the desired ProvGiga data level. Default is "slide_level".}
@@ -56,6 +61,6 @@ listProvGiga(level = "slide_level")
 \dontshow{\}) # examplesIf}
 \dontshow{if (interactive()) withAutoprint(\{ # examplesIf}
 ## Get the full catalog of available files
-getCatalog(pipeline = c("hovernet", "provgigapath"))
+getCatalog(pipeline = c("hovernet", "provgigapath"), format = "h5ad")
 \dontshow{\}) # examplesIf}
 }
