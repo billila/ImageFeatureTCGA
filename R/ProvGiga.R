@@ -51,6 +51,9 @@ setClass(
 #'   Must be one of `"slide_level"` or `"tile_level"`. If not provided, the
 #'   level is inferred from the file path or URL.
 #'
+#' @param is_url `logical(1)` indicating whether the `resource` is a URL. If not
+#'   provided, it is inferred from the `resource` value.
+#'
 #' @param tumorType `character(1)` specifying the tumor type associated with the
 #'   `ProvGiga` data. Required if `resource` is a local file (file path).
 #'
@@ -72,6 +75,7 @@ setClass(
 ProvGiga <- function(
     resource,
     level = c("slide_level", "tile_level"),
+    is_url = TRUE,
     tumorType = NA_character_
 ) {
     stopifnot(
@@ -79,7 +83,8 @@ ProvGiga <- function(
     )
     path_extract <- if (is(resource, "TENxFile")) path else I
     filename <- path_extract(resource)
-    is_url <- .is_url(filename)
+    if (missing(is_url))
+        is_url <- .is_url(filename)
 
     if (missing(level)) {
         levels <- vapply(

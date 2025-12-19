@@ -12,6 +12,7 @@
 ProvGiga(
   resource,
   level = c("slide_level", "tile_level"),
+  is_url = TRUE,
   tumorType = NA_character_
 )
 
@@ -28,6 +29,9 @@ or a \code{TENxFile} object.}
 \item{level}{\code{character(1)} specifying the level of ProvGiga data to import.
 Must be one of \code{"slide_level"} or \code{"tile_level"}. If not provided, the
 level is inferred from the file path or URL.}
+
+\item{is_url}{\code{logical(1)} indicating whether the \code{resource} is a URL. If not
+provided, it is inferred from the \code{resource} value.}
 
 \item{tumorType}{\code{character(1)} specifying the tumor type associated with the
 \code{ProvGiga} data. Required if \code{resource} is a local file (file path).}
