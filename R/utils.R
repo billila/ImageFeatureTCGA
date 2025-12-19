@@ -26,6 +26,65 @@
     )
 }
 
+.bqueries <- function(urls) {
+    checkInstalled("BiocFileCache")
+    bfc <- BiocFileCache::BiocFileCache()
+
+    lapply(
+        urls,
+        BiocFileCache::bfcquery,
+        x = bfc,
+        field = "rname",
+        exact = TRUE
+    ) |>
+        do.call(rbind, args = _)
+}
+
+.cache_url_files <- function(urls, redownload = FALSE, parallel = TRUE) {
+    if (parallel) {
+        checkInstalled("curl")
+        ## TODO: check for BiocFileCache entries for all URLs,
+        ## only download those that are missing or need redownloading
+        ## bqueries <- .bqueries(urls)
+        destfiles <- file.path(tempdir(), basename(urls))
+        output <- curl::multi_download(
+            urls = urls,
+            destfiles = destfiles
+        )
+        successframe <- output[output[["success"]], , drop = FALSE]
+        successurls <- urls[output[["success"]]]
+        successfiles <- successframe[["destfile"]]
+
+        BiocParallel::bpmapply(
+            function(url, file) {
+                BiocFileCache::BiocFileCache() |>
+                    BiocFileCache::bfcadd(
+                        rname = url,
+                        fpath = file,
+                        rtype = "local",
+                        action = "move",
+                        fname = "exact",
+                        exact = TRUE
+                    )
+            },
+            url = successurls,
+            file = successfiles,
+            SIMPLIFY = FALSE
+        )
+    } else {
+        vapply(
+            urls,
+            function(url) {
+                .cache_url_file(
+                    url = url,
+                    redownload = redownload
+                )
+            },
+            character(1L)
+        )
+    }
+}
+
 #' @importFrom rvest html_nodes html_table html_element html_attr read_html
 #' @importFrom httr2 request req_perform resp_body_string
 .see_more_table <- function(u24_url, verbose = TRUE) {
