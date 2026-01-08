@@ -26,52 +26,80 @@
     )
 }
 
-.is_cached <- function(urls) {
-    checkInstalled("BiocFileCache")
-    bfc <- BiocFileCache::BiocFileCache()
-
-    vapply(
+.url_query <- function(bfc, urls) {
+    lapply(
         urls,
         function(url) {
-            BiocFileCache::bfcquery(bfc, url, "rname", exact = TRUE) |>
-                nrow() == 1L
+            BiocFileCache::bfcquery(bfc, url, "rname", exact = TRUE)
+        }
+    )
+}
+
+.is_cached <- function(qframe) {
+    vapply(
+        qframe,
+        function(q) {
+            nrow(q) == 1L
         },
         logical(1L)
+    )
+}
+
+.rpath_cache <- function(qframe) {
+    vapply(
+        qframe,
+        function(q) {
+            q[["rpath"]]
+        },
+        character(1L)
     )
 }
 
 .cache_url_files <- function(urls, redownload = FALSE, parallel = TRUE) {
     if (parallel) {
         checkInstalled("curl")
-        cached <- .is_cached(urls)
-        urls <- urls[!cached | redownload]
-        destfiles <- file.path(
-            BiocFileCache::getBFCOption("CACHE"), basename(urls)
-        )
-        output <- curl::multi_download(
-            urls = urls,
-            destfiles = destfiles
-        )
-        successframe <- output[output[["success"]], , drop = FALSE]
-        successurls <- urls[output[["success"]]]
-        successfiles <- successframe[["destfile"]]
+        checkInstalled("BiocFileCache")
+        bfc <- BiocFileCache::BiocFileCache()
+        queries <- .url_query(bfc, urls)
+        cached <- .is_cached(queries)
+        locals <- vector("list", length(urls))
 
-        BiocParallel::bpmapply(
-            function(url, file) {
-                BiocFileCache::BiocFileCache() |>
-                    BiocFileCache::bfcadd(
-                        rname = url,
-                        fpath = file,
-                        rtype = "local",
-                        action = "asis",
-                        fname = "exact",
-                        exact = TRUE
-                    )
-            },
-            url = successurls,
-            file = successfiles,
-            SIMPLIFY = FALSE
-        )
+        if (!redownload)
+            locals[cached] <- .rpath_cache(queries[cached])
+        urls <- urls[!cached | redownload]
+        if (length(urls)) {
+            destfiles <- file.path(
+                BiocFileCache::getBFCOption("CACHE"), basename(urls)
+            )
+            output <- curl::multi_download(
+                urls = urls,
+                destfiles = destfiles
+            )
+            successframe <- output[output[["success"]], , drop = FALSE]
+            successurls <- urls[output[["success"]]]
+            successfiles <- successframe[["destfile"]]
+
+            locals <- BiocParallel::bpmapply(
+                function(bfc, url, file, cached, bfcid) {
+                    if (!cached)
+                        BiocFileCache::bfcadd(
+                            x = bfc,
+                            rname = url,
+                            fpath = file,
+                            rtype = "local",
+                            action = "asis",
+                            fname = "exact",
+                            exact = TRUE
+                        )
+                },
+                url = successurls,
+                file = successfiles,
+                cached = cached,
+                MoreArgs = list(bfc = bfc),
+                SIMPLIFY = FALSE
+            )
+        }
+        unlist(locals)
     } else {
         vapply(
             urls,
