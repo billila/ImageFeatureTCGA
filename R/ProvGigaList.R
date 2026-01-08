@@ -132,14 +132,14 @@ setMethod("import", "ProvGigaList", function(con, format, text, ...) {
         tile_level = .import_tile_level
     )
 
-    do.call(
+    mapply(
         .import_level,
-        list(
-            prov_path = prov_path,
-            tumorType = tumorType,
-            fileName = basename(prov_path)
-        ) |> c(args)
-    )
+        prov_path = prov_path,
+        tumorType = tumorType,
+        fileName = prov_path,
+        SIMPLIFY = FALSE
+    ) |>
+        dplyr::bind_rows()
 })
 
 #' @rdname ProvGigaList
