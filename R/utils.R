@@ -26,27 +26,28 @@
     )
 }
 
-.bqueries <- function(urls) {
+.is_cached <- function(urls) {
     checkInstalled("BiocFileCache")
     bfc <- BiocFileCache::BiocFileCache()
 
-    lapply(
+    vapply(
         urls,
-        BiocFileCache::bfcquery,
-        x = bfc,
-        field = "rname",
-        exact = TRUE
-    ) |>
-        do.call(rbind, args = _)
+        function(url) {
+            BiocFileCache::bfcquery(bfc, url, "rname", exact = TRUE) |>
+                nrow() == 1L
+        },
+        logical(1L)
+    )
 }
 
 .cache_url_files <- function(urls, redownload = FALSE, parallel = TRUE) {
     if (parallel) {
         checkInstalled("curl")
-        ## TODO: check for BiocFileCache entries for all URLs,
-        ## only download those that are missing or need redownloading
-        ## bqueries <- .bqueries(urls)
-        destfiles <- file.path(tempdir(), basename(urls))
+        cached <- .is_cached(urls)
+        urls <- urls[!cached | redownload]
+        destfiles <- file.path(
+            BiocFileCache::getBFCOption("CACHE"), basename(urls)
+        )
         output <- curl::multi_download(
             urls = urls,
             destfiles = destfiles
@@ -62,7 +63,7 @@
                         rname = url,
                         fpath = file,
                         rtype = "local",
-                        action = "move",
+                        action = "asis",
                         fname = "exact",
                         exact = TRUE
                     )
