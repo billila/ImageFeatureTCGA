@@ -118,8 +118,16 @@ setMethod("import", "ProvGigaList", function(con, format, text, ...) {
     if (con@are_URLs)
         prov_path <- .cache_url_files(prov_path, redownload, parallel)
 
+    level <- vapply(
+        con@listData, function(x) { x@level }, character(1L)
+    ) |> unique()
+
+    tumorType <- vapply(
+        con@listData, function(x) { x@tumorType }, character(1L)
+    )
+
     .import_level <- switch(
-        con@level,
+        level,
         slide_level = .import_slide_level,
         tile_level = .import_tile_level
     )
