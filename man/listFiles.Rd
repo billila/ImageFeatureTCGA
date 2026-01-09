@@ -71,4 +71,10 @@ listProvGiga(level = "slide_level")
 ## Get the full catalog of available files
 getCatalog(pipeline = c("hovernet", "provgigapath"), format = "h5ad")
 \dontshow{\}) # examplesIf}
+\dontshow{if (interactive()) withAutoprint(\{ # examplesIf}
+## Get file URLs from the catalog
+getCatalog(pipeline = "hovernet", format = "h5ad") |>
+    dplyr::slice(1:10) |>
+    getFileURLs()
+\dontshow{\}) # examplesIf}
 }

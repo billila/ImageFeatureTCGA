@@ -117,17 +117,12 @@ getCatalog <-
 #' @returns `getFileURLs`: A `character()` vector of full URLs for the files
 #'   listed in the provided catalog.
 #'
+#' @examplesIf interactive()
+#' ## Get file URLs from the catalog
+#' getCatalog(pipeline = "hovernet", format = "h5ad") |>
+#'     dplyr::slice(1:10) |>
+#'     getFileURLs()
 #' @export
 getFileURLs <- function(catalog) {
-    paste(
-        .BASE_URL,
-        catalog[["pipeline"]],
-        ifelse(
-            catalog[["pipeline"]] == "hovernet",
-            catalog[["format"]],
-            catalog[["level"]]
-        ),
-        catalog[["filename"]],
-        sep = "/"
-    )
+    paste(.BASE_URL, catalog[["fullpath"]], sep = "/")
 }
