@@ -24,7 +24,6 @@ library(sfdep)
 library(spdep)
 library(SpatialExperiment)
 library(data.table)
-
 ```
 
 
@@ -44,7 +43,7 @@ We then visualize the spatial layout of the tiles on the tissue slide, coloring 
 
 # Import tile level Embeddings. 
 
-```{r}
+```{r, results = 'hide'}
 # list slides
 all_tile_files <- listProvGiga( level = "tile_level")[["Filename"]]
 
