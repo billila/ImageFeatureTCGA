@@ -32,12 +32,11 @@ library(MOFA2)
 
 # Get embedding layer
 ```{r}
-getEmbeddingLayer <- function(fnames, participant_ids = NULL, cancer = "TCGA_COAD", layer = NULL) {
+getEmbeddingLayer <- function(fnames, participant_ids = NULL, layer = NULL) {
   
   # Base URL for TCGA image embeddings
   base_url <- paste0(
     "https://store.cancerdatasci.org/provgigapath/slide_level/",
-    cancer,
     "/"
   )
   
@@ -65,14 +64,11 @@ getEmbeddingLayer <- function(fnames, participant_ids = NULL, cancer = "TCGA_COA
       next
     }
     
-    # the embedding features start from the 3rd column (V1).
-    start_col_index <- 3
-    # Extract all columns from start_col_index to the end, and flatten into a vector
-    # We use x[1, ] to get the first (and only) row of data
-    embedding_vector <- unlist(x[1, start_col_index:ncol(x)])
-    
+    # Select only numeric embedding columns
+    num_cols <- which(vapply(x, is.numeric, logical(1)))
+    embedding_vector <- as.numeric(x[1, num_cols])
     # Assign the numeric vector directly
-    embeddings_list[[i]] <- as.numeric(embedding_vector)
+    embeddings_list[[i]] <- embedding_vector
     
   }
   
@@ -93,11 +89,14 @@ getEmbeddingLayer <- function(fnames, participant_ids = NULL, cancer = "TCGA_COA
 ```
 
 
+
+
+
 # Load data
 
 ```{r load embeddings}
 
-coad_slides_df <- listProvGiga("TCGA_COAD", level = "slide_level")
+coad_slides_df <- listProvGiga(level = "slide_level")
 
 # Select a small subset of the *slide-level* files for the vignette
 # We use the Filename column to get the full path
@@ -110,7 +109,6 @@ participant_ids_to_load <- sapply(slide_files_to_load, .extract_tcgabcode)
 structure_last <- getEmbeddingLayer(
   fnames = slide_files_to_load,
   participant_ids = participant_ids_to_load,
-  cancer = "TCGA_COAD", # Must match the cancer type
   layer = "last_layer_embed"
 )
 
