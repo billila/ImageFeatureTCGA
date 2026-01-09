@@ -36,23 +36,11 @@
 }
 
 .is_cached <- function(qframe) {
-    vapply(
-        qframe,
-        function(q) {
-            nrow(q) == 1L
-        },
-        logical(1L)
-    )
+    vapply(qframe, nrow, integer(1L)) == 1L
 }
 
 .rpath_cache <- function(qframe) {
-    vapply(
-        qframe,
-        function(q) {
-            q[["rpath"]]
-        },
-        character(1L)
-    )
+    vapply(qframe, `[[`, character(1L), "rpath")
 }
 
 .cache_url_files <- function(urls, redownload = FALSE, parallel = TRUE) {
