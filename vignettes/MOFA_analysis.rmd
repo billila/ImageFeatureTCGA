@@ -18,7 +18,6 @@ vignette: >
 # Libraries
 
 ```{r load_packages, message=FALSE}
-devtools::load_all("..")
 library(ImageFeatureTCGA)
 library(curatedTCGAData)
 library(SummarizedExperiment)
@@ -99,9 +98,13 @@ getEmbeddingLayer <- function(fnames, participant_ids = NULL, layer = NULL) {
 coad_slides_df <- listProvGiga(level = "slide_level")
 
 # Select a small subset of the *slide-level* files for the vignette
-# We use the Filename column to get the full path
-slide_files_to_load <- coad_slides_df$Filename[1:5] # Select the first 5 slides
+# use getCatalog to filter to COAD project
+coad_slide_files <- getCatalog("provgigapath") |> 
+  dplyr::filter(Project.ID == "TCGA-COAD") |> 
+  dplyr::pull(filename)
 
+# We use the Filename column to get the full path
+slide_files_to_load <- coad_slide_files[1:5] # Select the first 5 slides
 # Extract the unique participant IDs
 participant_ids_to_load <- sapply(slide_files_to_load, .extract_tcgabcode)
 
