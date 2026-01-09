@@ -56,8 +56,9 @@
             locals[cached] <- .rpath_cache(queries[cached])
         urls <- urls[!cached | redownload]
         if (length(urls)) {
+            part_urls <- gsub(paste0(.BASE_URL, "/"), "", urls)
             destfiles <- file.path(
-                BiocFileCache::getBFCOption("CACHE"), basename(urls)
+                BiocFileCache::getBFCOption("CACHE"), part_urls
             )
             output <- curl::multi_download(
                 urls = urls,
