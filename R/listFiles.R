@@ -109,3 +109,25 @@ getCatalog <-
         resp$files[[1L]]$links$self, redownload = redownload
     )
 }
+
+#' @rdname listFiles
+#'
+#' @param catalog A `tibble` as returned by `getCatalog()`.
+#'
+#' @returns `getFileURLs`: A `character()` vector of full URLs for the files
+#'   listed in the provided catalog.
+#'
+#' @export
+getFileURLs <- function(catalog) {
+    paste(
+        .BASE_URL,
+        catalog[["pipeline"]],
+        ifelse(
+            catalog[["pipeline"]] == "hovernet",
+            catalog[["format"]],
+            catalog[["level"]]
+        ),
+        catalog[["filename"]],
+        sep = "/"
+    )
+}

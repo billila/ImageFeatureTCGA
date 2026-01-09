@@ -5,6 +5,7 @@
 \alias{listHoverNet}
 \alias{listProvGiga}
 \alias{getCatalog}
+\alias{getFileURLs}
 \title{List available HoVerNet and Prov-Giga-Path data for TCGA cancers}
 \usage{
 listHoverNet(format = c("geojson", "h5ad", "json", "thumb"))
@@ -16,6 +17,8 @@ getCatalog(
   format = c("csv", "thumb", "h5ad", "geojson", "json"),
   redownload = FALSE
 )
+
+getFileURLs(catalog)
 }
 \arguments{
 \item{format}{\code{character()} One or more of "csv", "thumb", "h5ad", "geojson",
@@ -31,6 +34,8 @@ both.}
 
 \item{redownload}{\code{logical(1L)} Whether to redownload the catalog file even
 if it is already cached locally. Default is \code{FALSE}.}
+
+\item{catalog}{A \code{tibble} as returned by \code{getCatalog()}.}
 }
 \value{
 \code{listHoverNet},\code{listProvGiga}: A \code{tibble} listing available HoverNet
@@ -38,6 +43,9 @@ or ProvGigaPath files with \code{Filename}, \code{Modified}, and \code{Size} col
 
 \code{getCatalog}: A \code{tibble} containing the full catalog of available
 files for the specified pipeline(s).
+
+\code{getFileURLs}: A \code{character()} vector of full URLs for the files
+listed in the provided catalog.
 }
 \description{
 Functions to list available HoverNet and ProvGiga data for TCGA
