@@ -41,13 +41,11 @@
 #'   `import` method for the individual `ProvGiga` objects.
 #'
 #' @examples
-#' slides <- listProvGiga(level = "slide_level")
-#' twoslides <- slides[1:2, "Filename"] |> unlist() |> unname()
-#' slide_urls <- paste(
-#'     ImageFeatureTCGA:::.PROV_BASE_URL,
-#'     "slide_level",
-#'     twoslides, sep = "/"
-#' )
+#' slide_urls <- getCatalog("provgigapath") |>
+#'     dplyr::filter(level == "slide_level", Project.ID == "TCGA-UVM") |>
+#'     dplyr::slice(1:10) |>
+#'     getFileURLs()
+#'
 #' ProvGigaList(slide_urls) |>
 #'    import(redownload = TRUE, parallel = TRUE)
 #' @export
