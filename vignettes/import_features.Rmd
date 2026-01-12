@@ -51,25 +51,27 @@ BiocManager::install("waldronlab/ImageFeatureTCGA")
 
 # Available Data
 
-To see which TCGA tumor types are supported:
-```{r loadTCGAcodes}
-data("TCGAcodesAvailable", package = "ImageFeatureTCGA")
-TCGAcodesAvailable
+Use the following function to download the catalog of available files:
+
+```{r getcatalog}
+getCatalog()
 ```
 
+## Formats
 
-- `slide_level_available`: ProvGigaPath slide-level embeddings
-- `tile_level_available`: ProvGigaPath tile-level embeddings
-- `hover_available`: HoVerNet segmentation data
+- **HoVerNet** data is available in `JSON`, `GeoJSON`, `thumb` and `H5AD`
+  formats.
+- **ProvGigaPath** data is available in CSV format.
 
-# Listing Available Files
 
+Note that the `thumb` format refers to the png thumbnails of the whole-slide
+images.
 
 ### HoVerNet data
 
 
 ```{r listhover}
-listHoverNet(format = "h5ad")
+getCatalog("hovernet")
 ```
 
 
@@ -77,7 +79,7 @@ listHoverNet(format = "h5ad")
 
 
 ```{r listprovgiga}
-listProvGiga("TCGA_OV", level = "slide_level")
+getCatalog("provgigapath")
 ```
 
 
@@ -89,12 +91,18 @@ You can import HoVerNet segmentation results as a
 
 
 ```{r importHover}
-hov_file <- paste0(
-    "https://store.cancerdatasci.org/hovernet/TCGA_OV/json/",
-    "TCGA-VG-A8LO-01A-01-DX1.B39A4D64-82A1-4A04-8AB6-918F3058B83B.json.gz"
-)
-
-HoverNet(hov_file, outClass = "SpatialExperiment") |>
+getCatalog("hovernet") |>
+    dplyr::filter(
+        filename == paste(
+            "TCGA-VG-A8LO-01A-01-DX1",
+            "B39A4D64-82A1-4A04-8AB6-918F3058B83B",
+            "json",
+            "gz",
+            sep = "."
+        )
+    ) |>
+    getFileURLs() |>
+    HoverNet(outClass = "SpatialExperiment") |>
     import()
 ```
 
@@ -112,12 +120,19 @@ ProvGigaPath embeddings summarize tile or slide-level image features.
 
 
 ```{r importProvGiga}
-prov_url <- paste0(
-    "https://store.cancerdatasci.org/provgigapath/slide_level/TCGA_OV/",
-    "TCGA-VG-A8LO-01A-01-DX1.B39A4D64-82A1-4A04-8AB6-918F3058B83B.csv.gz"
-)
-
-ProvGiga(prov_url) |>
+getCatalog("provgigapath") |>
+    dplyr::filter(
+        filename == paste(
+            "TCGA-VG-A8LO-01A-01-DX1",
+            "B39A4D64-82A1-4A04-8AB6-918F3058B83B",
+            "csv",
+            "gz",
+            sep = "."
+        ) &
+        level == "slide_level"
+    ) |>
+    getFileURLs() |>
+    ProvGiga() |>
     import()
 ```
 
