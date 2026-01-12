@@ -27,94 +27,20 @@ library(stringr)
 library(MOFA2)
 ```
 
-
-
-# Get embedding layer
-```{r}
-getEmbeddingLayer <- function(fnames, participant_ids = NULL, layer = NULL) {
-  
-  # Base URL for TCGA image embeddings
-  base_url <- paste0(
-    "https://store.cancerdatasci.org/provgigapath/slide_level/",
-    "/"
-  )
-  
-  urls <- paste0(base_url, fnames)
-  embeddings_list <- vector("list", length(fnames))
-  if (!is.null(participant_ids)) {
-    names(embeddings_list) <- make.unique(participant_ids)
-  } else {
-    names(embeddings_list) <- paste0("sample", seq_along(fnames))
-  }
-  
-  for (i in seq_along(urls)) {
-    url <- urls[i]
-    
-    # Use ProvGiga to import the remote CSV
-    x <- tryCatch({
-      ProvGiga(url) |> import()
-    }, error = function(e) {
-      warning(paste("Failed to import", url, ":", e$message))
-      return(NULL)
-    })
-    
-    if (is.null(x) || nrow(x) == 0) {
-      embeddings_list[[i]] <- NA
-      next
-    }
-    
-    # Select only numeric embedding columns
-    num_cols <- which(vapply(x, is.numeric, logical(1)))
-    embedding_vector <- as.numeric(x[1, num_cols])
-    # Assign the numeric vector directly
-    embeddings_list[[i]] <- embedding_vector
-    
-  }
-  
-  # list-to-matrix conversion logic
-  embeddings_list <- embeddings_list[!sapply(embeddings_list, function(x) all(is.na(x)))]
-  
-  if (length(embeddings_list) == 0) return(NULL)
-  
-  max_len <- max(sapply(embeddings_list, length))
-  tensor_matrix <- t(sapply(embeddings_list, function(x) {
-    if (length(x) < max_len) c(x, rep(NA, max_len - length(x))) else x
-  }))
-  
-  rownames(tensor_matrix) <- names(embeddings_list)
-  
-  return(tensor_matrix)
-}
-```
-
-
-
-
-
 # Load data
 
 ```{r load embeddings}
-
-coad_slides_df <- listProvGiga(level = "slide_level")
-
-# Select a small subset of the *slide-level* files for the vignette
-# use getCatalog to filter to COAD project
 coad_slide_files <- getCatalog("provgigapath") |> 
-  dplyr::filter(Project.ID == "TCGA-COAD") |> 
-  dplyr::pull(filename)
+  filter(Project.ID == "TCGA-COAD") |> 
+  slice(1:5)
 
-# We use the Filename column to get the full path
-slide_files_to_load <- coad_slide_files[1:5] # Select the first 5 slides
-# Extract the unique participant IDs
-participant_ids_to_load <- sapply(slide_files_to_load, .extract_tcgabcode)
+structure_last <- coad_slide_files |>
+  getFileURLs() |>
+  ProvGigaList() |>
+  getEmbeddings()
 
-
-structure_last <- getEmbeddingLayer(
-  fnames = slide_files_to_load,
-  participant_ids = participant_ids_to_load,
-  layer = "last_layer_embed"
-)
-
+rownames(structure_last) <- coad_slide_files[["tcga_barcode"]]
+structure_last
 ```
 
 
@@ -130,7 +56,6 @@ coad_mae_all <- curatedTCGAData(
   version = "2.1.1",
   dry.run = FALSE
 )
-
 
 assays_subset <- c("COAD_RNASeq2GeneNorm-20160128")
 coad_mae <- coad_mae_all[,, which(names(coad_mae_all) %in% assays_subset)]
