@@ -31,15 +31,16 @@
 #'   overlay with an optional title.
 #'
 #' @details The function performs the following steps:
-#'   1. If `hovernet` is a file path, imports it using `HoverNet()` and `import()`
+#'   1. If `hovernet` is a file path, imports it using `HoverNet()`
+#'    and `import()`
 #'   2. Retrieves the associated thumbnail PNG using `importHoverNetThumbnail()`
 #'   3. Creates a segmentation plot colored by cell type
 #'   4. Combines the thumbnail and segmentation side-by-side
 #'   5. Adds an optional title
 #'
-#'   The thumbnail is automatically downloaded and cached if a URL is provided.
-#'   The segmentation uses the `type` column from the `colData` and colors are
-#'   taken from the `type_map` metadata if available.
+#'    The thumbnail is automatically downloaded and cached if a URL is provided.
+#'    The segmentation uses the `type` column from the `colData` and colors are
+#'    taken from the `type_map` metadata if available.
 #'
 #' @importFrom ggplot2 ggplot aes geom_point scale_color_manual guides
 #'   guide_legend theme_void theme coord_fixed element_blank
@@ -103,7 +104,7 @@ plotHoverNetOverlay <- function(
     if (!is(hovernet, "SpatialExperiment") && 
         !is(hovernet, "SpatialFeatureExperiment")) {
         stop("'hovernet' must be a SpatialExperiment, ",
-             "SpatialFeatureExperiment, or a path to a HoverNet JSON file.")
+            "SpatialFeatureExperiment, or a path to a HoverNet JSON file.")
     }
     
     # Get JSON path from metadata if not provided
@@ -111,7 +112,7 @@ plotHoverNetOverlay <- function(
         json_path <- metadata(hovernet)$json_path
         if (is.null(json_path)) {
             stop("'json_path' must be provided when 'hovernet' is a ",
-                 "SpatialExperiment object without metadata$json_path.")
+                    "SpatialExperiment object without metadata$json_path.")
         }
     }
     
@@ -131,7 +132,8 @@ plotHoverNetOverlay <- function(
     if (is.null(color_palette)) {
         # Try to use colors from type_map in metadata
         type_map <- metadata(hovernet)$type_map
-        if (!is.null(type_map) && all(c("label", "R", "G", "B") %in% names(type_map))) {
+        if (!is.null(type_map) && 
+            all(c("label", "R", "G", "B") %in% names(type_map))) {
             color_palette <- rgb(
                 type_map$R / 255,
                 type_map$G / 255,
@@ -239,10 +241,11 @@ plotHoverNetOverlay <- function(
 #' @param json_paths Optional. A vector of paths/URLs to HoverNet JSON files,
 #'   corresponding to `hovernet_list`. Only required if elements of
 #'   `hovernet_list` are `SpatialExperiment` objects. Default is `NULL`.
-#' @param titles Optional. A character vector of titles for each plot. If `NULL`,
-#'   uses the basename of JSON files. Default is `NULL`.
+#' @param titles Optional. A character vector of titles for each plot. 
+#'   If `NULL`, uses the basename of JSON files. Default is `NULL`.
 #' @param nrow Number of rows in the grid. Default is `NULL` (auto-determined).
-#' @param ncol Number of columns in the grid. Default is `NULL` (auto-determined).
+#' @param ncol Number of columns in the grid. 
+#'   Default is `NULL` (auto-determined).
 #' @param ... Additional arguments passed to `plotHoverNetOverlay()`.
 #'
 #' @return A combined `ggplot` object with multiple overlay plots arranged in a

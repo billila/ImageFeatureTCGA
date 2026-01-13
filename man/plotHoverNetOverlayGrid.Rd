@@ -21,12 +21,13 @@ HoverNet JSON files.}
 corresponding to \code{hovernet_list}. Only required if elements of
 \code{hovernet_list} are \code{SpatialExperiment} objects. Default is \code{NULL}.}
 
-\item{titles}{Optional. A character vector of titles for each plot. If \code{NULL},
-uses the basename of JSON files. Default is \code{NULL}.}
+\item{titles}{Optional. A character vector of titles for each plot.
+If \code{NULL}, uses the basename of JSON files. Default is \code{NULL}.}
 
 \item{nrow}{Number of rows in the grid. Default is \code{NULL} (auto-determined).}
 
-\item{ncol}{Number of columns in the grid. Default is \code{NULL} (auto-determined).}
+\item{ncol}{Number of columns in the grid.
+Default is \code{NULL} (auto-determined).}
 
 \item{...}{Additional arguments passed to \code{plotHoverNetOverlay()}.}
 }

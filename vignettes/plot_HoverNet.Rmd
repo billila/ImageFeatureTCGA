@@ -30,17 +30,18 @@ library(ggplot2)
 
 # Introduction
 
-HoverNet is a deep learning model for simultaneous segmentation and classification 
-of nuclei in multi-tissue histology images. This vignette demonstrates how to import 
-HoverNet output files into Bioconductor's spatial data structures and create 
+HoverNet is a deep learning model for simultaneous segmentation and 
+classification of nuclei in multi-tissue histology images. 
+This vignette demonstrates how to import HoverNet output files 
+into Bioconductor's spatial data structures and create 
 visualizations of the segmentation results.
 
 The package supports two main file formats:
 
 - **JSON files** (`.json` or `.json.gz`): Contains cell coordinates, types, and 
-  optional contours
-- **H5AD files** (`.h5ad`): AnnData format with additional computed features like 
-  mean intensity and nearest neighbor distance
+    optional contours
+- **H5AD files** (`.h5ad`): AnnData format with additional
+    computed features like mean intensity and nearest neighbor distance
 
 # Importing HoverNet JSON Data
 
@@ -54,7 +55,8 @@ json_file <- paste0(
     "TCGA-23-1021-01Z-00-DX1.F07C221B-D401-47A5-9519-10DE59CA1E9D.json.gz")
 ```
 
-## Import the JSON file into a `SpatialExperiment` object from URLs (with Automatic Caching)
+## Import the JSON file into a `SpatialExperiment` 
+object from URLs (with Automatic Caching)
 The file will be automatically cached using `BiocFileCache`:
 
 ```{r import-json-url}
@@ -218,7 +220,7 @@ hn_h5ad
 h5ad_coords <- data.frame(spatialCoords(hn_h5ad), colData(hn_h5ad))
 
 p1 <- ggplot(h5ad_coords, aes(x = x_centroid, y = y_centroid, 
-                               color = mean_intensity)) +
+                            color = mean_intensity)) +
     geom_point(size = 0.5) +
     scale_color_viridis_c() +
     coord_fixed() +
@@ -226,7 +228,7 @@ p1 <- ggplot(h5ad_coords, aes(x = x_centroid, y = y_centroid,
     labs(title = "Mean Intensity", color = "Intensity")
 
 p2 <- ggplot(h5ad_coords, aes(x = x_centroid, y = y_centroid, 
-                               color = nearest_neighbor_distance)) +
+                                color = nearest_neighbor_distance)) +
     geom_point(size = 0.5) +
     scale_color_viridis_c(option = "plasma") +
     coord_fixed() +

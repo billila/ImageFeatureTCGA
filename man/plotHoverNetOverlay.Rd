@@ -62,7 +62,8 @@ with a HoverNet JSON file and overlays the segmentation data.
 \details{
 The function performs the following steps:
 \enumerate{
-\item If \code{hovernet} is a file path, imports it using \code{HoverNet()} and \code{import()}
+\item If \code{hovernet} is a file path, imports it using \code{HoverNet()}
+and \code{import()}
 \item Retrieves the associated thumbnail PNG using \code{importHoverNetThumbnail()}
 \item Creates a segmentation plot colored by cell type
 \item Combines the thumbnail and segmentation side-by-side

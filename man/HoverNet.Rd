@@ -79,18 +79,18 @@ cell contours should be included in the metadata when importing the data.
 As well as a slot to specify the output class when importing the data,
 either \code{SpatialExperiment} or \code{SpatialFeatureExperiment}.
 
-The \code{HoverNetJSON} constructor function creates an instance of the
-\code{HoverNetJSON} class. The \code{resource} argument can be either a file path or URL
-to a Hovernet JSON file. The \code{contours} parameter is optional and can be
-used to include cell contours in the metadata. The \code{outClass} parameter
-specifies the output class when importing the data, either
-\code{SpatialExperiment} or \code{SpatialFeatureExperiment}.
+The \code{HoverNetJSON} constructor function creates an instance
+of the \code{HoverNetJSON} class. The \code{resource} argument can be either a
+file path or URL to a Hovernet JSON file. The \code{contours} parameter
+is optional and can be used to include cell contours in the metadata.
+The \code{outClass} parameter specifies the output class when importing
+the data, either \code{SpatialExperiment} or \code{SpatialFeatureExperiment}.
 }
 \details{
-The \code{HoverNetJSON} constructor function can import file paths and URLs.
-Remote files are automatically cached using \code{BiocFileCache} when the
-\code{import} method is called. This allows for efficient handling of large JSON
-files without the need to download them manually.
+The \code{HoverNetJSON} constructor function can import file paths
+and URLs. Remote files are automatically cached using \code{BiocFileCache}
+when the \code{import} method is called. This allows for efficient handling
+of large JSON files without the need to download them manually.
 }
 \section{Slots}{
 
@@ -111,8 +111,8 @@ data. One of \code{"SpatialExperiment"} or \code{"SpatialFeatureExperiment"}.}
 }
 
 \section{\code{import}}{
- The import method for \code{HoverNetJSON} reads the JSON file and
-represents the data as either a \code{SpatialExperiment} or
+ The import method for \code{HoverNetJSON} reads the JSON
+file and represents the data as either a \code{SpatialExperiment} or
 \code{SpatialFeatureExperiment} object. It extracts cell centroid coordinates,
 cell types, and type probabilities, and optionally includes cell contours
 in the metadata. The resulting \code{SpatialExperiment} object contains the cell

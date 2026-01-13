@@ -82,6 +82,7 @@ lw <- nb2listw(nb, style = "W")
 mi <- moran.test(x, lw)
 print(mi)
 ```
+
 ```{r}
 moran.plot(x, lw, labels = FALSE, main = "Moran scatterplot")
 ```
@@ -95,17 +96,18 @@ colData(sfe)$localI_pval <- lisa[, "Pr(z != E(Ii))"]
 
 df_lisa <- data.frame(coords, Ii = lisa[, "Ii"])
 moran <- ggplot(df_lisa, aes(x = x, y = y, color = Ii)) +
-  geom_point(size = 0.5) +
-  scale_color_viridis_c() +
-  theme_minimal() +
-  ggtitle("Local Moran's I")
+    geom_point(size = 0.5) +
+    scale_color_viridis_c() +
+    theme_minimal() +
+    ggtitle("Local Moran's I")
 
 moran
 ```
 
 # Geary’s C (Global Spatial Autocorrelation)
 
-Geary’s C is another measure of global autocorrelation but is more sensitive to local differences.
+Geary’s C is another measure of global autocorrelation but is more sensitive 
+to local differences.
 ```{r}
 gc <- geary.test(x, lw)
 print(gc)
@@ -131,29 +133,33 @@ colData(sfe)$losh_pval <- losh_pvals
 
 print(paste("LOSH medio:", round(mean(losh$hi, na.rm = TRUE), 4)))
 print(paste("LOSH z-score medio:", round(mean(losh$z_hi, na.rm = TRUE), 4)))
-print(paste("LOSH significativi (p<0.05):", sum(losh_pvals < 0.05, na.rm = TRUE)))
+print(paste("LOSH significativi (p<0.05):", 
+            sum(losh_pvals < 0.05, na.rm = TRUE)))
 
 df_losh <- data.frame(
-  x = coords[,1], 
-  y = coords[,2], 
-  losh = losh$hi, 
-  z_score = losh$z_hi,
-  pval = losh_pvals
+    x = coords[,1], 
+    y = coords[,2], 
+    losh = losh$hi, 
+    z_score = losh$z_hi,
+    pval = losh_pvals
 )
 
 p_losh <- ggplot(df_losh, aes(x = x, y = y, color = losh)) +
-  geom_point(size = 0.8, alpha = 0.7) +
-  scale_color_viridis_c() +
-  theme_minimal() +
-  ggtitle("Local Spatial Heteroscedasticity (LOSH)") 
+    geom_point(size = 0.8, alpha = 0.7) +
+    scale_color_viridis_c() +
+    theme_minimal() +
+    ggtitle("Local Spatial Heteroscedasticity (LOSH)") 
 
 p_losh
 
 p_losh_z <- ggplot(df_losh, aes(x = x, y = y, color = z_score)) +
-  geom_point(size = 0.8, alpha = 0.7) +
-  scale_color_gradient2(low = "blue", mid = "white", high = "red", midpoint = 20) +
-  theme_minimal() +
-  ggtitle("LOSH Z-scores") 
+    geom_point(size = 0.8, alpha = 0.7) +
+    scale_color_gradient2(low = "blue", 
+                            mid = "white", 
+                            high = "red", 
+                            midpoint = 20) +
+    theme_minimal() +
+    ggtitle("LOSH Z-scores") 
 
 p_losh_z
 ```

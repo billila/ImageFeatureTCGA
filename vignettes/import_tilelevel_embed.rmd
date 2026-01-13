@@ -29,13 +29,21 @@ library(data.table)
 
 # Introduction
 
-In this vignette, we demonstrate how to work with tile-level embeddings derived from whole-slide images (WSIs) of ovarian cancer. 
-Each tile corresponds to a patch of the tissue, and its embedding is a high-dimensional vector capturing visual and morphological features extracted from provgigapath.
+In this vignette, we demonstrate how to work with tile-level embeddings derived 
+from whole-slide images (WSIs) of ovarian cancer. 
+Each tile corresponds to a patch of the tissue, and its embedding is a
+high-dimensional vector capturing visual and morphological features 
+extracted from provgigapath.
 
 
-We begin by importing the tile-level data directly from the Cancer Data Science ProvGiga repository. 
-Next, we perform principal component analysis (PCA) to reduce the high-dimensional embeddings to two principal components, which facilitates visualization and preliminary exploration of the data. 
-We then visualize the spatial layout of the tiles on the tissue slide, coloring by the principal components to examine patterns in the embedding space. This workflow lays the groundwork for future spatial statistical analyses.
+We begin by importing the tile-level data directly from the Cancer 
+Data Science ProvGiga repository. 
+Next, we perform principal component analysis (PCA) to reduce 
+the high-dimensional embeddings to two principal components, 
+which facilitates visualization and preliminary exploration of the data. 
+We then visualize the spatial layout of the tiles on the tissue slide, 
+coloring by the principal components to examine patterns in the embedding space.
+This workflow lays the groundwork for future spatial statistical analyses.
 
 
 
@@ -98,7 +106,11 @@ ggplot(pca_example_slide, aes(tile_x, tile_y, color = PC1)) +
 
 # Spatial Patterns
 
-To investigate spatial patterns in the tissue, we use the PCA-reduced embeddings for each tile. Each tile has a physical location (tile_x, tile_y) on the slide, which allows us to explore how similar embedding values cluster across space. We construct a k-nearest neighbor graph to define which tiles are spatially “connected,” and then compute global and local spatial autocorrelation metrics.
+To investigate spatial patterns in the tissue, we use the PCA-reduced embeddings
+for each tile. Each tile has a physical location (tile_x, tile_y) on the slide,
+which allows us to explore how similar embedding values cluster across space. 
+We construct a k-nearest neighbor graph to define which tiles are spatially 
+“connected,” and then compute global and local spatial autocorrelation metrics.
 
 
 ```{r}
@@ -110,7 +122,10 @@ lw <- nb2listw(nb, style = "W")
 
 
 
-Next, we calculate global spatial autocorrelation using Moran’s I and Geary’s C, which quantify the overall tendency of similar PC1 values to cluster or disperse on the tissue slide. We also compute Local Moran’s I (LISA) to detect local clusters of similar embedding values.
+Next, we calculate global spatial autocorrelation using Moran’s I and Geary’s C,
+which quantify the overall tendency of similar PC1 values to cluster or disperse
+on the tissue slide. We also compute Local Moran’s I (LISA) to detect local 
+clusters of similar embedding values.
 
 ```{r}
 mi <- moran.test(pca_example_slide$PC1, lw)
@@ -123,7 +138,10 @@ print(mi)
 print(gc)
 ```
 
-We visualize the spatial patterns. The Moran scatterplot shows the relationship between each tile’s PC1 value and the mean of its neighbors, while the LISA plot highlights local clusters (“hotspots”) of high or low PC1 values across the tissue slide.
+We visualize the spatial patterns. The Moran scatterplot shows the relationship 
+between each tile’s PC1 value and the mean of its neighbors, while the LISA plot
+highlights local clusters (“hotspots”) of high or low PC1 values across the 
+tissue slide.
 
 ```{r}
 moran.plot(pca_example_slide$PC1, lw, labels = FALSE,
@@ -179,7 +197,10 @@ cell_meta <- colData(hn_spe)
 
 ```{r plotting hovernet vs tiles PCA}
 plot(cell_meta$x, cell_meta$y, pch=16, col="#0000FF20")
-points(pca_example_slide$tile_x, pca_example_slide$tile_y, pch=16, col="#FF000020")
+points(pca_example_slide$tile_x, 
+       pca_example_slide$tile_y, 
+       pch=16, 
+       col="#FF000020")
 
 ```
 
@@ -197,7 +218,8 @@ scale_factor
 ```{r}
 
 # Step 1: Compute scale factor
-# The nuclei coordinates (cell_meta$x/y) and tile coordinates (tile_x/y) may be on slightly
+# The nuclei coordinates (cell_meta$x/y) and tile coordinates 
+# (tile_x/y) may be on slightly
 # different scales. We compute a scale factor to align nuclei with tiles.
 sx <- diff(range(cell_meta$x)) / diff(range(pca_example_slide$tile_x))
 sy <- diff(range(cell_meta$y)) / diff(range(pca_example_slide$tile_y))
@@ -250,7 +272,10 @@ setnames(tile_dominant, "cell_type_label", "dominant_cell_type")
 
 
 # Step 6: Merge hovernet cell type back to tiles
-pca_example_slide_hover <- merge(pca_example_slide, tile_counts, by = "tile_id", all.x = TRUE)
+pca_example_slide_hover <- merge(pca_example_slide, 
+                                 tile_counts, 
+                                 by = "tile_id",
+                                 all.x = TRUE)
 pca_example_slide_hover <- merge(pca_example_slide_hover, 
                             tile_dominant[, .(tile_id, dominant_cell_type)], 
                             by = "tile_id", all.x = TRUE)
@@ -261,13 +286,17 @@ pca_example_slide_hover <- merge(pca_example_slide_hover,
 ```{r visualizing tile level with hovernet}
 
 # Step 7: Plot per-tile cell types and dominant cell type
-ggplot(pca_example_slide_hover, aes(tile_x, tile_y, color = cell_type_label, size = N)) +
+ggplot(pca_example_slide_hover, aes(tile_x, 
+                                    tile_y, 
+                                    color = cell_type_label, 
+                                    size = N)) +
   geom_point(alpha = 0.7) +
   coord_equal() +
   theme_minimal() +
   labs(title = "All HoverNet cell types per tile")
 
-ggplot(pca_example_slide_hover, aes(tile_x, tile_y, color = dominant_cell_type)) +
+ggplot(pca_example_slide_hover, aes(tile_x, tile_y, 
+                                    color = dominant_cell_type)) +
   geom_point(size = 2) +
   coord_equal() +
   theme_minimal() +

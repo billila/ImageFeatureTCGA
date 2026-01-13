@@ -59,12 +59,12 @@ setClass(
 
 #' @rdname HoverNet
 #'
-#' @description The `HoverNetJSON` constructor function creates an instance of the
-#'   `HoverNetJSON` class. The `resource` argument can be either a file path or URL
-#'   to a Hovernet JSON file. The `contours` parameter is optional and can be
-#'   used to include cell contours in the metadata. The `outClass` parameter
-#'   specifies the output class when importing the data, either
-#'   `SpatialExperiment` or `SpatialFeatureExperiment`.
+#' @description The `HoverNetJSON` constructor function creates an instance 
+#'   of the `HoverNetJSON` class. The `resource` argument can be either a 
+#'   file path or URL to a Hovernet JSON file. The `contours` parameter 
+#'   is optional and can be used to include cell contours in the metadata.
+#'   The `outClass` parameter specifies the output class when importing 
+#'   the data, either `SpatialExperiment` or `SpatialFeatureExperiment`.
 #'
 #' @param resource `character(1)` the file path or URL to the Hovernet JSON
 #'   file.
@@ -78,10 +78,10 @@ setClass(
 #'   of `"SpatialExperiment"` (default) or `"SpatialFeatureExperiment"`.
 #'
 #'
-#' @details The `HoverNetJSON` constructor function can import file paths and URLs.
-#'   Remote files are automatically cached using `BiocFileCache` when the
-#'   `import` method is called. This allows for efficient handling of large JSON
-#'   files without the need to download them manually.
+#' @details The `HoverNetJSON` constructor function can import file paths
+#'   and URLs. Remote files are automatically cached using `BiocFileCache` 
+#'   when the `import` method is called. This allows for efficient handling
+#'   of large JSON files without the need to download them manually.
 #'
 #' @importFrom BiocIO import path
 #' @importFrom TENxIO TENxFile
@@ -153,8 +153,8 @@ setMethod("show", "HoverNetJSON", function(object) {
 
 #' @rdname HoverNet
 #'
-#' @section `import`: The import method for `HoverNetJSON` reads the JSON file and
-#'   represents the data as either a `SpatialExperiment` or
+#' @section `import`: The import method for `HoverNetJSON` reads the JSON 
+#'   file and represents the data as either a `SpatialExperiment` or
 #'   `SpatialFeatureExperiment` object. It extracts cell centroid coordinates,
 #'   cell types, and type probabilities, and optionally includes cell contours
 #'   in the metadata. The resulting `SpatialExperiment` object contains the cell
@@ -198,10 +198,10 @@ setMethod("import", "HoverNetJSON", function(con, format, text, ...) {
         json_path <- .cache_url_file(json_path)
 
     jmespath_query_simple <- "nuc.*.{
-      x: centroid[0],
-      y: centroid[1],
-      type: type,
-      type_prob: type_prob
+        x: centroid[0],
+        y: centroid[1],
+        type: type,
+        type_prob: type_prob
     }"
 
     cell_ids <- j_query(json_path, "nuc | keys(@)", as = "R")
@@ -315,7 +315,7 @@ setMethod("import", "HoverNetH5AD", function(con, format, text, ...) {
         else
             TRUE
     } else {
-           TRUE
+            TRUE
     }
 }
 

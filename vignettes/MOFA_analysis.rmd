@@ -51,10 +51,10 @@ structure_last
 # 1. Load COAD RNASeq assay
 #------------------------------------------
 coad_mae_all <- curatedTCGAData(
-  diseaseCode = "COAD",
-  assays = "RNASeq2GeneNorm",
-  version = "2.1.1",
-  dry.run = FALSE
+    diseaseCode = "COAD",
+    assays = "RNASeq2GeneNorm",
+    version = "2.1.1",
+    dry.run = FALSE
 )
 
 assays_subset <- c("COAD_RNASeq2GeneNorm-20160128")
@@ -64,12 +64,12 @@ coad_mae <- coad_mae_all[,, which(names(coad_mae_all) %in% assays_subset)]
 updated_coad_mae <- vector("list", length(coad_mae))
 names(updated_coad_mae) <- names(coad_mae)
 for (i in seq_along(coad_mae)) {
-  mae <- coad_mae[[i]]
-  patients <- sapply(strsplit(colnames(mae), "-"), function(x) paste(x[1:3], collapse = "-"))
-  # Remove suffixes to match clinical data format
-  patients <- gsub("\\..*", "", patients)
-  colnames(mae) <- make.unique(patients)
-  updated_coad_mae[[i]] <- mae
+    mae <- coad_mae[[i]]
+    patients <- sapply(strsplit(colnames(mae), "-"), function(x) paste(x[1:3], collapse = "-"))
+    # Remove suffixes to match clinical data format
+    patients <- gsub("\\..*", "", patients)
+    colnames(mae) <- make.unique(patients)
+    updated_coad_mae[[i]] <- mae
 }
 
 
@@ -82,15 +82,15 @@ for (i in seq_along(coad_mae)) {
 # 2. Prepare embedding layers
 #------------------------------------------
 prepare_layer <- function(mat) {
-  rownames(mat) <- rownames(mat) %||% paste0("patient_", seq_len(nrow(mat)))
-  mat_unique <- mat[!duplicated(rownames(mat)), , drop = FALSE]
+    rownames(mat) <- rownames(mat) %||% paste0("patient_", seq_len(nrow(mat)))
+    mat_unique <- mat[!duplicated(rownames(mat)), , drop = FALSE]
   
   # Standardize patient IDs and REMOVE SUFFIXES
-  embedding_patients <- sapply(strsplit(rownames(mat_unique), "-"), function(x) paste(x[1:3], collapse = "-"))
-  embedding_patients <- gsub("\\..*", "", embedding_patients)
-  rownames(mat_unique) <- embedding_patients
+    embedding_patients <- sapply(strsplit(rownames(mat_unique), "-"), function(x) paste(x[1:3], collapse = "-"))
+    embedding_patients <- gsub("\\..*", "", embedding_patients)
+    rownames(mat_unique) <- embedding_patients
   
-  mat_unique
+    mat_unique
 }
 
 structure_last_prepped <- prepare_layer(structure_last)
@@ -103,25 +103,25 @@ structure_last_prepped <- prepare_layer(structure_last)
 # 3. Prepare clinical metadata
 #------------------------------------------
 prepare_clinical <- function(mae) {
-  clinical <- colData(mae)
-  completeness <- colSums(!is.na(clinical)) / nrow(clinical) * 100
-  clinical_sub <- clinical[, which(completeness > 95), drop = FALSE] %>%
-    as.data.frame() %>%
-    select(-matches("aliquot"), -matches("portion"))
+    clinical <- colData(mae)
+    completeness <- colSums(!is.na(clinical)) / nrow(clinical) * 100
+    clinical_sub <- clinical[, which(completeness > 95), drop = FALSE] %>%
+        as.data.frame() %>%
+        select(-matches("aliquot"), -matches("portion"))
   
-  # Set row names to patientID column
-  if ("patientID" %in% colnames(clinical_sub)) {
-    rownames(clinical_sub) <- clinical_sub$patientID
-  }
+    # Set row names to patientID column
+    if ("patientID" %in% colnames(clinical_sub)) {
+        rownames(clinical_sub) <- clinical_sub$patientID
+    }
   
   # Factorize categorical variables with 2-10 levels
-  numLv <- apply(clinical_sub, 2, function(x) length(unique(x)))
-  slideAttrNames <- names(numLv[numLv >= 2 & numLv <= 10])
-  for (slideAttrName in slideAttrNames) {
-    clinical_sub[[slideAttrName]] <- as.factor(clinical_sub[[slideAttrName]])
-  }
+    numLv <- apply(clinical_sub, 2, function(x) length(unique(x)))
+    slideAttrNames <- names(numLv[numLv >= 2 & numLv <= 10])
+    for (slideAttrName in slideAttrNames) {
+        clinical_sub[[slideAttrName]] <- as.factor(clinical_sub[[slideAttrName]])
+    }
   
-  clinical_sub
+    clinical_sub
 }
 
 metadata_df <- prepare_clinical(coad_mae)
@@ -135,30 +135,30 @@ metadata_df <- prepare_clinical(coad_mae)
 # 4. Create embedding SE
 #------------------------------------------
 make_embedding_se <- function(embedding_matrix, metadata_df) {
-  # Find patients present in both embedding matrix and clinical metadata
-  patients_with_image <- intersect(rownames(embedding_matrix), rownames(metadata_df))
+    # Find patients present in both embedding matrix and clinical metadata
+    patients_with_image <- intersect(rownames(embedding_matrix), rownames(metadata_df))
   
-  print(paste("Number of common patients:", length(patients_with_image)))
+    print(paste("Number of common patients:", length(patients_with_image)))
   
-  if (length(patients_with_image) == 0) {
-    stop("No common patients found between embedding matrix and clinical metadata")
-  }
+    if (length(patients_with_image) == 0) {
+        stop("No common patients found between embedding matrix and clinical metadata")
+    }
   
-  # Subset both to common patients
-  embedding_se_coldata <- metadata_df[patients_with_image, , drop = FALSE]
-  embedding_se_subset <- embedding_matrix[patients_with_image, , drop = FALSE]
+    # Subset both to common patients
+    embedding_se_coldata <- metadata_df[patients_with_image, , drop = FALSE]
+    embedding_se_subset <- embedding_matrix[patients_with_image, , drop = FALSE]
   
-  # Create assay matrix with proper column names
-  assay_matrix <- t(embedding_se_subset)
-  colnames(assay_matrix) <- patients_with_image
+    # Create assay matrix with proper column names
+    assay_matrix <- t(embedding_se_subset)
+    colnames(assay_matrix) <- patients_with_image
   
-  # Create SummarizedExperiment
-  se <- SummarizedExperiment(
-    assays = list(embedding = assay_matrix),
-    colData = embedding_se_coldata
-  )
-  rownames(se) <- paste0("dim_", seq_len(nrow(se)))
-  se
+    # Create SummarizedExperiment
+    se <- SummarizedExperiment(
+        assays = list(embedding = assay_matrix),
+        colData = embedding_se_coldata
+    )
+    rownames(se) <- paste0("dim_", seq_len(nrow(se)))
+    se
 }
 
 embedding_se_last <- make_embedding_se(structure_last_prepped, metadata_df)
@@ -179,25 +179,25 @@ common_final <- intersect(common_final, rownames(metadata_df))
 
 # create MAE
 crc_mae <- MultiAssayExperiment(
-  experiments = list(
-    RNASeq = updated_coad_mae[["COAD_RNASeq2GeneNorm-20160128"]],
-    Embedding_last = embedding_se_last
-  ),
-  colData = metadata_df
+    experiments = list(
+        RNASeq = updated_coad_mae[["COAD_RNASeq2GeneNorm-20160128"]],
+        Embedding_last = embedding_se_last
+    ),
+    colData = metadata_df
 )
 
 # Check if assay has any replicated measurement
 if (any(anyReplicated(crc_mae))) {
-  reps <- replicated(crc_mae)
-  # Extract all sample names except first for each assay
-  drops <- unlist(
+    reps <- replicated(crc_mae)
+# Extract all sample names except first for each assay
+    drops <- unlist(
     lapply(reps, function(x) {
-      if (length(x) > 1) x[-1] else character(0)
+        if (length(x) > 1) x[-1] else character(0)
     }),
-    use.names = FALSE
-  )
-  # Drop replicated samples
-  crc_mae <- crc_mae[, !names(crc_mae) %in% drops]
+        use.names = FALSE
+    )
+# Drop replicated samples
+    crc_mae <- crc_mae[, !names(crc_mae) %in% drops]
 }
 
 ```
@@ -223,17 +223,17 @@ train_opts$seed <- 42
 
 # Prepare the model
 mofa_obj <- prepare_mofa(
-  object = mofa_obj,
-  data_options = data_opts,
-  model_options = model_opts,
-  training_options = train_opts
+    object = mofa_obj,
+    data_options = data_opts,
+    model_options = model_opts,
+    training_options = train_opts
 )
 
 # Train the model
 mofa_obj.trained <- run_mofa(
-  mofa_obj,
-  outfile = "test_model.hdf5",      # or specify a file path
-  use_basilisk = TRUE
+    mofa_obj,
+    outfile = "test_model.hdf5",      # or specify a file path
+    use_basilisk = TRUE
 )
 ```
 
