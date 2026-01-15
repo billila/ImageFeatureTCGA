@@ -15,12 +15,12 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
-```{r,include=FALSE}
+```{r setting,include=FALSE}
 knitr::opts_chunk$set(cache = TRUE)
 ```
 
 
-```{r message=FALSE, warning=FALSE}
+```{r import libraries, message=FALSE, warning=FALSE}
 library(ImageFeatureTCGA)
 library(sfdep)
 library(spdep)
@@ -47,7 +47,7 @@ HoVerNet segmentation results.
 
 
 # Importing HoVerNet Data as a SpatialFeatureExperiment
-```{r echo=TRUE}
+```{r import hov as sfe, echo=TRUE}
 hov_file <- paste0(
     "https://store.cancerdatasci.org/hovernet/h5ad/",
     "TCGA-VG-A8LO-01A-01-DX1.B39A4D64-82A1-4A04-8AB6-918F3058B83B.h5ad.gz"
@@ -62,7 +62,7 @@ sfe
 
 We extract coordinates and select two example features: mean intensity
 and nearest-neighbor distance.
-```{r}
+```{r coords}
 coords <- spatialCoords(sfe)
 x <- colData(sfe)$mean_intensity
 y <- colData(sfe)$nearest_neighbor_distance  
@@ -76,20 +76,20 @@ Moran's I quantifies the degree to which similar values cluster spatially.
 A positive Moran's I indicates spatial clustering, while negative values 
 indicate spatial dispersion.
 
-```{r}
+```{r moran}
 nb <- knn2nb(knearneigh(coords, k = 6))
 lw <- nb2listw(nb, style = "W")
 mi <- moran.test(x, lw)
 print(mi)
 ```
 
-```{r}
+```{r moran plot}
 moran.plot(x, lw, labels = FALSE, main = "Moran scatterplot")
 ```
 
 # Local Moran (LISA)
 
-```{r}
+```{r LISA}
 lisa <- localmoran(x, lw)
 colData(sfe)$localI <- lisa[, "Ii"]
 colData(sfe)$localI_pval <- lisa[, "Pr(z != E(Ii))"]
@@ -108,7 +108,7 @@ moran
 
 Geary’s C is another measure of global autocorrelation but is more sensitive 
 to local differences.
-```{r}
+```{r Geary}
 gc <- geary.test(x, lw)
 print(gc)
 
@@ -122,7 +122,7 @@ print(gc_mc)
 LOSH characterizes local variance in the spatial distribution of a variable.
 
 
-```{r}
+```{r LOSH}
 losh <- losh(x, nb, lw$weights)
 colData(sfe)$losh <- losh$hi           # valore LOSH
 colData(sfe)$losh_z <- losh$z_hi       # z-score

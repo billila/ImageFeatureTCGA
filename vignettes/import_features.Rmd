@@ -60,7 +60,7 @@ getCatalog()
 ## Formats
 
 - **HoVerNet** data is available in `JSON`, `GeoJSON`, `thumb` and `H5AD`
-  formats.
+    formats.
 - **ProvGigaPath** data is available in CSV format.
 
 
