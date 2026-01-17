@@ -68,6 +68,7 @@ tile_prov_url <- paste0(
 
 example_slide <- ProvGiga(tile_prov_url) |>
     import()
+
 ```
 
 # Embedding PCA
@@ -207,25 +208,42 @@ points(pca_example_slide$tile_x,
 
 # Scale factor between nuclei coordinates and tile coordinates
 ```{r compute scaling factor}
-sx <- diff(range(cell_meta$x)) / diff(range(pca_example_slide$tile_x))
-sy <- diff(range(cell_meta$y)) / diff(range(pca_example_slide$tile_y))
-sx; sy
-scale_factor <- mean(c(sx, sy))
-scale_factor
-
 # Step 1: Compute scale factor
 # The nuclei coordinates (cell_meta$x/y) and tile coordinates 
 # (tile_x/y) may be on slightly
 # different scales. We compute a scale factor to align nuclei with tiles.
-sx <- diff(range(cell_meta$x)) / diff(range(pca_example_slide$tile_x))
-sy <- diff(range(cell_meta$y)) / diff(range(pca_example_slide$tile_y))
-scale_factor <- mean(c(sx, sy))
+compute_scale_factor <- function(cell_meta, tile_df,
+                                 cell_x = "x", cell_y = "y",
+                                 tile_x = "tile_x", tile_y = "tile_y") {
+  # adding a check to ensure correct structure
+  stopifnot(
+    all(c(cell_x, cell_y) %in% names(cell_meta)),
+    all(c(tile_x, tile_y) %in% names(tile_df))
+  )
+  # calculate X and Y scale factors
+  sx <- diff(range(cell_meta[[cell_x]], na.rm = TRUE)) /
+        diff(range(tile_df[[tile_x]], na.rm = TRUE))
+  
+  sy <- diff(range(cell_meta[[cell_y]], na.rm = TRUE)) /
+        diff(range(tile_df[[tile_y]], na.rm = TRUE))
+  # mean scale factor
+  scale_factor <- mean(c(sx, sy), na.rm = TRUE)
+  
+  list(
+    scale_factor = scale_factor,
+    sx = sx,
+    sy = sy
+  )
+}
+
+sf <- compute_scale_factor(cell_meta, pca_example_slide)
+sf$scale_factor
 
 # Step 2: Scale nuclei coordinates
 cell_meta_scaled <- as.data.frame(cell_meta) %>%
     mutate(
-        x = x / scale_factor,
-        y = y / scale_factor
+        x = x / sf$scale_factor,
+        y = y / sf$scale_factor
     )
 
 # Step 3: Prepare tiles and nuclei data.tables
@@ -300,7 +318,6 @@ ggplot(pca_example_slide_hover, aes(tile_x, tile_y,
 
 
 ```
-
 
 
 # Session Info
