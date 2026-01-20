@@ -48,7 +48,8 @@ Suggests:
     rmarkdown,
     sfdep,
     SpatialFeatureExperiment,
-    spdep
+    spdep,
+    tinytest
 VignetteBuilder: knitr
 biocViews: Software, Infrastructure, DataImport, DataRepresentation
 BugReports: https://github.com/waldronlab/ImageFeatureTCGA/issues
