@@ -55,7 +55,7 @@ CONCH <- function(file_path, patch_size = 224) {
         assays = list(conch = assay_data),
         spatialCoords = spatial_coords,
         # Optional: Set unit if known, usually 'px' for raw slides
-        unit = "px" 
+        unit = "full_res_image_pixel"
     )
     
     # 5. Add Metadata (Optional but recommended for reproducibility)
