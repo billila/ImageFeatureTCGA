@@ -168,8 +168,8 @@ You can import HoVerNet segmentation results as a
 
 ```{r importHover}
 hov_file <- paste0(
-    "https://store.cancerdatasci.org/hovernet/json/",
-    "TCGA-23-1021-01Z-00-DX1.F07C221B-D401-47A5-9519-10DE59CA1E9D.json.gz"
+    "https://store.cancerdatasci.org/hovernet/h5ad/",
+    "TCGA-23-1021-01Z-00-DX1.F07C221B-D401-47A5-9519-10DE59CA1E9D.h5ad.gz"
 )
 
 
