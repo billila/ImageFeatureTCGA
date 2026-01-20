@@ -146,7 +146,7 @@ tissue slide.
 
 ```{r metrics 2}
 moran.plot(pca_example_slide$PC1, lw, labels = FALSE,
-              main = "Moran scatterplot of PC1")
+                main = "Moran scatterplot of PC1")
 
 # 5. LISA visualization
 df_lisa <- data.frame(coords, Ii = lisa[, "Ii"])
@@ -213,27 +213,27 @@ points(pca_example_slide$tile_x,
 # (tile_x/y) may be on slightly
 # different scales. We compute a scale factor to align nuclei with tiles.
 compute_scale_factor <- function(cell_meta, tile_df,
-                                 cell_x = "x", cell_y = "y",
-                                 tile_x = "tile_x", tile_y = "tile_y") {
-  # adding a check to ensure correct structure
-  stopifnot(
+                                    cell_x = "x", cell_y = "y",
+                                    tile_x = "tile_x", tile_y = "tile_y") {
+    # adding a check to ensure correct structure
+    stopifnot(
     all(c(cell_x, cell_y) %in% names(cell_meta)),
     all(c(tile_x, tile_y) %in% names(tile_df))
-  )
-  # calculate X and Y scale factors
-  sx <- diff(range(cell_meta[[cell_x]], na.rm = TRUE)) /
+    )
+    # calculate X and Y scale factors
+    sx <- diff(range(cell_meta[[cell_x]], na.rm = TRUE)) /
         diff(range(tile_df[[tile_x]], na.rm = TRUE))
-  
-  sy <- diff(range(cell_meta[[cell_y]], na.rm = TRUE)) /
+
+    sy <- diff(range(cell_meta[[cell_y]], na.rm = TRUE)) /
         diff(range(tile_df[[tile_y]], na.rm = TRUE))
-  # mean scale factor
-  scale_factor <- mean(c(sx, sy), na.rm = TRUE)
-  
-  list(
+    # mean scale factor
+    scale_factor <- mean(c(sx, sy), na.rm = TRUE)
+
+    list(
     scale_factor = scale_factor,
     sx = sx,
     sy = sy
-  )
+    )
 }
 
 sf <- compute_scale_factor(cell_meta, pca_example_slide)

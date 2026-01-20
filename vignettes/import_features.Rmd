@@ -114,7 +114,7 @@ Each cell is represented with:
 
 
 # Importing ProvGigaPath embeddings
-
+80 
 
 ProvGigaPath embeddings summarize tile or slide-level image features.
 
@@ -145,8 +145,8 @@ image-derived features.
 
 You can explore the full documentation through the package vignettes:
 
-- [MOFA](https://github.com/waldronlab/ImageFeatureTCGA/blob/devel/vignettes/MOFA_analysis.qmd)
-- [Point Pattern Analysis](https://github.com/waldronlab/ImageFeatureTCGA/blob/devel/vignettes/PPA.Rmd)
+-[MOFA](https://github.com/waldronlab/ImageFeatureTCGA/blob/devel/vignettes/MOFA_analysis.qmd)
+-[Point Pattern Analysis](https://github.com/waldronlab/ImageFeatureTCGA/blob/devel/vignettes/PPA.Rmd)
 
 Note. More vignettes will be added as new feature types and workflows become
 available.
