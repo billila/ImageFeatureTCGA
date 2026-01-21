@@ -51,8 +51,8 @@ First, let's download an example HoverNet JSON file:
 
 ```{r download-json}
 json_file <- paste0(
-    "https://store.cancerdatasci.org/hovernet/json/",
-    "TCGA-23-1021-01Z-00-DX1.F07C221B-D401-47A5-9519-10DE59CA1E9D.json.gz")
+    "https://store.cancerdatasci.org/hovernet/h5ad/",
+    "TCGA-23-1021-01Z-00-DX1.F07C221B-D401-47A5-9519-10DE59CA1E9D.h5ad.gz")
 ```
 
 ## Import the JSON file into a `SpatialExperiment` 
@@ -159,9 +159,9 @@ original tissue thumbnail image.
 ## Basic Overlay
 
 ```{r overlay-basic, fig.width=12, fig.height=6}
-json_file <- "https://store.cancerdatasci.org/hovernet/TCGA_OV/json/TCGA-VG-A8LO-01A-01-DX1.B39A4D64-82A1-4A04-8AB6-918F3058B83B.json.gz"
+h5ad_file <- "https://store.cancerdatasci.org/hovernet/TCGA_OV/h5ad/TCGA-VG-A8LO-01A-01-DX1.B39A4D64-82A1-4A04-8AB6-918F3058B83B.h5ad.gz"
 
-plotHoverNetOverlay(json_file)
+plotHoverNetOverlay(h5ad_file)
 ```
 
 ## Customized Overlay
