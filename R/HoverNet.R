@@ -331,7 +331,7 @@ S4Vectors::setValidity2("HoverNetPNG", .validHoverNetPNG)
 #'    "https://store.cancerdatasci.org/hovernet/TCGA_OV/thumb/",
 #'    "TCGA-VG-A8LO-01A-02-DX2.9B58474C-DAC0-4D45-B13C-0A1EA9E1BC32.png"
 #' )
-#' HoverNetPNG(hov_png_url) |>
+#' HoverNet(hov_png_url) |>
 #'   import()
 #' @exportMethod import
 setMethod("import", "HoverNetPNG", function(con, format, text, ...) {

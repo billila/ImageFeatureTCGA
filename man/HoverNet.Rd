@@ -165,7 +165,7 @@ hov_png_url <- paste0(
    "https://store.cancerdatasci.org/hovernet/TCGA_OV/thumb/",
    "TCGA-VG-A8LO-01A-02-DX2.9B58474C-DAC0-4D45-B13C-0A1EA9E1BC32.png"
 )
-HoverNetPNG(hov_png_url) |>
+HoverNet(hov_png_url) |>
   import()
 }
 \author{
