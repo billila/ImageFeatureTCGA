@@ -191,7 +191,8 @@ cell_coords <- spatialCoords(hn_spe)
 
 # Extract nuclei metadata (types, intensity, etc.)
 cell_meta <- colData(hn_spe)
-
+cell_meta$x <-cell_coords[,1]
+cell_meta$y <-cell_coords[,2]
 ```
 
 # Visualizing Hovernet nuclei vs tile coordinates
@@ -267,7 +268,7 @@ dt_nuc <- data.table(
     x2 = cell_meta_scaled$x,
     y1 = cell_meta_scaled$y,
     y2 = cell_meta_scaled$y,
-    cell_type = cell_meta_scaled$label
+    cell_type = cell_meta_scaled$type
 )
 
 # Step 4: Assign nuclei to tiles
