@@ -14,8 +14,9 @@
 #'     version = "2.1.1",
 #'     dry.run = FALSE
 #' )
+#' coad_sub <- coad[, 1:3, ]
 #' catalog <- getCatalog(pipeline = "provgigapath", format = "csv")
-#' linked_mae <- linkTCGA(coad, catalog)
+#' linked_mae <- linkTCGA(coad_sub, catalog)
 #' @export
 linkTCGA <- function(
     MultiAssayExperiment, catalog, redownload = FALSE, parallel = TRUE
