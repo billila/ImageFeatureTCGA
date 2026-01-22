@@ -47,121 +47,11 @@ The package supports two main file formats:
 
 ## From Local Files
 
-First, let's download an example HoverNet JSON file:
-
-```{r json}
-json_file <- paste0(
-    "https://store.cancerdatasci.org/hovernet/json/",
-    "TCGA-23-1021-01Z-00-DX1.F07C221B-D401-47A5-9519-10DE59CA1E9D.json.gz")
-```
-
-## Import the JSON file into a `SpatialExperiment` 
+## Import the H5ad file into a `SpatialExperiment` 
 object from URLs (with Automatic Caching)
 The file will be automatically cached using `BiocFileCache`:
 
-```{r import-json-url}
-hn_spe <- HoverNet(json_file, outClass = "SpatialExperiment") |>
-    import()
-```
-
-## Including Cell Contours
-
-To include cell contour information in the metadata:
-
-```{r import-contours}
-# it takes a while to run: 
-
-# hn_spe_contours <- HoverNet(
-#     json_file, 
-#     contours = TRUE,
-#     outClass = "SpatialExperiment"
-# ) |> import()
-# 
-# # Access contours
-# contours <- metadata(hn_spe_contours)$contours
-# head(contours[[1]])
-```
-
-# Exploring the Data Structure
-
-## Spatial Coordinates
-
-```{r spatial-coords}
-head(spatialCoords(hn_spe))
-```
-
-## Cell Metadata
-
-```{r coldata}
-head(colData(hn_spe))
-```
-
-## Cell Type Distribution
-
-```{r cell-type-dist}
-table(colData(hn_spe)$label)
-```
-
-## Type Map and Colors
-
-The type map contains the mapping between cell types and their RGB colors:
-
-```{r type-map}
-type_map <- metadata(hn_spe)$type_map
-type_map
-```
-
-
-# Basic Visualizations
-
-## Simple Scatter Plot
-
-```{r basic-plot, fig.width=8, fig.height=6}
-coords <- data.frame(spatialCoords(hn_spe), colData(hn_spe))
-
-ggplot(coords, aes(x = x, y = y, color = label)) +
-    geom_point(size = 0.5, alpha = 0.8) +
-    scale_color_manual(values = setNames(
-        rgb(type_map$R/255, type_map$G/255, type_map$B/255),
-        type_map$label
-    )) +
-    coord_fixed() +
-    theme_minimal() +
-    labs(
-        title = "HoverNet Cell Segmentation",
-        x = "X coordinate",
-        y = "Y coordinate",
-        color = "Cell Type"
-    )
-```
-
-## Cell Type Probabilities
-
-Visualize the confidence of cell type predictions:
-
-```{r type-prob, fig.width=8, fig.height=6}
-ggplot(coords, aes(x = x, y = y, color = type_prob)) +
-    geom_point(size = 0.5) +
-    scale_color_viridis_c() +
-    coord_fixed() +
-    theme_minimal() +
-    labs(
-        title = "Cell Type Prediction Confidence",
-        x = "X coordinate",
-        y = "Y coordinate",
-        color = "Type Probability"
-    )
-```
-
-# Advanced Visualization: Overlay with Original Image
-
-The package provides a convenient function to overlay the segmentation on the 
-original tissue thumbnail image.
-
-## Basic Overlay
-
-```{r overlay-basic, fig.width=12, fig.height=6}
-
+```{r h5ad}
 hov_file <- paste0(
     "https://store.cancerdatasci.org/hovernet/h5ad/",
     "TCGA-23-1021-01Z-00-DX1.F07C221B-D401-47A5-9519-10DE59CA1E9D.h5ad.gz")
@@ -172,6 +62,19 @@ thumb_path <- paste0(
 
 hn_spe <- HoverNet(hov_file, outClass = "SpatialExperiment") |>
     import()
+```
+
+
+The package provides a convenient function to overlay the segmentation on the 
+original tissue thumbnail image.
+
+## Basic Overlay
+
+```{r overlay-basic, fig.width=12, fig.height=6}
+
+thumb_path <- paste0(
+    "https://store.cancerdatasci.org/hovernet/thumb/",
+    "TCGA-23-1021-01Z-00-DX1.F07C221B-D401-47A5-9519-10DE59CA1E9D.png")
 
 plotHoverNetH5ADOverlay(hn_spe, thumb_path)
 ```
