@@ -60,6 +60,17 @@
             destfiles <- file.path(
                 BiocFileCache::getBFCOption("CACHE"), part_urls
             )
+            destfolders <- dirname(destfiles) |>
+                unique()
+            dexist <- dir.exists(destfolders)
+            if (!any(dexist))
+                vapply(
+                    destfolders[!dexist],
+                    dir.create,
+                    logical(1L),
+                    recursive = TRUE,
+                    showWarnings = FALSE
+                )
             output <- curl::multi_download(
                 urls = urls,
                 destfiles = destfiles
