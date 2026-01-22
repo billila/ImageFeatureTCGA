@@ -49,7 +49,7 @@ The package supports two main file formats:
 
 First, let's download an example HoverNet JSON file:
 
-```{r download-json}
+```{r json}
 json_file <- paste0(
     "https://store.cancerdatasci.org/hovernet/json/",
     "TCGA-23-1021-01Z-00-DX1.F07C221B-D401-47A5-9519-10DE59CA1E9D.json.gz")
@@ -69,15 +69,17 @@ hn_spe <- HoverNet(json_file, outClass = "SpatialExperiment") |>
 To include cell contour information in the metadata:
 
 ```{r import-contours}
-hn_spe_contours <- HoverNet(
-    json_file, 
-    contours = TRUE,
-    outClass = "SpatialExperiment"
-) |> import()
+# it takes a while to run: 
 
-# Access contours
-contours <- metadata(hn_spe_contours)$contours
-head(contours[[1]])
+# hn_spe_contours <- HoverNet(
+#     json_file, 
+#     contours = TRUE,
+#     outClass = "SpatialExperiment"
+# ) |> import()
+# 
+# # Access contours
+# contours <- metadata(hn_spe_contours)$contours
+# head(contours[[1]])
 ```
 
 # Exploring the Data Structure
@@ -159,16 +161,27 @@ original tissue thumbnail image.
 ## Basic Overlay
 
 ```{r overlay-basic, fig.width=12, fig.height=6}
-json_file <- "https://store.cancerdatasci.org/hovernet/TCGA_OV/json/TCGA-VG-A8LO-01A-01-DX1.B39A4D64-82A1-4A04-8AB6-918F3058B83B.json.gz"
 
-plotHoverNetOverlay(json_file)
+hov_file <- paste0(
+    "https://store.cancerdatasci.org/hovernet/h5ad/",
+    "TCGA-23-1021-01Z-00-DX1.F07C221B-D401-47A5-9519-10DE59CA1E9D.h5ad.gz")
+
+thumb_path <- paste0(
+    "https://store.cancerdatasci.org/hovernet/thumb/",
+    "TCGA-23-1021-01Z-00-DX1.F07C221B-D401-47A5-9519-10DE59CA1E9D.png")
+
+hn_spe <- HoverNet(hov_file, outClass = "SpatialExperiment") |>
+    import()
+
+plotHoverNetH5ADOverlay(hn_spe, thumb_path)
 ```
 
 ## Customized Overlay
 
 ```{r overlay-custom, fig.width=12, fig.height=6}
-plotHoverNetOverlay(
-    json_file,
+plotHoverNetH5ADOverlay(
+    hn_spe,
+    thumb_path,
     title = "Ovarian Cancer Tissue - Cell Segmentation",
     point_size = 0.02,
     legend_point_size = 3
@@ -179,45 +192,32 @@ plotHoverNetOverlay(
 
 ```{r overlay-colors, fig.width=12, fig.height=6}
 custom_colors <- c(
-    "nolabe" = "#808080",
-    "neopla" = "#E31A1C",
-    "inflam" = "#1F78B4",
-    "connec" = "#33A02C",
-    "necros" = "#FF7F00",
-    "no-neo" = "#6A3D9A"
+    "no label" = "#808080",
+    "neoplastic" = "#E31A1C",
+    "inflammatory" = "#1F78B4",
+    "stromal" = "#33A02C",
+    "necrotic" = "#FF7F00",
+    "benign epithelial" = "#6A3D9A"
 )
 
-plotHoverNetOverlay(
-    json_file,
+plotHoverNetH5ADOverlay(
+    hn_spe,
+    thumb_path,
     color_palette = custom_colors,
     title = "Custom Color Scheme"
 )
 ```
 
-# Importing H5AD Data
+
 
 H5AD files contain additional computed features like mean intensity and nearest 
 neighbor distance.
 
-```{r import-h5ad}
-h5ad_url <- paste0(
-    "https://store.cancerdatasci.org/hovernet/TCGA_OV/h5ad/",
-    "TCGA-VG-A8LO-01A-01-DX1.B39A4D64-82A1-4A04-8AB6-918F3058B83B.h5ad"
-)
-
-h5ad_file <- file.path(tempdir(), basename(h5ad_url))
-download.file(h5ad_url, destfile = h5ad_file)
-
-hn_h5ad <- HoverNet(h5ad_file, outClass = "SpatialExperiment") |>
-    import()
-
-hn_h5ad
-```
 
 ## Visualizing Additional Features
 
 ```{r h5ad-features, fig.width=10, fig.height=8}
-h5ad_coords <- data.frame(spatialCoords(hn_h5ad), colData(hn_h5ad))
+h5ad_coords <- data.frame(spatialCoords(hn_spe), colData(hn_spe))
 
 p1 <- ggplot(h5ad_coords, aes(x = x_centroid, y = y_centroid, 
                             color = mean_intensity)) +
