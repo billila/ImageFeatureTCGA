@@ -116,28 +116,39 @@ setMethod("import", "ProvGigaList", function(con, format, text, ...) {
     if (con@are_URLs)
         prov_path <- .cache_url_files(prov_path, redownload, parallel)
 
-    level <- vapply(
+    levels <- vapply(
         con@listData, function(x) { x@level }, character(1L)
-    ) |> unique()
+    )
 
     tumorType <- vapply(
         con@listData, function(x) { x@tumorType }, character(1L)
     )
 
-    .import_level <- switch(
-        level,
-        slide_level = .import_slide_level,
-        tile_level = .import_tile_level
+    import_list <- mapply(
+        function(path, type, fn, level, ...) {
+            .import_level <- switch(
+                level,
+                slide_level = .import_slide_level,
+                tile_level = .import_tile_level
+            )
+            .import_level(
+                prov_path = path,
+                tumorType = type,
+                fileName = fn,
+                ...
+            )
+        },
+        path = prov_path,
+        type = tumorType,
+        fn = prov_path,
+        level = levels,
+        simplify = FALSE
     )
-
-    mapply(
-        .import_level,
-        prov_path = prov_path,
-        tumorType = tumorType,
-        fileName = prov_path,
-        SIMPLIFY = FALSE
-    ) |>
-        dplyr::bind_rows()
+    if (!identical(length(unique(levels)), 1L))
+        split(import_list, levels) |>
+            lapply(dplyr::bind_rows)
+    else
+        dplyr::bind_rows(import_list)
 })
 
 #' @rdname ProvGigaList
