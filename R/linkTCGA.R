@@ -25,11 +25,45 @@ linkTCGA <- function(
     catalog <-
         catalog[tcgabcodes %in% rownames(colData(MultiAssayExperiment)), ]
     catalog[["url"]] <- getFileURLs(catalog)
-    ProvGigaList(
+    resdata <- ProvGigaList(
         catalog[["url"]],
         is_url = TRUE,
         levels = catalog[["level"]],
         parallel = parallel
     ) |>
         import(redownload = redownload, parallel = parallel)
+    slide_assay <- slide_df_to_se(resdata[["slide_level"]])
+    sampmap <- DataFrame(
+        assay = "slide_assay",
+        primary = metadata(slide_assay)[["patientIds"]],
+        colname = metadata(slide_assay)[["sampleIds"]]
+    )
+}
+
+slide_df_to_se <- function(tdf) {
+    sampleIds <- vapply(
+        strsplit(tdf[["slideName"]], "\\."),
+        `[[`,
+        character(1L),
+        1L
+    )
+    patientIds <- TCGAutils::TCGAbarcode(sampleIds)
+    metadata <- c(
+        as.list(tdf[, c("slideName", "tumorType", "fileName")]),
+        patientIds = patientIds,
+        sampleIds = sampleIds
+    )
+    embeddings <-
+        tdf[-which(names(tdf) %in% c("slideName", "tumorType", "fileName"))] |>
+        as.matrix() |>
+        t()
+    dimnames(embeddings) <- list(
+        NULL,
+        sampleIds
+    )
+    se <- SummarizedExperiment(
+        assays = list(embeddings = embeddings)
+    )
+    metadata(se) <- metadata
+    se
 }
