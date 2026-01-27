@@ -48,10 +48,12 @@ slide_df_to_se <- function(tdf) {
         1L
     )
     patientIds <- TCGAutils::TCGAbarcode(sampleIds)
-    metadata <- c(
+    metadata <- append(
         as.list(tdf[, c("slideName", "tumorType", "fileName")]),
-        patientIds = patientIds,
-        sampleIds = sampleIds
+        list(
+            patientIds = patientIds,
+            sampleIds = sampleIds
+        )
     )
     embeddings <-
         tdf[-which(names(tdf) %in% c("slideName", "tumorType", "fileName"))] |>
