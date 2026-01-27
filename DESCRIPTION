@@ -18,6 +18,7 @@ Imports:
     BiocBaseUtils,
     BiocIO,
     cowplot,
+    data.table,
     dplyr,
     ggplot2,
     httr2,
