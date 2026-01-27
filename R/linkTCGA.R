@@ -38,6 +38,11 @@ linkTCGA <- function(
         primary = metadata(slide_assay)[["patientIds"]],
         colname = metadata(slide_assay)[["sampleIds"]]
     )
+    c(
+        MultiAssayExperiment,
+        slide_assay = slide_assay,
+        sampleMap = sampmap
+    )
 }
 
 slide_df_to_se <- function(tdf) {
