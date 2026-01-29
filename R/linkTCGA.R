@@ -64,11 +64,10 @@ linkTCGA <- function(
         NULL,
         sampleIds
     )
-    se <- SummarizedExperiment(
-        assays = list(embeddings = embeddings)
+    SummarizedExperiment(
+        assays = list(embeddings = embeddings),
+        metadata = metadata
     )
-    metadata(se) <- metadata
-    se
 }
 
 .slide_to_sampleId <- function(txt) {
