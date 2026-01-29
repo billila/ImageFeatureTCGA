@@ -32,7 +32,7 @@ linkTCGA <- function(
         parallel = parallel
     ) |>
         import(redownload = redownload, parallel = parallel)
-    slide_assay <- slide_df_to_se(resdata[["slide_level"]])
+    slide_assay <- .slide_df_to_se(resdata[["slide_level"]])
     sampmap <- DataFrame(
         assay = "slide_assay",
         primary = metadata(slide_assay)[["patientIds"]],
@@ -45,23 +45,19 @@ linkTCGA <- function(
     )
 }
 
-slide_df_to_se <- function(tdf) {
-    sampleIds <- vapply(
-        strsplit(tdf[["slideName"]], "\\."),
-        `[[`,
-        character(1L),
-        1L
-    )
+#' @importFrom SummarizedExperiment SummarizedExperiment
+.slide_df_to_se <- function(sdf) {
+    sampleIds <- .slide_to_sampleId(sdf[["slideName"]])
     patientIds <- TCGAutils::TCGAbarcode(sampleIds)
     metadata <- append(
-        as.list(tdf[, c("slideName", "tumorType", "fileName")]),
+        as.list(sdf[, c("slideName", "tumorType", "fileName")]),
         list(
             patientIds = patientIds,
             sampleIds = sampleIds
         )
     )
     embeddings <-
-        tdf[-which(names(tdf) %in% c("slideName", "tumorType", "fileName"))] |>
+        sdf[-which(names(sdf) %in% c("slideName", "tumorType", "fileName"))] |>
         as.matrix() |>
         t()
     dimnames(embeddings) <- list(
@@ -73,4 +69,8 @@ slide_df_to_se <- function(tdf) {
     )
     metadata(se) <- metadata
     se
+}
+
+.slide_to_sampleId <- function(txt) {
+    vapply(strsplit(txt, "\\."), `[[`, character(1L), 1L)
 }
