@@ -6,9 +6,11 @@ Authors@R: c(
         c(ORCID = "0000-0002-3242-0582")
     ),
     person("Ilaria", "Billato", , "ilaria.billato@phd.unipd.it",
-        c("aut"), c(ORCID = "0000-0002-3335-3254", 
+        "aut", c(ORCID = "0000-0002-3335-3254", 
         affiliation = "Department of Biology, University of Padova")
-    ))
+    ),
+    person("Eslam", "Abousamra", role = "aut")
+    )
 Description: The package imports data from hovernet, provgigapath, and
     other feature extraction technologies hosted online. It conveniently
     incorporates these additional data into existing MultiAssayExperiment
