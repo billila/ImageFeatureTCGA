@@ -8,7 +8,10 @@
 
 .cache_url_file <- function(url, redownload = FALSE) {
     checkInstalled("BiocFileCache")
-    bfc <- BiocFileCache::BiocFileCache()
+    cache <- getOption(
+        "BiocFileCache.cache", BiocFileCache::getBFCOption("CACHE")
+    )
+    bfc <- BiocFileCache::BiocFileCache(cache = cache)
     bquery <- BiocFileCache::bfcquery(bfc, url, "rname", exact = TRUE)
     ## only re-download manually b/c bfcneedsupdate always returns TRUE
     if (identical(nrow(bquery), 1L) && redownload)
@@ -47,7 +50,10 @@
     if (parallel) {
         checkInstalled("curl")
         checkInstalled("BiocFileCache")
-        bfc <- BiocFileCache::BiocFileCache()
+        cache <- getOption(
+            "BiocFileCache.cache", BiocFileCache::getBFCOption("CACHE")
+        )
+        bfc <- BiocFileCache::BiocFileCache(cache = cache)
         queries <- .url_query(bfc, urls)
         cached <- .is_cached(queries)
         locals <- vector("list", length(urls))
