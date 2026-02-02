@@ -124,7 +124,7 @@ setMethod("import", "ProvGigaList", function(con, format, text, ...) {
         con@listData, function(x) { x@tumorType }, character(1L)
     )
 
-    import_list <- mapply(
+    import_list <- Map(
         function(path, type, fn, level, ...) {
             .import_level <- switch(
                 level,
@@ -142,7 +142,7 @@ setMethod("import", "ProvGigaList", function(con, format, text, ...) {
         type = tumorType,
         fn = prov_path,
         level = levels,
-        simplify = FALSE
+        ...
     )
     if (!identical(length(unique(levels)), 1L))
         split(import_list, levels) |>
