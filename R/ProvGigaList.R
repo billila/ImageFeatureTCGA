@@ -43,11 +43,15 @@
 #' @examples
 #' slide_urls <- getCatalog("provgigapath") |>
 #'     dplyr::filter(level == "slide_level", Project.ID == "TCGA-UVM") |>
-#'     dplyr::slice(1:10) |>
+#'     dplyr::slice(1:3) |>
 #'     getFileURLs()
 #'
+#' ## set a temporary BiocFileCache cache location
+#' old <- options(BiocFileCache.cache = tempdir())
+#' on.exit(options(BiocFileCache.cache = old))
+#'
 #' ProvGigaList(slide_urls) |>
-#'    import(redownload = TRUE, parallel = TRUE)
+#'    import(redownload = FALSE, parallel = TRUE)
 #' @export
 ProvGigaList <- function(
     ..., is_url = TRUE, levels = "slide_level", parallel = FALSE
