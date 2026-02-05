@@ -87,12 +87,11 @@ ProvGigaList <- function(
         levels <- rep(levels, lengths(dots))
 
     if (is.character(undots)) {
-        if (parallel) {
-            checkInstalled("BiocParallel")
-            mapplyFUN <- BiocParallel::bpmapply
-        } else {
-            mapplyFUN <- mapply
-        }
+        mapplyFUN <-
+            if (parallel && checkInstalled("BiocParallel"))
+                BiocParallel::bpmapply
+            else
+                mapply
         mapplyFUN(
             ProvGiga,
             resource = undots,
