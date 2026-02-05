@@ -30,21 +30,11 @@ library(MOFA2)
 # Load data
 
 ```{r load embeddings}
-coad_slide_files <- getCatalog("provgigapath") |> 
-    filter(Project.ID == "TCGA-COAD")
-
-coad_slide_files = coad_slide_files[1:5, ]
-
-
-structure_last <- coad_slide_files |>
-    getFileURLs() |>
-    ProvGigaList() |>
-    getEmbeddings()
-
-rownames(structure_last) <- coad_slide_files[["tcga_barcode"]]
-
+catalog <- getCatalog("provgigapath") |> 
+    dplyr::filter(Project.ID == "TCGA-COAD") |>
+    dplyr::slice(1:5)
+catalog
 ```
-
 
 # Read Colon Cancer assay with curatedTCGA
 
@@ -52,171 +42,30 @@ rownames(structure_last) <- coad_slide_files[["tcga_barcode"]]
 #------------------------------------------
 # Load COAD RNASeq assay
 #------------------------------------------
-coad_mae_all <- curatedTCGAData(
+coad_mae <- curatedTCGAData(
     diseaseCode = "COAD",
     assays = "RNASeq2GeneNorm",
     version = "2.1.1",
     dry.run = FALSE
 )
-
-assays_subset <- c("COAD_RNASeq2GeneNorm-20160128")
-coad_mae <- coad_mae_all[,, which(names(coad_mae_all) %in% assays_subset)]
-
-# Standardize patient IDs for all assays
-updated_coad_mae <- vector("list", length(coad_mae))
-names(updated_coad_mae) <- names(coad_mae)
-for (i in seq_along(coad_mae)) {
-    mae <- coad_mae[[i]]
-    patients <- sapply(strsplit(colnames(mae), "-"), function(x) paste(x[1:3], collapse = "-"))
-    # Remove suffixes to match clinical data format
-    patients <- gsub("\\..*", "", patients)
-    colnames(mae) <- make.unique(patients)
-    updated_coad_mae[[i]] <- mae
-}
-
-
 ```
 
+# Update COAD MultiAssayExperiment with linkTCGA 
 
-# Prep embedding
-```{r prep embedding}
-#------------------------------------------
-# Prepare embedding layers
-#------------------------------------------
-prepare_layer <- function(mat) {
-    rownames(mat) <- rownames(mat) %||% paste0("patient_", seq_len(nrow(mat)))
-    mat_unique <- mat[!duplicated(rownames(mat)), , drop = FALSE]
+```{r linktcga}
+coad_mae_emb <-
+    linkTCGA(coad_mae, catalog, redownload = FALSE, parallel = FALSE)
 
-    # Standardize patient IDs and REMOVE SUFFIXES
-    embedding_patients <- sapply(strsplit(rownames(mat_unique), "-"), function(x) paste(x[1:3], collapse = "-"))
-    embedding_patients <- gsub("\\..*", "", embedding_patients)
-    rownames(mat_unique) <- embedding_patients
-
-    mat_unique
-}
-
-structure_last_prepped <- prepare_layer(structure_last)
+## create artificial rownames for MOFA2
+rownames(coad_mae_emb[["slide_assay"]]) <-
+    paste0("slide_feat_", seq_len(nrow(coad_mae_emb[["slide_assay"]])))
 ```
-
-
-# Prep clinical metadata
-```{r prep clinical metadata}
-#------------------------------------------
-# Prepare clinical metadata
-#------------------------------------------
-prepare_clinical <- function(mae) {
-    clinical <- colData(mae)
-    completeness <- colSums(!is.na(clinical)) / nrow(clinical) * 100
-    clinical_sub <- clinical[, which(completeness > 95), drop = FALSE] %>%
-        as.data.frame() %>%
-        select(-matches("aliquot"), -matches("portion"))
-
-# Set row names to patientID column
-    if ("patientID" %in% colnames(clinical_sub)) {
-        rownames(clinical_sub) <- clinical_sub$patientID
-    }
-
-# Factorize categorical variables with 2-10 levels
-    numLv <- apply(clinical_sub, 2, function(x) length(unique(x)))
-    slideAttrNames <- names(numLv[numLv >= 2 & numLv <= 10])
-    for (slideAttrName in slideAttrNames) {
-        clinical_sub[[slideAttrName]] <- as.factor(
-            clinical_sub[[slideAttrName]])
-    }
-
-    clinical_sub
-}
-
-metadata_df <- prepare_clinical(coad_mae)
-
-```
-
-# Make embedding SE
-
-```{r create embedding SE}
-#------------------------------------------
-# Create embedding SE
-#------------------------------------------
-make_embedding_se <- function(embedding_matrix, metadata_df) {
-    # Find patients present in both embedding matrix and clinical metadata
-    patients_with_image <- intersect(
-        rownames(embedding_matrix), 
-        rownames(metadata_df))
-
-    print(paste("Number of common patients:", length(patients_with_image)))
-
-    if (length(patients_with_image) == 0) {
-        stop("No common patients found between embed and clinical metadata")
-    }
-
-    # Subset both to common patients
-    embedding_se_coldata <- metadata_df[patients_with_image, , drop = FALSE]
-    embedding_se_subset <- embedding_matrix[patients_with_image, , drop = FALSE]
-
-    # Create assay matrix with proper column names
-    assay_matrix <- t(embedding_se_subset)
-    colnames(assay_matrix) <- patients_with_image
-
-    # Create SummarizedExperiment
-    se <- SummarizedExperiment(
-        assays = list(embedding = assay_matrix),
-        colData = embedding_se_coldata
-    )
-    rownames(se) <- paste0("dim_", seq_len(nrow(se)))
-    se
-}
-
-embedding_se_last <- make_embedding_se(structure_last_prepped, metadata_df)
-
-
-```
-
-
-
-# Create MAE
-
-
-```{r create MAE, warning=FALSE}
-# common patients
-common_final <- intersect(
-    colnames(updated_coad_mae[["COAD_RNASeq2GeneNorm-20160128"]]), 
-    colnames(embedding_se_last))
-
-common_final <- intersect(
-    common_final, 
-    rownames(metadata_df))
-
-# create MAE
-crc_mae <- MultiAssayExperiment(
-    experiments = list(
-        RNASeq = updated_coad_mae[["COAD_RNASeq2GeneNorm-20160128"]],
-        Embedding_last = embedding_se_last
-    ),
-    colData = metadata_df
-)
-
-# Check if assay has any replicated measurement
-if (any(anyReplicated(crc_mae))) {
-    reps <- replicated(crc_mae)
-# Extract all sample names except first for each assay
-    drops <- unlist(
-    lapply(reps, function(x) {
-        if (length(x) > 1) x[-1] else character(0)
-    }),
-        use.names = FALSE
-    )
-# Drop replicated samples
-    crc_mae <- crc_mae[, !names(crc_mae) %in% drops]
-}
-
-```
-
 
 # Run MOFA
 
 ```{r run_mofa}
 # Create MOFA object from MultiAssayExperiment
-mofa_obj <- create_mofa_from_MultiAssayExperiment(crc_mae)
+mofa_obj <- create_mofa_from_MultiAssayExperiment(coad_mae_emb)
 
 # Set data options
 data_opts <- get_default_data_options(mofa_obj)
@@ -240,25 +89,22 @@ mofa_obj <- prepare_mofa(
     model_options = model_opts,
     training_options = train_opts
 )
-
+test_model_file <- tempfile(fileext = ".hdf5")
 # Train the model
 mofa_obj.trained <- run_mofa(
     mofa_obj,
-    outfile = "test_model.hdf5",      # or specify a file path
+    outfile = test_model_file,
     use_basilisk = TRUE
 )
 ```
 
-
 # Visualize MOFA results
+
 ```{r load and visualize the model}
-mofa_object.trained <- load_model("test_model.hdf5")
+mofa_object.trained <- load_model(test_model_file)
 
 plot_variance_explained(mofa_object.trained)
-
 ```
-
-
 
 # Session Info
 
