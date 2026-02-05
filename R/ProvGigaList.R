@@ -49,6 +49,7 @@
 #' @return A `ProvGigaList` object containing multiple `ProvGiga` objects.
 #'
 #' @examples
+#' ## slide level imports
 #' slide_urls <- getCatalog("provgigapath") |>
 #'     dplyr::filter(level == "slide_level", Project.ID == "TCGA-UVM") |>
 #'     dplyr::slice(1:3) |>
@@ -59,6 +60,15 @@
 #' on.exit(options(BiocFileCache.cache = old))
 #'
 #' ProvGigaList(slide_urls) |>
+#'    import(redownload = FALSE, parallel = FALSE)
+#'
+#' ## tile level imports
+#' tile_urls <- getCatalog("provgigapath") |>
+#'    dplyr::filter(level == "tile_level", Project.ID == "TCGA-GBM") |>
+#'    dplyr::slice(1:2) |>
+#'    getFileURLs()
+#'
+#' ProvGigaList(tile_urls) |>
 #'    import(redownload = FALSE, parallel = FALSE)
 #' @export
 ProvGigaList <- function(
