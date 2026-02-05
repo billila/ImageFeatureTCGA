@@ -71,7 +71,9 @@ ProvGigaList <- function(
             dots <- undots
         }
     }
-    if (missing(levels))
+    if (missing(levels) && is_url && is.character(undots))
+        levels <- gsub(".*\\/(tile_level|slide_level)\\/.*", "\\1", undots)
+    else if (missing(levels))
         levels <- rep(levels, lengths(dots))
 
     if (is.character(undots)) {
