@@ -48,25 +48,44 @@ linkTCGA <- function(
         parallel = parallel
     ) |>
         import(redownload = redownload, parallel = parallel)
-    slide_assay <- .slide_df_to_se(resdata[["slide_level"]])
-    slide_sm <- DataFrame(
-        assay = "slide_assay",
-        primary = metadata(slide_assay)[["patientIds"]],
-        colname = metadata(slide_assay)[["sampleIds"]]
-    )
-    tile_assay <- .tile_df_to_bumpy_se(resdata[["tile_level"]])
-    tile_sm <- DataFrame(
-        assay = "tile_assay",
-        primary = metadata(tile_assay)[["patientIds"]],
-        colname = metadata(tile_assay)[["sampleIds"]]
-    )
-    sampmap <- rbind(slide_sm, tile_sm)
-    c(
-        MultiAssayExperiment,
-        slide_assay = slide_assay,
-        tile_assay = tile_assay,
-        sampleMap = sampmap
-    )
+    if (tibble::is_tibble(resdata)) {
+        assayname <- unique(catalog[["level"]]) |>
+            gsub("level", "assay", x = _)
+        assayFUN <- switch(
+            assayname,
+            slide_assay = .slide_df_to_se,
+            tile_assay = .tile_df_to_bumpy_se
+        )
+        assay <- assayFUN(resdata)
+        sampmap <- DataFrame(
+            assay = assayname,
+            primary = TCGAutils::TCGAbarcode(colnames(assay)),
+            colname = colnames(assay)
+        )
+        args <- list(MultiAssayExperiment, assay, sampmap)
+        names(args) <- c("x", assayname, "sampleMap")
+        do.call(c, args)
+    } else {
+        slide_assay <- .slide_df_to_se(resdata[["slide_level"]])
+        slide_sm <- DataFrame(
+            assay = "slide_assay",
+            primary = metadata(slide_assay)[["patientIds"]],
+            colname = metadata(slide_assay)[["sampleIds"]]
+        )
+        tile_assay <- .tile_df_to_bumpy_se(resdata[["tile_level"]])
+        tile_sm <- DataFrame(
+            assay = "tile_assay",
+            primary = metadata(tile_assay)[["patientIds"]],
+            colname = metadata(tile_assay)[["sampleIds"]]
+        )
+        sampmap <- rbind(slide_sm, tile_sm)
+        c(
+            MultiAssayExperiment,
+            slide_assay = slide_assay,
+            tile_assay = tile_assay,
+            sampleMap = sampmap
+        )
+    }
 }
 
 #' @importFrom SummarizedExperiment SummarizedExperiment
