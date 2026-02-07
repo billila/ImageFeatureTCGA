@@ -1,14 +1,14 @@
-library(ImageFeatureTCGA)
+library(imageFeatureTCGA)
 
 slides_url <- "https://store.cancerdatasci.org/provgigapath/slide_level/"
-slides_df <- ImageFeatureTCGA:::.see_more_table(slides_url)
+slides_df <- imageFeatureTCGA:::.see_more_table(slides_url)
 slideCodes <- slides_df[startsWith(slides_df[["Filename"]], "TCGA"), "Filename"] |>
     unlist() |>
     unname() |>
     gsub("/", "", fixed = TRUE, x = _)
 
 tiles_url <- "https://store.cancerdatasci.org/provgigapath/tile_level/"
-tiles_df <- ImageFeatureTCGA:::.see_more_table(tiles_url)
+tiles_df <- imageFeatureTCGA:::.see_more_table(tiles_url)
 tileCodes <- tiles_df[startsWith(tiles_df[["Filename"]], "TCGA"), "Filename"] |>
     unlist() |>
     unname() |>

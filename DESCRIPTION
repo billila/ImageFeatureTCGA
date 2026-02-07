@@ -1,4 +1,4 @@
-Package: ImageFeatureTCGA
+Package: imageFeatureTCGA
 Title: Import features from hovernet, provgigapath into a MultiAssayExperiment
 Version: 0.99.40
 Authors@R: c(

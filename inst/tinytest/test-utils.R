@@ -1,15 +1,15 @@
 # Test utils.R functions
 
 # Test .is_url
-expect_true(ImageFeatureTCGA:::.is_url("https://example.com"))
-expect_true(ImageFeatureTCGA:::.is_url("http://example.com"))
-expect_true(ImageFeatureTCGA:::.is_url("ftp://example.com"))
-expect_false(ImageFeatureTCGA:::.is_url("/path/to/file.csv"))
-expect_false(ImageFeatureTCGA:::.is_url("file.csv"))
+expect_true(imageFeatureTCGA:::.is_url("https://example.com"))
+expect_true(imageFeatureTCGA:::.is_url("http://example.com"))
+expect_true(imageFeatureTCGA:::.is_url("ftp://example.com"))
+expect_false(imageFeatureTCGA:::.is_url("/path/to/file.csv"))
+expect_false(imageFeatureTCGA:::.is_url("file.csv"))
 
 # Test .is_url error on non-scalar
 expect_error(
-    ImageFeatureTCGA:::.is_url(c("https://a.com", "https://b.com"))
+    imageFeatureTCGA:::.is_url(c("https://a.com", "https://b.com"))
 )
 expect_error(
     imageFeatureTCGA:::.is_url(123)
@@ -25,17 +25,17 @@ mock_query_not_cached <- list(
     data.frame(rpath = "/path/to/file2")
 )
 expect_equal(
-    ImageFeatureTCGA:::.is_cached(mock_query_cached),
+    imageFeatureTCGA:::.is_cached(mock_query_cached),
     c(TRUE, TRUE)
 )
 expect_equal(
-    ImageFeatureTCGA:::.is_cached(mock_query_not_cached),
+    imageFeatureTCGA:::.is_cached(mock_query_not_cached),
     c(FALSE, TRUE)
 )
 
 # Test .rpath_cache
 expect_equal(
-    ImageFeatureTCGA:::.rpath_cache(mock_query_cached),
+    imageFeatureTCGA:::.rpath_cache(mock_query_cached),
     c("/path/to/file1", "/path/to/file2")
 )
 
@@ -48,7 +48,7 @@ writeLines(
     ),
     mock_slide_csv
 )
-slide_result <- ImageFeatureTCGA:::.import_slide_level(
+slide_result <- imageFeatureTCGA:::.import_slide_level(
     prov_path = mock_slide_csv,
     tumorType = "TCGA_COAD",
     fileName = "test.csv"
@@ -71,7 +71,7 @@ writeLines(
     ),
     mock_tile_csv
 )
-tile_result <- ImageFeatureTCGA:::.import_tile_level(
+tile_result <- imageFeatureTCGA:::.import_tile_level(
     prov_path = mock_tile_csv,
     tumorType = "TCGA_COAD",
     fileName = "test_tile.csv"
@@ -85,11 +85,11 @@ unlink(mock_tile_csv)
 
 # Test .PROV_ORDER and .HOV_ORDER constants
 expect_equal(
-    ImageFeatureTCGA:::.PROV_ORDER, 
+    imageFeatureTCGA:::.PROV_ORDER,
     c("pipeline", "level", "filename")
 )
 expect_equal(
-    ImageFeatureTCGA:::.HOV_ORDER, 
+    imageFeatureTCGA:::.HOV_ORDER,
     c("pipeline", "format", "filename")
 )
 

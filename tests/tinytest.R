@@ -1,3 +1,3 @@
 if (requireNamespace("tinytest", quietly = TRUE)) {
-  tinytest::test_package("ImageFeatureTCGA")
+  tinytest::test_package("imageFeatureTCGA")
 }
