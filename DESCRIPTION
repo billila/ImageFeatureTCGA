@@ -57,8 +57,8 @@ Suggests:
     tinytest
 VignetteBuilder: knitr
 biocViews: Software, Infrastructure, DataImport, DataRepresentation
-BugReports: https://github.com/waldronlab/ImageFeatureTCGA/issues
-URL: https://github.com/waldronlab/ImageFeatureTCGA
+BugReports: https://github.com/waldronlab/imageFeatureTCGA/issues
+URL: https://github.com/waldronlab/imageFeatureTCGA
 License: Artistic-2.0
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
