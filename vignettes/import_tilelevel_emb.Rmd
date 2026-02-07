@@ -8,16 +8,16 @@ output:
     number_sections: true
     toc_float: true
     toc_depth: 3
-package: ImageFeatureTCGA
+package: imageFeatureTCGA
 vignette: >
-  %\VignetteIndexEntry{ImageFeatureTCGA}
+  %\VignetteIndexEntry{imageFeatureTCGA}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
 
 ```{r library import, message=FALSE}
 library(BiocStyle)
-library(ImageFeatureTCGA)
+library(imageFeatureTCGA)
 library(ggplot2)
 library(dplyr)
 library(sfdep)
@@ -36,7 +36,7 @@ high-dimensional vector capturing visual and morphological features
 extracted from Prov-GigaPath.
 
 
-We begin by importing the tile-level data using ImageFeatureTCGA. 
+We begin by importing the tile-level data using imageFeatureTCGA. 
 Next, we perform principal component analysis (PCA) to reduce 
 the high-dimensional embeddings to two principal components, 
 which facilitates visualization and preliminary exploration of the data. 

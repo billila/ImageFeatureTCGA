@@ -8,9 +8,9 @@ output:
     number_sections: true
     toc_float: true
     toc_depth: 3
-package: ImageFeatureTCGA
+package: imageFeatureTCGA
 vignette: >
-  %\VignetteIndexEntry{ImageFeatureTCGA}
+  %\VignetteIndexEntry{imageFeatureTCGA}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -21,7 +21,7 @@ knitr::opts_chunk$set(cache = TRUE)
 
 
 ```{r import libraries, message=FALSE, warning=FALSE}
-library(ImageFeatureTCGA)
+library(imageFeatureTCGA)
 library(sfdep)
 library(spdep)
 library(SpatialFeatureExperiment)
@@ -34,7 +34,7 @@ library(ggplot2)
 
 Point pattern analysis provides a framework to investigate the spatial
 distribution of cells within histopathology images. When HoVerNet output
-is imported through `ImageFeatureTCGA`, each cell is represented with
+is imported through `imageFeatureTCGA`, each cell is represented with
 spatial coordinates and associated morphological or intensity features.
 These data allow the computation of global and local spatial autocorrelation
 metrics, such as Moran's I, Local Moran's I (LISA), Geary's C,

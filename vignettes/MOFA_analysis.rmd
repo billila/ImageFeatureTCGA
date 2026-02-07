@@ -8,7 +8,7 @@ output:
     number_sections: true
     toc_float: true
     toc_depth: 3
-package: ImageFeatureTCGA
+package: imageFeatureTCGA
 vignette: >
   %\VignetteIndexEntry{MOFA_COAD_READ}
   %\VignetteEngine{knitr::rmarkdown}
@@ -18,7 +18,7 @@ vignette: >
 # Libraries
 
 ```{r load_packages, message=FALSE}
-library(ImageFeatureTCGA)
+library(imageFeatureTCGA)
 library(curatedTCGAData)
 library(SummarizedExperiment)
 library(MultiAssayExperiment)

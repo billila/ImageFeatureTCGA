@@ -8,27 +8,27 @@ output:
     number_sections: true
     toc_float: true
     toc_depth: 3
-package: ImageFeatureTCGA
+package: imageFeatureTCGA
 vignette: >
-  %\VignetteIndexEntry{ImageFeatureTCGA}
+  %\VignetteIndexEntry{imageFeatureTCGA}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
 
-# ImageFeatureTCGA
+# imageFeatureTCGA
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(cache = TRUE, echo = TRUE)
 ```
 
 ```{r load_packages, include=TRUE, results="hide", message=FALSE, warning=FALSE}
-library(ImageFeatureTCGA)
+library(imageFeatureTCGA)
 library(dplyr)
 ```
 
 # Overview
 
-`ImageFeatureTCGA` (`imageTCGA`) provides convenient access to
+`imageFeatureTCGA` (`imageTCGA`) provides convenient access to
 histopathology-derived data from **TCGA** through two complementary pipelines:
 
 - **HoVerNet** → cell segmentation and classification
@@ -45,7 +45,7 @@ facilitating downstream integration with TCGA omics and clinical data.
 if (!requireNamespace("BiocManager", quietly = TRUE))
     install.packages("BiocManager")
 
-BiocManager::install("waldronlab/ImageFeatureTCGA")
+BiocManager::install("waldronlab/imageFeatureTCGA")
 ```
 
 
@@ -145,8 +145,8 @@ image-derived features.
 
 You can explore the full documentation through the package vignettes:
 
--[MOFA](https://github.com/waldronlab/ImageFeatureTCGA/blob/devel/vignettes/MOFA_analysis.qmd)
--[Point Pattern Analysis](https://github.com/waldronlab/ImageFeatureTCGA/blob/devel/vignettes/PPA.Rmd)
+-[MOFA](https://github.com/waldronlab/imageFeatureTCGA/blob/devel/vignettes/MOFA_analysis.qmd)
+-[Point Pattern Analysis](https://github.com/waldronlab/imageFeatureTCGA/blob/devel/vignettes/PPA.Rmd)
 
 Note. More vignettes will be added as new feature types and workflows become
 available.

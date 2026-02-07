@@ -8,21 +8,21 @@ output:
     number_sections: true
     toc_float: true
     toc_depth: 3
-package: ImageFeatureTCGA
+package: imageFeatureTCGA
 vignette: >
-  %\VignetteIndexEntry{ImageFeatureTCGA}
+  %\VignetteIndexEntry{imageFeatureTCGA}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
 
-# ImageFeatureTCGA
+# imageFeatureTCGA
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(cache = TRUE, echo = TRUE)
 ```
 
 ```{r load_packages, include=TRUE, results="hide", message=FALSE, warning=FALSE}
-library(ImageFeatureTCGA)
+library(imageFeatureTCGA)
 library(dplyr)
 library(SpatialExperiment)
 library(ggplot2)
