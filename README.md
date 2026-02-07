@@ -1,14 +1,14 @@
 
-# ImageFeatureTCGA
+# imageFeatureTCGA
 
 ``` r
-library(ImageFeatureTCGA)
+library(imageFeatureTCGA)
 library(dplyr)
 ```
 
 # Overview
 
-`ImageFeatureTCGA` (`imageTCGA`) provides convenient access to
+`imageFeatureTCGA` (`imageTCGA`) provides convenient access to
 histopathology-derived data from **TCGA** through two complementary
 pipelines:
 
@@ -25,7 +25,7 @@ clinical data.
 if (!requireNamespace("BiocManager", quietly = TRUE))
     install.packages("BiocManager")
 
-BiocManager::install("waldronlab/ImageFeatureTCGA")
+BiocManager::install("waldronlab/imageFeatureTCGA")
 ```
 
 # Available Data
@@ -130,6 +130,7 @@ getCatalog("hovernet") |>
     getFileURLs() |>
     HoverNet(outClass = "SpatialExperiment") |>
     import()
+#> adding rname 'https://store.cancerdatasci.org/hovernet/json/TCGA-VG-A8LO-01A-01-DX1.B39A4D64-82A1-4A04-8AB6-918F3058B83B.json.gz'
 #> class: SpatialExperiment 
 #> dim: 0 67081 
 #> metadata(1): type_map
@@ -172,6 +173,7 @@ getCatalog("provgigapath") |>
     getFileURLs() |>
     ProvGiga() |>
     import()
+#> adding rname 'https://store.cancerdatasci.org/provgigapath/slide_level/TCGA-VG-A8LO-01A-01-DX1.B39A4D64-82A1-4A04-8AB6-918F3058B83B.csv.gz'
 #> # A tibble: 1 × 771
 #>   slideName     tumorType fileName     V1    V2     V3     V4     V5    V6    V7
 #>   <chr>         <chr>     <chr>     <dbl> <dbl>  <dbl>  <dbl>  <dbl> <dbl> <dbl>
@@ -192,9 +194,9 @@ image-derived features.
 
 You can explore the full documentation through the package vignettes:
 
-\-[MOFA](https://github.com/waldronlab/ImageFeatureTCGA/blob/devel/vignettes/MOFA_analysis.qmd)
+\-[MOFA](https://github.com/waldronlab/imageFeatureTCGA/blob/devel/vignettes/MOFA_analysis.qmd)
 -[Point Pattern
-Analysis](https://github.com/waldronlab/ImageFeatureTCGA/blob/devel/vignettes/PPA.Rmd)
+Analysis](https://github.com/waldronlab/imageFeatureTCGA/blob/devel/vignettes/PPA.Rmd)
 
 Note. More vignettes will be added as new feature types and workflows
 become available.
@@ -219,13 +221,13 @@ Click here for Session Info
 
 ``` r
 sessionInfo()
-#> R version 4.5.2 (2025-10-31)
+#> R Under development (unstable) (2025-10-28 r88973)
 #> Platform: x86_64-pc-linux-gnu
-#> Running under: Ubuntu 24.04.3 LTS
+#> Running under: Ubuntu 22.04.5 LTS
 #> 
 #> Matrix products: default
-#> BLAS:   /usr/lib/x86_64-linux-gnu/blas/libblas.so.3.12.0 
-#> LAPACK: /usr/lib/x86_64-linux-gnu/lapack/liblapack.so.3.12.0  LAPACK version 3.12.0
+#> BLAS:   /usr/lib/x86_64-linux-gnu/blas/libblas.so.3.10.0 
+#> LAPACK: /usr/lib/x86_64-linux-gnu/lapack/liblapack.so.3.10.0  LAPACK version 3.10.0
 #> 
 #> locale:
 #>  [1] LC_CTYPE=en_US.UTF-8       LC_NUMERIC=C              
@@ -235,61 +237,65 @@ sessionInfo()
 #>  [9] LC_ADDRESS=C               LC_TELEPHONE=C            
 #> [11] LC_MEASUREMENT=en_US.UTF-8 LC_IDENTIFICATION=C       
 #> 
-#> time zone: Europe/Rome
+#> time zone: America/New_York
 #> tzcode source: system (glibc)
 #> 
 #> attached base packages:
 #> [1] stats     graphics  grDevices utils     datasets  methods   base     
 #> 
 #> other attached packages:
-#> [1] dplyr_1.1.4              ImageFeatureTCGA_0.99.21
+#> [1] dplyr_1.1.4              ImageFeatureTCGA_0.99.33
 #> 
 #> loaded via a namespace (and not attached):
 #>  [1] tidyselect_1.2.1            farver_2.1.2               
-#>  [3] blob_1.3.0                  bitops_1.0-9               
+#>  [3] blob_1.2.4                  bitops_1.0-9               
 #>  [5] filelock_1.0.3              S7_0.2.1                   
 #>  [7] RCurl_1.98-1.17             fastmap_1.2.0              
-#>  [9] SingleCellExperiment_1.32.0 BiocFileCache_3.0.0        
-#> [11] digest_0.6.39               lifecycle_1.0.5            
-#> [13] RSQLite_2.4.5               magrittr_2.0.4             
-#> [15] compiler_4.5.2              rlang_1.1.7                
-#> [17] tools_4.5.2                 utf8_1.2.6                 
-#> [19] yaml_2.3.12                 knitr_1.51                 
-#> [21] S4Arrays_1.10.1             bit_4.6.0                  
-#> [23] curl_7.0.0                  DelayedArray_0.36.0        
-#> [25] xml2_1.5.2                  RColorBrewer_1.1-3         
-#> [27] abind_1.4-8                 withr_3.0.2                
-#> [29] purrr_1.2.1                 BiocGenerics_0.56.0        
-#> [31] grid_4.5.2                  stats4_4.5.2               
-#> [33] ggplot2_4.0.1               scales_1.4.0               
-#> [35] dichromat_2.0-0.1           SummarizedExperiment_1.40.0
-#> [37] cli_3.6.5                   rmarkdown_2.30             
-#> [39] crayon_1.5.3                generics_0.1.4             
-#> [41] otel_0.2.0                  rstudioapi_0.18.0          
-#> [43] httr_1.4.7                  tzdb_0.5.0                 
-#> [45] rjson_0.2.23                BiocBaseUtils_1.12.0       
-#> [47] DBI_1.2.3                   cachem_1.1.0               
-#> [49] rvest_1.0.5                 parallel_4.5.2             
-#> [51] XVector_0.50.0              matrixStats_1.5.0          
-#> [53] vctrs_0.7.0                 Matrix_1.7-4               
-#> [55] jsonlite_2.0.0              IRanges_2.44.0             
-#> [57] hms_1.1.4                   S4Vectors_0.48.0           
-#> [59] bit64_4.6.0-1               archive_1.1.12.1           
-#> [61] TENxIO_1.12.1               magick_2.9.0               
-#> [63] glue_1.8.0                  codetools_0.2-20           
-#> [65] cowplot_1.2.0               gtable_0.3.6               
-#> [67] BiocIO_1.20.0               GenomicRanges_1.62.1       
-#> [69] tibble_3.3.1                pillar_1.11.1              
-#> [71] rappdirs_0.3.4              htmltools_0.5.9            
-#> [73] Seqinfo_1.0.0               R6_2.6.1                   
-#> [75] dbplyr_2.5.1                httr2_1.2.2                
-#> [77] vroom_1.6.7                 evaluate_1.0.5             
-#> [79] lattice_0.22-7              Biobase_2.70.0             
-#> [81] readr_2.1.5                 SpatialExperiment_1.20.0   
-#> [83] memoise_2.0.1               rjsoncons_1.3.2            
-#> [85] Rcpp_1.1.1                  SparseArray_1.10.8         
-#> [87] xfun_0.56                   MatrixGenerics_1.22.0      
-#> [89] pkgconfig_2.0.3
+#>  [9] SingleCellExperiment_1.33.0 BiocFileCache_3.1.0        
+#> [11] promises_1.5.0              digest_0.6.39              
+#> [13] lifecycle_1.0.5             processx_3.8.6             
+#> [15] RSQLite_2.4.5               magrittr_2.0.4             
+#> [17] compiler_4.6.0              rlang_1.1.6                
+#> [19] tools_4.6.0                 utf8_1.2.6                 
+#> [21] yaml_2.3.12                 data.table_1.18.0          
+#> [23] knitr_1.51                  S4Arrays_1.11.1            
+#> [25] bit_4.6.0                   curl_7.0.0                 
+#> [27] DelayedArray_0.37.0         xml2_1.5.1                 
+#> [29] RColorBrewer_1.1-3          abind_1.4-8                
+#> [31] websocket_1.4.4             withr_3.0.2                
+#> [33] purrr_1.2.0                 BiocGenerics_0.57.0        
+#> [35] grid_4.6.0                  stats4_4.6.0               
+#> [37] ggplot2_4.0.1               scales_1.4.0               
+#> [39] dichromat_2.0-0.1           SummarizedExperiment_1.41.0
+#> [41] cli_3.6.5                   rmarkdown_2.30             
+#> [43] crayon_1.5.3                generics_0.1.4             
+#> [45] otel_0.2.0                  rstudioapi_0.17.1          
+#> [47] httr_1.4.7                  tzdb_0.5.0                 
+#> [49] rjson_0.2.23                BiocBaseUtils_1.13.0       
+#> [51] cachem_1.1.0                DBI_1.2.3                  
+#> [53] chromote_0.5.1              parallel_4.6.0             
+#> [55] rvest_1.0.5                 BiocManager_1.30.27        
+#> [57] XVector_0.51.0              matrixStats_1.5.0          
+#> [59] vctrs_0.6.5                 Matrix_1.7-4               
+#> [61] jsonlite_2.0.0              IRanges_2.45.0             
+#> [63] hms_1.1.4                   S4Vectors_0.49.0           
+#> [65] bit64_4.6.0-1               archive_1.1.12             
+#> [67] TENxIO_1.13.2               magick_2.9.0               
+#> [69] glue_1.8.0                  codetools_0.2-20           
+#> [71] ps_1.9.1                    cowplot_1.2.0              
+#> [73] gtable_0.3.6                later_1.4.5                
+#> [75] BiocIO_1.21.0               GenomicRanges_1.63.1       
+#> [77] tibble_3.3.0                pillar_1.11.1              
+#> [79] rappdirs_0.3.3              htmltools_0.5.9            
+#> [81] Seqinfo_1.1.0               dbplyr_2.5.1               
+#> [83] R6_2.6.1                    httr2_1.2.2                
+#> [85] vroom_1.6.6                 evaluate_1.0.5             
+#> [87] lattice_0.22-7              Biobase_2.71.0             
+#> [89] readr_2.1.5                 SpatialExperiment_1.21.0   
+#> [91] memoise_2.0.1               rjsoncons_1.3.2            
+#> [93] Rcpp_1.1.0.8.2              SparseArray_1.11.10        
+#> [95] xfun_0.55                   MatrixGenerics_1.23.0      
+#> [97] pkgconfig_2.0.3
 ```
 
 </details>
