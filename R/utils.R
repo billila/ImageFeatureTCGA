@@ -199,17 +199,6 @@
     )
 }
 
-.extract_tcgabcode <- function(file_path) {
-    stopifnot(
-        isScalarCharacter(file_path)
-    )
-    utils::head(
-        strsplit(basename(file_path), "\\.")[[1L]],
-        1L
-    )
-}
-
-
 #' Match HoverNet Nuclei to ProvGigaPath Tiles
 #'
 #' @description Assigns HoverNet nuclei to ProvGigaPath tiles by computing a

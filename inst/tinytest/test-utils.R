@@ -12,24 +12,7 @@ expect_error(
     ImageFeatureTCGA:::.is_url(c("https://a.com", "https://b.com"))
 )
 expect_error(
-    ImageFeatureTCGA:::.is_url(123)
-)
-
-# Test .extract_tcgabcode
-expect_equal(
-    ImageFeatureTCGA:::.extract_tcgabcode(
-        "/path/to/TCGA-AA-3518-01A-01-BS1.9437f2c5-9f15-4b8d-b95c-01a1bd09b8bd.csv"
-    ),
-    "TCGA-AA-3518-01A-01-BS1"
-)
-expect_equal(
-    ImageFeatureTCGA:::.extract_tcgabcode("TCGA-BB-1234.uuid.csv.gz"),
-    "TCGA-BB-1234"
-)
-
-# Test .extract_tcgabcode error on non-scalar
-expect_error(
-    ImageFeatureTCGA:::.extract_tcgabcode(c("file1.csv", "file2.csv"))
+    imageFeatureTCGA:::.is_url(123)
 )
 
 # Test .is_cached
