@@ -28,7 +28,6 @@ Imports:
     methods,
     readr,
     rjsoncons,
-    rvest,
     S4Vectors,
     SingleCellExperiment,
     SpatialExperiment,
