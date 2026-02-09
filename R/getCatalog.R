@@ -1,3 +1,4 @@
+.BASE_URL <- "https://store.cancerdatasci.org"
 .CATALOG_COL_TYPES <- "ccccccccccccccccccccccddc"
 
 #' @title Download the catalog of available HoVerNet and ProvGigaPath files
