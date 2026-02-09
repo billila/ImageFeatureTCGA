@@ -227,6 +227,7 @@ setMethod("import", "HoverNetJSON", function(con, format, text, ...) {
     FUN <- if (identical(outClass, "SpatialExperiment")) {
         SpatialExperiment::SpatialExperiment
     } else if (identical(outClass, "SpatialFeatureExperiment")) {
+        checkInstalled("SpatialFeatureExperiment")
         SpatialFeatureExperiment::SpatialFeatureExperiment
     }
     out <- FUN(
