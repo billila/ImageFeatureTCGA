@@ -15,10 +15,10 @@ Authors@R: c(
         affiliation = "CUNY Graduate School of Public Health and Health Policy,
         New York, NY USA")
     ))
-Description: The package imports data from hovernet, provgigapath, and
-    other feature extraction technologies hosted online. It conveniently
-    incorporates these additional data into existing MultiAssayExperiment
-    instances from curatedTCGAData. 
+Description: The package imports data from HoverNet, and ProvGigaPath
+    pipelines. Pipeline output data are hosted in a self-owned online
+    repository. Package functionality conveniently incorporates pipeline data
+    into existing MultiAssayExperiment instances from curatedTCGAData.
 Depends: R (>= 4.5.0)
 Imports:
     BiocBaseUtils,
