@@ -3,7 +3,9 @@ Title: Import features from hovernet, provgigapath into a MultiAssayExperiment
 Version: 0.99.44
 Authors@R: c(
     person("Marcel", "Ramos", , "marcel.ramos@sph.cuny.edu", c("aut", "cre"),
-        c(ORCID = "0000-0002-3242-0582")
+        c(ORCID = "0000-0002-3242-0582", affiliation = 
+        "CUNY Graduate School of Public Health and Health Policy,
+        New York, NY USA")
     ),
     person("Ilaria", "Billato", , "ilaria.billato@phd.unipd.it",
         "aut", c(ORCID = "0000-0002-3335-3254", 
