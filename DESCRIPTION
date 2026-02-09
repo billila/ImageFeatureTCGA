@@ -19,9 +19,7 @@ Depends: R (>= 4.5.0)
 Imports:
     BiocBaseUtils,
     BiocIO,
-    cowplot,
     dplyr,
-    ggplot2,
     httr2,
     magick,
     methods,
