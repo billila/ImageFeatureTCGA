@@ -4,6 +4,7 @@
 \name{ProvGiga}
 \alias{ProvGiga}
 \alias{ProvGiga-class}
+\alias{ProvGigaCSV-class}
 \alias{show,ProvGiga-method}
 \alias{import,ProvGigaCSV,ANY,ANY-method}
 \alias{embedding}
