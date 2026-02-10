@@ -53,7 +53,14 @@ providing the string data to import.}
 embedding. Default is \code{"last_layer_embed"}.}
 }
 \value{
-A \code{ProvGigaList} object containing multiple \code{ProvGiga} objects.
+\itemize{
+\item A \code{ProvGigaList} object containing multiple \code{ProvGiga} objects.
+\item \code{import-ProvGigaList}: Either a single \code{SummarizedExperiment} (if all
+objects are the same level) or a list of \code{SummarizedExperiment} objects (if
+levels differ).
+\item \code{getEmbeddings}: A matrix of embeddings extracted from all slide-level
+\code{ProvGiga} objects in the list.
+}
 }
 \description{
 The \code{ProvGigaList} class is a container for multiple \code{ProvGiga}
