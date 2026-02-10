@@ -147,7 +147,6 @@ setMethod("show", "ProvGiga", function(object) {
 #'
 #' @inheritParams BiocIO::import
 #'
-#'
 #' @importFrom BiocIO import path
 #' @importFrom utils read.table
 #'
@@ -218,6 +217,9 @@ setMethod("import", "ProvGigaCSV", function(con, format, text, ...) {
 embedding <- function(con, layer = "last_layer_embed") {
     if (!is(con, "ProvGigaCSV"))
         con <- ProvGiga(con)
+
+    if (!identical(con@level, "slide_level"))
+        stop("Embedding extraction is only supported for 'slide_level' data.")
 
     ldf <- import(con)
     stopifnot(
