@@ -129,7 +129,7 @@ setMethod("path", "ProvGigaList", function(object, ...) {
 #'
 #' @exportMethod import
 setMethod("import", "ProvGigaList", function(con, format, text, ...) {
-    prov_path <- path(con)
+    prov_paths <- path(con)
 
     args <- list(...)
     redownload <- args[["redownload"]] %||% FALSE
@@ -137,14 +137,14 @@ setMethod("import", "ProvGigaList", function(con, format, text, ...) {
     args <- args[names(args) != c("redownload", "parallel")]
 
     if (con@are_URLs)
-        prov_path <- .cache_url_files(prov_path, redownload, parallel)
+        prov_paths <- .cache_url_files(prov_paths, redownload, parallel)
 
     levels <- vapply(
         con@listData, function(x) { x@level }, character(1L)
     )
     level <- unique(levels)
 
-    tumorType <- vapply(
+    tumorTypes <- vapply(
         con@listData, function(x) { x@tumorType }, character(1L)
     )
 
@@ -162,9 +162,9 @@ setMethod("import", "ProvGigaList", function(con, format, text, ...) {
                 ...
             )
         },
-        path = prov_path,
-        type = tumorType,
-        fn = prov_path,
+        path = prov_paths,
+        type = tumorTypes,
+        fn = prov_paths,
         level = levels,
         ...
     )
