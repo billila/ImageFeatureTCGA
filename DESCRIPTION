@@ -23,9 +23,11 @@ Depends: R (>= 4.5.0)
 Imports:
     BiocBaseUtils,
     BiocIO,
+    BumpyMatrix,
     dplyr,
     httr2,
     magick,
+    IRanges,
     methods,
     readr,
     rjsoncons,
