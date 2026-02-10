@@ -142,6 +142,7 @@ setMethod("import", "ProvGigaList", function(con, format, text, ...) {
     levels <- vapply(
         con@listData, function(x) { x@level }, character(1L)
     )
+    level <- unique(levels)
 
     tumorType <- vapply(
         con@listData, function(x) { x@tumorType }, character(1L)
@@ -167,11 +168,23 @@ setMethod("import", "ProvGigaList", function(con, format, text, ...) {
         level = levels,
         ...
     )
-    if (!identical(length(unique(levels)), 1L))
-        split(import_list, levels) |>
-            lapply(dplyr::bind_rows)
+    split_list <- split(import_list, levels) |>
+        lapply(dplyr::bind_rows)
+    result <- Map(
+        function(data, lvl) {
+            switch(
+                lvl,
+                slide_level = .slide_df_to_se,
+                tile_level = .tile_df_to_bumpy_se
+            )(data)
+        },
+        data = split_list,
+        lvl = names(split_list)
+    )
+    if (identical(length(level), 1L))
+        result[[level]]
     else
-        dplyr::bind_rows(import_list)
+        result
 })
 
 #' @rdname ProvGigaList
