@@ -176,6 +176,8 @@ setMethod("import", "ProvGigaList", function(con, format, text, ...) {
 
 #' @rdname ProvGigaList
 #'
+#' @inheritParams ProvGiga
+#'
 #' @description The `getEmbeddings` function extracts and combines the
 #'   embeddings from all `ProvGiga` objects within a `ProvGigaList`.
 #'

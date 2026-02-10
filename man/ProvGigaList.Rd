@@ -48,6 +48,9 @@ unnecessary when \code{con} is a derivative of \link[BiocIO:BiocFile-class]{Bioc
 
 \item{text}{If \code{con} is missing, this can be a character vector directly
 providing the string data to import.}
+
+\item{layer}{\code{character(1)} specifying the layer from which to extract the
+embedding. Default is \code{"last_layer_embed"}.}
 }
 \value{
 A \code{ProvGigaList} object containing multiple \code{ProvGiga} objects.
