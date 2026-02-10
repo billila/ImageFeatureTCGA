@@ -111,7 +111,12 @@ colData(hspe)
 
 # Importing ProvGigaPath embeddings
 
-ProvGigaPath embeddings summarize tile or slide-level image features.
+## Slide-level embeddings
+
+ProvGigaPath embeddings summarize tile or slide-level image features. In this
+example, we import slide-level embeddings for a single file. Each row
+corresponds to a slide, with an embedding vector describing the image-derived
+features.
 
 ```{r importProvGiga}
 getCatalog("provgigapath") |>
