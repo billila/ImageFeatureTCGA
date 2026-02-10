@@ -4,13 +4,15 @@
 \name{HoverNet}
 \alias{HoverNet}
 \alias{HoverNet-class}
+\alias{HoverNetJSON-class}
+\alias{HoverNetH5AD-class}
+\alias{HoverNetPNG-class}
 \alias{show,HoverNetJSON-method}
 \alias{import,HoverNetJSON,ANY,ANY-method}
 \alias{import,HoverNetH5AD,ANY,ANY-method}
-\alias{HoverNetPNG-class}
 \alias{.HoverNetPNG}
 \alias{import,HoverNetPNG,ANY,ANY-method}
-\title{Import Hovernet JSON files into a Bioconductor class object}
+\title{Import Hovernet JSON, H5AD, and PNG files into Bioconductor classes}
 \usage{
 HoverNet(
   resource,
@@ -71,13 +73,14 @@ coordinates extracted from the Hovernet H5AD file
 }
 }
 \description{
-The \code{HoverNetJSON} class represents Hovernet JSON files used for
-cell segmentation and classification in histopathology images. It extends
-the \code{TENxFile} class from the \code{TENxIO} package, allowing for efficient
-handling of large JSON files. The class includes a slot to indicate whether
-cell contours should be included in the metadata when importing the data.
-As well as a slot to specify the output class when importing the data,
-either \code{SpatialExperiment} or \code{SpatialFeatureExperiment}.
+The \code{HoverNet} virtual class and its subclasses represent
+different file formats used in the HoverNet cell segmentation and
+classification pipeline for histopathology images. The \code{HoverNet}
+constructor function creates instances of the appropriate subclass based on
+the file format of the provided resource. The \code{import} methods for each
+subclass read the respective file formats and represent the data as either
+a \code{SpatialExperiment} or \code{SpatialFeatureExperiment} object, depending on
+the specified output class.
 
 The \code{HoverNetJSON} constructor function creates an instance
 of the \code{HoverNetJSON} class. The \code{resource} argument can be either a
@@ -87,6 +90,17 @@ The \code{outClass} parameter specifies the output class when importing
 the data, either \code{SpatialExperiment} or \code{SpatialFeatureExperiment}.
 }
 \details{
+The \code{HoverNetJSON} class represents Hovernet JSON files used for
+cell segmentation and classification in histopathology images. It extends
+the \code{TENxFile} class from the \code{TENxIO} package, allowing for efficient
+handling of large JSON files. The class includes a slot to indicate whether
+cell contours should be included in the metadata when importing the data.
+As well as a slot to specify the output class when importing the data,
+either \code{SpatialExperiment} or \code{SpatialFeatureExperiment}.
+The \code{HoverNetH5AD} class represents Hovernet H5AD files, which contain
+similar data but in a different format. The \code{HoverNetPNG} class represents
+PNG thumbnail images of the whole-slide images used in HoverNet.
+
 The \code{HoverNetJSON} constructor function can import file paths
 and URLs. Remote files are automatically cached using \code{BiocFileCache}
 when the \code{import} method is called. This allows for efficient handling

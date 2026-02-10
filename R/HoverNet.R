@@ -8,17 +8,30 @@
 
 #' @name HoverNet
 #'
-#' @aliases HoverNet-class
+#' @aliases HoverNet-class HoverNetJSON-class HoverNetH5AD-class
+#'   HoverNetPNG-class
 #'
-#' @title Import Hovernet JSON files into a Bioconductor class object
+#' @title Import Hovernet JSON, H5AD, and PNG files into Bioconductor classes
 #'
-#' @description The `HoverNetJSON` class represents Hovernet JSON files used for
+#' @description The `HoverNet` virtual class and its subclasses represent
+#'   different file formats used in the HoverNet cell segmentation and
+#'   classification pipeline for histopathology images. The `HoverNet`
+#'   constructor function creates instances of the appropriate subclass based on
+#'   the file format of the provided resource. The `import` methods for each
+#'   subclass read the respective file formats and represent the data as either
+#'   a `SpatialExperiment` or `SpatialFeatureExperiment` object, depending on
+#'   the specified output class.
+#'
+#' @details The `HoverNetJSON` class represents Hovernet JSON files used for
 #'   cell segmentation and classification in histopathology images. It extends
 #'   the `TENxFile` class from the `TENxIO` package, allowing for efficient
 #'   handling of large JSON files. The class includes a slot to indicate whether
 #'   cell contours should be included in the metadata when importing the data.
 #'   As well as a slot to specify the output class when importing the data,
 #'   either `SpatialExperiment` or `SpatialFeatureExperiment`.
+#'   The `HoverNetH5AD` class represents Hovernet H5AD files, which contain
+#'   similar data but in a different format. The `HoverNetPNG` class represents
+#'   PNG thumbnail images of the whole-slide images used in HoverNet.
 #'
 #' @slot contours `logical(1)` indicating whether to include cell contours in
 #'   the metadata of the resulting `SpatialExperiment` or
