@@ -72,11 +72,11 @@ setClass(
 
 #' @rdname HoverNet
 #'
-#' @description The `HoverNetJSON` constructor function creates an instance 
-#'   of the `HoverNetJSON` class. The `resource` argument can be either a 
-#'   file path or URL to a Hovernet JSON file. The `contours` parameter 
+#' @description The `HoverNetJSON` constructor function creates an instance
+#'   of the `HoverNetJSON` class. The `resource` argument can be either a
+#'   file path or URL to a Hovernet JSON file. The `contours` parameter
 #'   is optional and can be used to include cell contours in the metadata.
-#'   The `outClass` parameter specifies the output class when importing 
+#'   The `outClass` parameter specifies the output class when importing
 #'   the data, either `SpatialExperiment` or `SpatialFeatureExperiment`.
 #'
 #' @param resource `character(1)` the file path or URL to the Hovernet JSON
@@ -92,7 +92,7 @@ setClass(
 #'
 #'
 #' @details The `HoverNetJSON` constructor function can import file paths
-#'   and URLs. Remote files are automatically cached using `BiocFileCache` 
+#'   and URLs. Remote files are automatically cached using `BiocFileCache`
 #'   when the `import` method is called. This allows for efficient handling
 #'   of large JSON files without the need to download them manually.
 #'
@@ -166,7 +166,7 @@ setMethod("show", "HoverNetJSON", function(object) {
 
 #' @rdname HoverNet
 #'
-#' @section `import`: The import method for `HoverNetJSON` reads the JSON 
+#' @section `import`: The import method for `HoverNetJSON` reads the JSON
 #'   file and represents the data as either a `SpatialExperiment` or
 #'   `SpatialFeatureExperiment` object. It extracts cell centroid coordinates,
 #'   cell types, and type probabilities, and optionally includes cell contours
@@ -290,6 +290,7 @@ setMethod("import", "HoverNetH5AD", function(con, format, text, ...) {
 
     if (con@is_url)
         h5ad_path <- .cache_url_file(h5ad_path)
+
     BiocBaseUtils::checkInstalled("anndataR")
     res <- anndataR::read_h5ad(path = h5ad_path, as = "SingleCellExperiment")
     scoords <- SingleCellExperiment::reducedDim(res, "spatial")
@@ -307,9 +308,8 @@ setMethod("import", "HoverNetH5AD", function(con, format, text, ...) {
         spatialCoords = scoords
     )
 
-    if (identical(con@outClass, "SpatialFeatureExperiment")) {
+    if (identical(con@outClass, "SpatialFeatureExperiment"))
         res <- SpatialFeatureExperiment::toSpatialFeatureExperiment(res)
-    }
 
     res
 })
