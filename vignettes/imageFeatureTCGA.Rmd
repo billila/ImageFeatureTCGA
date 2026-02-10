@@ -34,10 +34,8 @@ histopathology-derived data from **TCGA** through two complementary pipelines:
 - **HoVerNet** → cell segmentation and classification
 - **ProvGigaPath** → slide- and tile-level embeddings
 
-
 These datasets can be imported directly into R as **Bioconductor objects**,
 facilitating downstream integration with TCGA omics and clinical data.
-
 
 # Installation
 
@@ -47,7 +45,6 @@ if (!requireNamespace("BiocManager", quietly = TRUE))
 
 BiocManager::install("waldronlab/imageFeatureTCGA")
 ```
-
 
 # Available Data
 
@@ -69,26 +66,20 @@ images.
 
 ### HoVerNet data
 
-
 ```{r listhover}
 getCatalog("hovernet")
 ```
 
-
 ### ProvGigaPath data
-
 
 ```{r listprovgiga}
 getCatalog("provgigapath")
 ```
 
-
 # Importing HoVerNet data
-
 
 You can import HoVerNet segmentation results as a
 `SpatialExperiment` or `SpatialFeatureExperiment`.
-
 
 ```{r importHover}
 getCatalog("hovernet") |>
@@ -114,10 +105,8 @@ Each cell is represented with:
 
 
 # Importing ProvGigaPath embeddings
-80 
 
 ProvGigaPath embeddings summarize tile or slide-level image features.
-
 
 ```{r importProvGiga}
 getCatalog("provgigapath") |>
@@ -136,10 +125,8 @@ getCatalog("provgigapath") |>
     import()
 ```
 
-
 Each row corresponds to a slide, with an embedding vector describing the
 image-derived features.
-
 
 # See also
 
