@@ -209,6 +209,16 @@ getEmbeddings <- function(
     if (!is(con, "ProvGigaList"))
         con <- ProvGigaList(con, ...)
 
+    levels <- vapply(
+        con@listData, function(x) { x@level }, character(1L)
+    )
+    level <- unique(levels)
+
+    if (!identical(unique(level),  "slide_level"))
+        stop(
+            "All ProvGiga objects must be 'slide_level' to extract embeddings."
+        )
+
     emb_list <- lapply(
         con,
         embedding
