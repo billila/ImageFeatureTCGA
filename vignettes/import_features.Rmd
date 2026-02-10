@@ -1,7 +1,7 @@
 ---
-title: "Import Image Features using ImageTCGA"
+title: "Import HoverNet and ProvGigaPath features with imageFeatureTCGA"
 author: "Ilaria Billato"
-date: "2025-11-13"
+date: "`r BiocStyle::doc_date()`"
 output:
   BiocStyle::html_document:
     toc: true
