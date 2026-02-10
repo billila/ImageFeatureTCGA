@@ -90,7 +90,6 @@ setClass(
 #'   either "JSON" or "H5AD" data into a Bioconductor class object. Must be one
 #'   of `"SpatialExperiment"` (default) or `"SpatialFeatureExperiment"`.
 #'
-#'
 #' @details The `HoverNetJSON` constructor function can import file paths
 #'   and URLs. Remote files are automatically cached using `BiocFileCache`
 #'   when the `import` method is called. This allows for efficient handling

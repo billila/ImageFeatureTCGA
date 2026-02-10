@@ -40,13 +40,13 @@
 #'   list of these elements. For `import`, futher arguments are passed to the
 #'   `import` method for the individual `ProvGiga` objects.
 #'
-#' @param is_url Logical. Whether the input resources are URLs. Default is
+#' @param is_url `logical(1L)` whether the input resources are URLs. Default is
 #'   `TRUE`.
 #'
-#' @param levels Character. The data levels for each resource. Default is
+#' @param levels `character()` the data levels for each resource. Default is
 #'   `"slide_level"`.
 #'
-#' @param parallel Logical. Whether to use parallel processing. Default is
+#' @param parallel `logical(1L)` whether to use parallel processing. Default is
 #'   `FALSE`.
 #'
 #' @returns * A `ProvGigaList` object containing multiple `ProvGiga` objects.
