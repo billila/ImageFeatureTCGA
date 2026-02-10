@@ -15,6 +15,10 @@
 #' @slot tumorType `character(1)` specifying the tumor type associated with the
 #'   `ProvGiga` data.
 #'
+#' @slot level `character(1)` specifying the level of ProvGiga data to import.
+#'   Must be one of `"slide_level"` or `"tile_level"`. If not provided, the
+#'   level is inferred from the file path or URL.
+#'
 #' @slot is_url `logical(1)` indicating whether the resource is a URL.
 #'
 #' @importClassesFrom TENxIO TENxFile

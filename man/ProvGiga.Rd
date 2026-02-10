@@ -97,6 +97,10 @@ URL structure.
 \item{\code{tumorType}}{\code{character(1)} specifying the tumor type associated with the
 \code{ProvGiga} data.}
 
+\item{\code{level}}{\code{character(1)} specifying the level of ProvGiga data to import.
+Must be one of \code{"slide_level"} or \code{"tile_level"}. If not provided, the
+level is inferred from the file path or URL.}
+
 \item{\code{is_url}}{\code{logical(1)} indicating whether the resource is a URL.}
 }}
 
