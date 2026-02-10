@@ -60,7 +60,6 @@ getCatalog()
     formats.
 - **ProvGigaPath** data is available in CSV format.
 
-
 Note that the `thumb` format refers to the png thumbnails of the whole-slide
 images.
 
@@ -78,11 +77,13 @@ getCatalog("provgigapath")
 
 # Importing HoVerNet data
 
-You can import HoVerNet segmentation results as a
-`SpatialExperiment` or `SpatialFeatureExperiment`.
+You can import HoVerNet segmentation results as either a `SpatialExperiment` or
+`SpatialFeatureExperiment`. Here we selectively import a file based on its
+filename, but you can also filter by other metadata fields such as `Project.ID`,
+`pipeline`, `format`, etc.
 
 ```{r importHover}
-getCatalog("hovernet") |>
+hspe <- getCatalog("hovernet") |>
     dplyr::filter(
         filename == paste(
             "TCGA-VG-A8LO-01A-01-DX1",
@@ -95,6 +96,7 @@ getCatalog("hovernet") |>
     getFileURLs() |>
     HoverNet(outClass = "SpatialExperiment") |>
     import()
+hspe
 ```
 
 Each cell is represented with:
@@ -103,6 +105,9 @@ Each cell is represented with:
 - cell type and type probabilities
 - optional contours stored in metadata
 
+```{r spcoords}
+colData(hspe)
+```
 
 # Importing ProvGigaPath embeddings
 
