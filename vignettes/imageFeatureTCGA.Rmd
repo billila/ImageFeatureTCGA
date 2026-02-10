@@ -144,12 +144,11 @@ image-derived features for that tile. In this example, we filter the catalog
 to the tile-level file corresponding to the same slide as above.
 
 ```{r}
-
 getCatalog("provgigapath") |>
     dplyr::filter(
         filename == paste(
-            "TCGA-23-1021-01Z-00-DX1",
-            "F07C221B-D401-47A5-9519-10DE59CA1E9D",
+            "TCGA-VG-A8LO-01A-01-DX1",
+            "B39A4D64-82A1-4A04-8AB6-918F3058B83B",
             "csv",
             "gz",
             sep = "."
@@ -159,6 +158,7 @@ getCatalog("provgigapath") |>
     getFileURLs() |>
     ProvGiga() |>
     import()
+```
 
 # Importing multiple ProvGigaPath files
 
