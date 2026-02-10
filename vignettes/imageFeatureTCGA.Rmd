@@ -128,6 +128,27 @@ getCatalog("provgigapath") |>
 Each row corresponds to a slide, with an embedding vector describing the
 image-derived features.
 
+## Tile-level embeddings can be imported as follows
+
+```{r}
+
+getCatalog("provgigapath") |>
+    dplyr::filter(
+        filename == paste(
+            "TCGA-23-1021-01Z-00-DX1",
+            "F07C221B-D401-47A5-9519-10DE59CA1E9D",
+            "csv",
+            "gz",
+            sep = "."
+        ) &
+        level == "tile_level"
+    ) |>
+    getFileURLs() |>
+    ProvGiga() |>
+    import()
+
+```
+
 # See also
 
 You can explore the full documentation through the package vignettes:
