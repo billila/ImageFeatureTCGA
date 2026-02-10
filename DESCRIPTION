@@ -26,7 +26,6 @@ Imports:
     BumpyMatrix,
     dplyr,
     httr2,
-    magick,
     IRanges,
     methods,
     readr,
