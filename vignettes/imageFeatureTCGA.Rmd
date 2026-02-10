@@ -135,10 +135,13 @@ getCatalog("provgigapath") |>
     import()
 ```
 
-Each row corresponds to a slide, with an embedding vector describing the
-image-derived features.
+## Tile-level embeddings
 
-## Tile-level embeddings can be imported as follows
+ProvGigaPath tile-level embeddings provide a more granular representation of
+image features at the tile level. Each row corresponds to a tile, with spatial
+coordinates (`tile_x`, `tile_y`) and an embedding vector describing the
+image-derived features for that tile. In this example, we filter the catalog
+to the tile-level file corresponding to the same slide as above.
 
 ```{r}
 
