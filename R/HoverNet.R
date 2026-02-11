@@ -322,14 +322,10 @@ setMethod("import", "HoverNetH5AD", function(con, format, text, ...) {
 )
 
 .validHoverNetPNG <- function(object) {
-    if (!object@is_url) {
-        if (!file.exists(path(object)))
-            "The specified PNG file does not exist"
-        else
-            TRUE
-    } else {
-            TRUE
-    }
+    out <- TRUE
+    if (!object@is_url && !file.exists(path(object)))
+        out <- "The specified PNG file does not exist"
+    out
 }
 
 S4Vectors::setValidity2("HoverNetPNG", .validHoverNetPNG)
