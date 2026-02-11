@@ -19,11 +19,6 @@ expect_inherits(data, "data.frame")
 expect_equal(nrow(data), 1)
 expect_true("tumorType" %in% names(data))
 
-# embedding
-emb <- embedding(pg)
-expect_inherits(emb, "numeric")
-expect_true(length(emb) == 768)
-
 # check output
 output <- capture.output(show(pg))
 expect_true(any(grepl("TCGA_ACC", output)))

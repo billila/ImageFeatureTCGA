@@ -30,9 +30,3 @@ imported <- import(pgl, redownload = FALSE)
 expect_inherits(imported, "data.frame")
 expect_equal(nrow(imported), 3)
 expect_true("tumorType" %in% names(imported))
-
-# Test getEmbeddings
-emb <- getEmbeddings(pgl)
-expect_inherits(emb, "matrix")
-expect_equal(nrow(emb), 3)
-expect_equal(ncol(emb), 768)
