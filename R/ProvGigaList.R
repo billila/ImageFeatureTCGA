@@ -137,47 +137,19 @@ setMethod("path", "ProvGigaList", function(object, ...) {
 #'
 #' @exportMethod import
 setMethod("import", "ProvGigaList", function(con, format, text, ...) {
-    prov_paths <- path(con)
-
     args <- list(...)
     redownload <- args[["redownload"]] %||% FALSE
     parallel <- args[["parallel"]] %||% FALSE
-    args <- args[names(args) != c("redownload", "parallel")]
-
-    if (con@are_URLs)
-        prov_paths <- .cache_url_files(prov_paths, redownload, parallel)
 
     levels <- vapply(
         con@listData, function(x) { x@level }, character(1L)
     )
     level <- unique(levels)
 
-    tumorTypes <- vapply(
-        con@listData, function(x) { x@tumorType }, character(1L)
+    split_list <- embeddingStack(
+        con, levels = levels, redownload = redownload, parallel = parallel
     )
 
-    import_list <- Map(
-        function(path, type, fn, level, ...) {
-            .import_level <- switch(
-                level,
-                slide_level = .import_slide_level,
-                tile_level = .import_tile_level
-            )
-            .import_level(
-                prov_path = path,
-                tumorType = type,
-                fileName = fn,
-                ...
-            )
-        },
-        path = prov_paths,
-        type = tumorTypes,
-        fn = prov_paths,
-        level = levels,
-        ...
-    )
-    split_list <- split(import_list, levels) |>
-        lapply(dplyr::bind_rows)
     result <- Map(
         function(data, lvl) {
             switch(

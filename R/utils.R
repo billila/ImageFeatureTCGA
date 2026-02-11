@@ -137,7 +137,7 @@
 }
 
 .import_slide_level <- function(
-    prov_path, tumorType, fileName, layer = "last_layer_embed", ...
+    prov_path, tumorType, layer = "last_layer_embed", ...
 ) {
     df <- readr::read_csv(prov_path, show_col_types = FALSE)
     embedding <- df[[layer]][1L] |>
@@ -148,16 +148,18 @@
     tibble::tibble(
         slideName = df[["slide_name"]],
         tumorType = tumorType,
-        fileName = fileName,
+        fileName = basename(prov_path),
         embedding
     )
 }
 
-.import_tile_level <- function(prov_path, tumorType, fileName, ...) {
+.import_tile_level <- function(
+    prov_path, tumorType, layer, ...
+) {
     df <- readr::read_csv(prov_path, show_col_types = FALSE)
     tibble::tibble(
         df,
         tumorType = tumorType,
-        fileName = fileName
+        fileName = basename(prov_path)
     )
 }
