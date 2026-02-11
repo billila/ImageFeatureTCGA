@@ -12,10 +12,10 @@ metadata with TCGA barcodes.}
 
 \item{catalog}{A \code{data.frame} from \code{getCatalog()} containing file metadata.}
 
-\item{redownload}{Logical. Whether to re-download cached files. Default is
-\code{FALSE}.}
+\item{redownload}{\code{logical(1)} whether to re-download cached files. Default
+is \code{FALSE}.}
 
-\item{parallel}{Logical. Whether to use parallel processing. Default is
+\item{parallel}{\code{logical(1)} whether to use parallel processing. Default is
 \code{TRUE}.}
 }
 \value{

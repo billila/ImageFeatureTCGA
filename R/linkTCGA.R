@@ -5,10 +5,13 @@
 #'
 #' @param MultiAssayExperiment A `MultiAssayExperiment` object containing sample
 #'   metadata with TCGA barcodes.
+#'
 #' @param catalog A `data.frame` from `getCatalog()` containing file metadata.
-#' @param redownload Logical. Whether to re-download cached files. Default is
-#'   `FALSE`.
-#' @param parallel Logical. Whether to use parallel processing. Default is
+#'
+#' @param redownload `logical(1)` whether to re-download cached files. Default
+#'   is `FALSE`.
+#'
+#' @param parallel `logical(1)` whether to use parallel processing. Default is
 #'   `TRUE`.
 #'
 #' @return A `MultiAssayExperiment` object with two additional assays:
