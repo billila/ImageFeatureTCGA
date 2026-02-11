@@ -55,6 +55,15 @@ setClass(
     )
 )
 
+.validHoverNet <- function(object) {
+    out <- TRUE
+    if (!object@is_url && !file.exists(path(object)))
+        out <- "The specified HoverNet file does not exist"
+    out
+}
+
+S4Vectors::setValidity2("HoverNet", .validHoverNet)
+
 #' @exportClass HoverNetJSON
 .HoverNetJSON <- setClass(
     Class = "HoverNetJSON",
@@ -320,15 +329,6 @@ setMethod("import", "HoverNetH5AD", function(con, format, text, ...) {
     Class = "HoverNetPNG",
     contains = "HoverNet"
 )
-
-.validHoverNetPNG <- function(object) {
-    out <- TRUE
-    if (!object@is_url && !file.exists(path(object)))
-        out <- "The specified PNG file does not exist"
-    out
-}
-
-S4Vectors::setValidity2("HoverNetPNG", .validHoverNetPNG)
 
 #' @rdname HoverNet
 #'
