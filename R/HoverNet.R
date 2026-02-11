@@ -129,11 +129,11 @@ HoverNet <- function(
         isScalarCharacter(resource) || is(resource, "TENxFile")
     )
     path_extract <- if (is(resource, "TENxFile")) path else I
-    is_url <- .is_url(path_extract(resource))
-    isJSON <-
-        grepl("\\.json(\\.gz)?$", path_extract(resource), TRUE)
-    isH5AD <- grepl("\\.h5ad(\\.gz)$", path_extract(resource), TRUE)
-    isPNG <- grepl("\\.png$", path_extract(resource), TRUE)
+    path_res <- path_extract(resource)
+    is_url <- .is_url(path_res)
+    isJSON <- grepl("\\.json(\\.gz)?$", path_res, TRUE)
+    isH5AD <- grepl("\\.h5ad(\\.gz)$", path_res, TRUE)
+    isPNG <- grepl("\\.png$", path_res, TRUE)
     if (!is(resource, "TENxFile"))
         resource <- TENxIO::TENxFile(resource)
     outClass <- match.arg(outClass)
