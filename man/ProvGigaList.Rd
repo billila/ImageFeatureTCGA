@@ -7,7 +7,6 @@
 \alias{ProvGigaList-class}
 \alias{path,ProvGigaList-method}
 \alias{import,ProvGigaList,ANY,ANY-method}
-\alias{getEmbeddings}
 \title{ProvGigaList class for handling lists of ProvGiga objects}
 \usage{
 ProvGigaList(..., is_url = TRUE, levels = "slide_level", parallel = FALSE)
@@ -15,8 +14,6 @@ ProvGigaList(..., is_url = TRUE, levels = "slide_level", parallel = FALSE)
 \S4method{path}{ProvGigaList}(object, ...)
 
 \S4method{import}{ProvGigaList,ANY,ANY}(con, format, text, ...)
-
-getEmbeddings(con, parallel = TRUE, layer = "last_layer_embed", ...)
 }
 \arguments{
 \item{...}{Multiple \code{ProvGiga} objects, a vector of file paths or URLs, or a
@@ -48,9 +45,6 @@ unnecessary when \code{con} is a derivative of \link[BiocIO:BiocFile-class]{Bioc
 
 \item{text}{If \code{con} is missing, this can be a character vector directly
 providing the string data to import.}
-
-\item{layer}{\code{character(1)} specifying the layer from which to extract the
-embedding. Default is \code{"last_layer_embed"}.}
 }
 \value{
 \itemize{
@@ -71,9 +65,6 @@ package.
 The \code{ProvGigaList} constructor function creates an instance of
 the \code{ProvGigaList} class. It accepts multiple \code{ProvGiga} objects, a vector
 of file paths or URLs, or a list of these elements.
-
-The \code{getEmbeddings} function extracts and combines the
-embeddings from all \code{ProvGiga} objects within a \code{ProvGigaList}.
 }
 \section{\code{path}}{
  The \code{path} method for \code{ProvGigaList} objects retrieves the

@@ -203,28 +203,3 @@ setMethod("import", "ProvGigaCSV", function(con, format, text, ...) {
         ) |> c(args)
     )
 })
-
-#' @rdname ProvGiga
-#'
-#' @description The `embedding` function extracts the embedding vector from a
-#'   `ProvGiga` object. It reads the slide_level data and returns the embedding
-#'   as a numeric vector.
-#'
-#' @param layer `character(1)` specifying the layer from which to extract the
-#'   embedding. Default is `"last_layer_embed"`.
-#'
-#' @export
-embedding <- function(con, layer = "last_layer_embed") {
-    if (!is(con, "ProvGigaCSV"))
-        con <- ProvGiga(con)
-
-    if (!identical(con@level, "slide_level"))
-        stop("Embedding extraction is only supported for 'slide_level' data.")
-
-    ldf <- import(con)
-    stopifnot(
-        identical(nrow(ldf), 1L)
-    )
-    unlist(ldf[, grepl("^V[0-9]+$", names(ldf))]) |>
-        as.numeric()
-}

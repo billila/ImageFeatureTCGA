@@ -7,7 +7,6 @@
 \alias{ProvGigaCSV-class}
 \alias{show,ProvGiga-method}
 \alias{import,ProvGigaCSV,ANY,ANY-method}
-\alias{embedding}
 \title{Import ProvGiga slide-level data into a Bioconductor class object}
 \usage{
 ProvGiga(
@@ -20,8 +19,6 @@ ProvGiga(
 \S4method{show}{ProvGiga}(object)
 
 \S4method{import}{ProvGigaCSV,ANY,ANY}(con, format, text, ...)
-
-embedding(con, layer = "last_layer_embed")
 }
 \arguments{
 \item{resource}{\code{character(1)} the file path or URL to the ProvGiga CSV file,
@@ -55,9 +52,6 @@ unnecessary when \code{con} is a derivative of \link[BiocIO:BiocFile-class]{Bioc
 providing the string data to import.}
 
 \item{...}{Parameters to pass to the format-specific method.}
-
-\item{layer}{\code{character(1)} specifying the layer from which to extract the
-embedding. Default is \code{"last_layer_embed"}.}
 }
 \value{
 \itemize{
@@ -79,10 +73,6 @@ The \code{ProvGiga} constructor function creates an instance of the
 \code{ProvGiga} class. The \code{resource} argument can be either a file path or URL
 to a ProvGiga CSV file. The \code{tumorType} parameter specifies the tumor
 type associated with the ProvGiga data.
-
-The \code{embedding} function extracts the embedding vector from a
-\code{ProvGiga} object. It reads the slide_level data and returns the embedding
-as a numeric vector.
 }
 \details{
 The \code{ProvGiga} constructor function can import file paths, URLs, and
