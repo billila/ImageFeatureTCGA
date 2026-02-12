@@ -47,8 +47,13 @@ jobs:
 
       - name: Query dependencies
         run: |
-          BiocManager::install(c("covr", "BiocCheck", "waldronlab/HistoImagePlot", "waldronlab/imageTCGAutils"))
+          BiocManager::install(c("covr", "BiocCheck", "waldronlab/imageTCGAutils"))
           saveRDS(remotes::dev_package_deps(dependencies = TRUE), ".github/depends.Rds", version = 2)
+        shell: Rscript {0}
+
+      - name: Install R Package
+        run: |
+          remotes::install_local(repos = BiocManager::repositories())
         shell: Rscript {0}
 
       - name: Cache R packages
@@ -64,8 +69,8 @@ jobs:
 
       - name: Install Dependencies
         run: |
+          BiocManager::install("waldronlab/HistoImagePlot", ask = FALSE, update = TRUE)
           remotes::install_deps(dependencies = TRUE, repos = BiocManager::repositories())
-          BiocManager::install(ask = FALSE, update = TRUE)
         shell: Rscript {0}
 
       - name: Check Package
