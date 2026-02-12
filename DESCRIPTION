@@ -46,6 +46,8 @@ Suggests:
     curatedTCGAData,
     curl,
     data.table,
+    HistoImagePlot,
+    imageTCGAutils,
     knitr,
     MOFA2,
     png,

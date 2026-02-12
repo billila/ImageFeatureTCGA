@@ -23,6 +23,7 @@ knitr::opts_chunk$set(cache = TRUE, echo = TRUE)
 
 ```{r load_packages, include=TRUE, results="hide", message=FALSE, warning=FALSE}
 library(imageFeatureTCGA)
+library(HistoImagePlot)
 library(dplyr)
 library(SpatialExperiment)
 library(ggplot2)
