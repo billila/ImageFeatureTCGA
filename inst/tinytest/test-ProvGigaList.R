@@ -27,6 +27,11 @@ old <- options(BiocFileCache.cache = tempdir())
 on.exit(options(old))
 
 imported <- import(pgl, redownload = FALSE)
-expect_inherits(imported, "data.frame")
-expect_equal(nrow(imported), 3)
-expect_true("tumorType" %in% names(imported))
+expect_inherits(imported, "SummarizedExperiment")
+expect_equal(ncol(imported), 3)
+expect_true(
+    all(
+        c("slideName", "tumorType", "fileName", "patientIds", "sampleIds") %in%
+            names(S4Vectors::metadata(imported))
+    )
+)
