@@ -21,9 +21,7 @@ vignette: >
 library(imageFeatureTCGA)
 library(curatedTCGAData)
 library(SummarizedExperiment)
-library(MultiAssayExperiment)
 library(dplyr)
-library(stringr)
 library(MOFA2)
 ```
 
