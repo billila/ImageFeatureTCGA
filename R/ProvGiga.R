@@ -68,6 +68,7 @@ setClass(
 #'   URL structure.
 #'
 #' @importFrom BiocBaseUtils isScalarCharacter
+#' @importFrom BiocIO path
 #' @importFrom TENxIO TENxFile
 #' @importFrom methods is
 #'
@@ -83,10 +84,12 @@ ProvGiga <- function(
     tumorType = NA_character_
 ) {
     stopifnot(
-        isScalarCharacter(resource) || is(resource, "TENxFile")
+        "'resource' must be a file path, URL, or of class 'TENxFile'" =
+            isScalarCharacter(resource) || is(resource, "TENxFile")
     )
-    path_extract <- if (is(resource, "TENxFile")) path else I
-    filename <- path_extract(resource)
+    if (!is(resource, "TENxFile"))
+        resource <- TENxIO::TENxFile(resource)
+    filename <- path(resource)
     if (missing(is_url))
         is_url <- .is_url(filename)
 
@@ -113,9 +116,6 @@ ProvGiga <- function(
     } else {
         level <- match.arg(level)
     }
-
-    if (!is(resource, "TENxFile"))
-        resource <- TENxIO::TENxFile(resource)
 
     .ProvGigaCSV(
         resource, is_url = is_url, tumorType = tumorType, level = level
