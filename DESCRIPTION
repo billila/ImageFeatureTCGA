@@ -46,7 +46,6 @@ Suggests:
     cowplot,
     curatedTCGAData,
     curl,
-    data.table,
     ggplot2,
     imageTCGAutils,
     knitr,
