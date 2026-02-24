@@ -55,9 +55,7 @@ Suggests:
     RColorBrewer,
     rhdf5,
     rmarkdown,
-    sfdep,
     SpatialFeatureExperiment,
-    spdep,
     tinytest
 VignetteBuilder: knitr
 biocViews: Software, Infrastructure, DataImport, DataRepresentation
