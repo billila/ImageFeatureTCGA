@@ -48,7 +48,6 @@ Suggests:
     curl,
     data.table,
     ggplot2,
-    HistoImagePlot,
     imageTCGAutils,
     knitr,
     MOFA2,
