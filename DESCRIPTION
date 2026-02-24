@@ -50,7 +50,6 @@ Suggests:
     ggplot2,
     imageTCGAutils,
     knitr,
-    MOFA2,
     png,
     RColorBrewer,
     rhdf5,
