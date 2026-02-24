@@ -216,11 +216,11 @@ pgl_mixed
 
 # See also
 
-You can explore the full documentation through the package vignettes:
+You can explore the full documentation through the MOFA and Point Pattern
+Analysis vignettes in the `imageTCGA` manuscript [repository][1].
 
--[MOFA](https://github.com/waldronlab/imageFeatureTCGA/blob/devel/vignettes/MOFA_analysis.qmd)
--[Point Pattern Analysis](https://github.com/waldronlab/imageFeatureTCGA/blob/devel/vignettes/PPA.Rmd)
-
+[1]: https://github.com/billila/manuscript_imageTCGA/
+    
 Note. More vignettes will be added as new feature types and workflows become
 available.
 
