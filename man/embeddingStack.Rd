@@ -39,9 +39,9 @@ specific level (e.g., "slide_level", "tile_level") and contains the
 combined embeddings from all files at that level.
 }
 \description{
-This function imports and combines embeddings from multiple ProvGigaPath files
-contained within a ProvGigaList object. It supports both slide-level and
-tile-level embeddings.
+This function imports and combines embeddings from multiple ProvGigaPath
+files contained within a ProvGigaList object. It supports both slide-level
+and tile-level embeddings.
 }
 \examples{
 \dontshow{if (interactive()) withAutoprint(\{ # examplesIf}

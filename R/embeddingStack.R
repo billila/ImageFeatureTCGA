@@ -1,8 +1,8 @@
 #' Create an embedding stack from a ProvGigaList object
 #'
-#' This function imports and combines embeddings from multiple ProvGigaPath files
-#' contained within a ProvGigaList object. It supports both slide-level and
-#' tile-level embeddings.
+#' This function imports and combines embeddings from multiple ProvGigaPath
+#' files contained within a ProvGigaList object. It supports both slide-level
+#' and tile-level embeddings.
 #'
 #' @returns A named list of tibbles, where each list element corresponds to a
 #'   specific level (e.g., "slide_level", "tile_level") and contains the
