@@ -18,6 +18,6 @@ knitr::opts_chunk$set(
 rmarkdown::render(input = "inst/scripts/README.Rmd", output_dir = ".")
 ```
 
-```{r, child="../../vignettes/import_features.Rmd"}
+```{r, child="../../vignettes/imageFeatureTCGA.Rmd"}
 
 ```
