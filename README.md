@@ -9,7 +9,7 @@ library(dplyr)
 
 # Overview
 
-`imageFeatureTCGA` (`imageTCGA`) provides convenient access to
+`imageFeatureTCGA` provides convenient access to
 histopathology-derived data from **TCGA** through two complementary
 pipelines:
 
