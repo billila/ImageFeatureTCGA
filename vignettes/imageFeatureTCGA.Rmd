@@ -106,7 +106,7 @@ Each tile entry includes:
 
 These embeddings enable spatial analyses of tissue heterogeneity and can
 be integrated with cell-level data from HoVerNet using complementary
-tools such as `imageTCGAutils`.
+packages such as `imageTCGAutils`.
 
 
 # Available Data

@@ -29,6 +29,67 @@ if (!requireNamespace("BiocManager", quietly = TRUE))
 BiocManager::install("waldronlab/imageFeatureTCGA")
 ```
 
+# Data structure and technical details
+
+The datasets accessible through `imageFeatureTCGA` originate from
+whole-slide histopathology images processed by deep learning pipelines.
+They are distributed as precomputed features to avoid the computational
+cost of running segmentation and embedding models locally.
+
+## HoVerNet outputs
+
+HoVerNet provides nuclei segmentation and classification results at the
+single-cell level. Each detected nucleus is represented by:
+
+- spatial coordinates (`x`, `y`) in pixel units relative to the slide
+- predicted cell type labels
+- class probabilities
+- polygon contours describing nuclear boundaries (when available)
+
+When imported as a `SpatialExperiment` or `SpatialFeatureExperiment`,
+the data are structured as follows:
+
+- **columns** represent individual nuclei
+- **colData** stores cell-level metadata (coordinates, cell types)
+- **assays** may contain quantitative features (e.g., probabilities)
+- **metadata** may include segmentation contours and image information
+
+These objects enable spatial analyses and integration with other
+Bioconductor workflows for spatial transcriptomics and imaging data.
+
+## ProvGigaPath embeddings
+
+ProvGigaPath is a foundation model trained on large-scale pathology image
+tiles that produces high-dimensional embeddings summarizing visual and
+morphological features.
+
+Two levels of embeddings are provided:
+
+### Slide-level embeddings
+
+Slide-level embeddings summarize the entire whole-slide image into a
+single feature vector.
+
+- one row per slide
+- embedding dimension corresponds to the encoder output size
+- suitable for slide-level prediction or clustering tasks
+
+### Tile-level embeddings
+
+Tile-level embeddings provide localized representations of tissue regions.
+
+Each tile entry includes:
+
+- spatial coordinates (`tile_x`, `tile_y`) corresponding to the tile
+  position on the slide
+- a high-dimensional embedding vector
+- optional metadata describing tile extraction parameters
+
+These embeddings enable spatial analyses of tissue heterogeneity and can
+be integrated with cell-level data from HoVerNet using complementary
+packages such as `imageTCGAutils`.
+
+
 # Available Data
 
 Use the following function to download the catalog of available files:
