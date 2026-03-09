@@ -14,7 +14,12 @@ Authors@R: c(
     person("Eslam", "Abousamra", role = "aut", comment = c(
         affiliation = "CUNY Graduate School of Public Health and Health Policy,
         New York, NY USA")
-    ))
+    ),
+    person("Sehyun", "Oh", , "shbrief@gmail.com", "aut",
+        c(ORCID = "0000-0002-9490-3061", affiliation = 
+        "CUNY Graduate School of Public Health and Health Policy,
+        New York, NY USA")
+    )
 Description: The package imports data from HoverNet, and ProvGigaPath
     pipelines. Pipeline output data are hosted in a self-owned online
     repository. Package functionality conveniently incorporates pipeline data
