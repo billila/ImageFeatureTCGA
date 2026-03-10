@@ -61,6 +61,23 @@
     vapply(qframe, `[[`, character(1L), "rpath")
 }
 
+.file_dirs_create <- function(files) {
+    dirs <- dirname(files) |>
+        unique()
+
+    dexist <- dir.exists(dirs)
+    if (!all(dexist))
+        vapply(
+            dirs[!dexist],
+            dir.create,
+            logical(1L),
+            recursive = TRUE,
+            showWarnings = FALSE
+        )
+    else
+        TRUE
+}
+
 .cache_url_files <- function(urls, redownload = FALSE, parallel = TRUE) {
     checkInstalled("curl")
     checkInstalled("BiocFileCache")
@@ -78,29 +95,38 @@
         urls <- urls[!cached | redownload]
         if (length(urls)) {
             part_urls <- gsub(paste0(.BASE_URL, "/"), "", urls)
+            temppaths <- file.path(tempfile(), part_urls)
+            .file_dirs_create(temppaths)
             destfiles <- file.path(cache, part_urls)
-            destfolders <- dirname(destfiles) |>
-                unique()
-            dexist <- dir.exists(destfolders)
-            if (!all(dexist))
-                vapply(
-                    destfolders[!dexist],
-                    dir.create,
-                    logical(1L),
-                    recursive = TRUE,
-                    showWarnings = FALSE
-                )
+            .file_dirs_create(destfiles)
+
             output <- curl::multi_download(
                 urls = urls,
-                destfiles = destfiles
+                destfiles = temppaths
             )
-            successframe <- output[output[["success"]], , drop = FALSE]
-            successurls <- urls[output[["success"]]]
-            successfiles <- successframe[["destfile"]]
+            success <- output[["success"]]
+            failed <- !success
+            if (any(failed)) {
+                warning(
+                    "Some downloads failed:\n  ",
+                    paste(urls[failed], collapse = "\n  "),
+                    "\n  Reasons: ",
+                    paste(output[failed, "error"], collapse = ";\n  ")
+                )
+            }
+            Map(
+                function(file, dest, success) {
+                    if (success)
+                        file.rename(file, dest)
+                },
+                file = output[["destfile"]],
+                dest = destfiles,
+                success = success
+            )
 
             locals <- BiocParallel::bpmapply(
-                function(bfc, url, file, cached, bfcid) {
-                    if (!cached)
+                function(bfc, url, file, cached, success) {
+                    if (!cached && success)
                         BiocFileCache::bfcadd(
                             x = bfc,
                             rname = url,
@@ -113,9 +139,10 @@
                     else
                         file
                 },
-                url = successurls,
-                file = successfiles,
+                url = output[["url"]],
+                file = destfiles,
                 cached = cached,
+                success = output[["success"]],
                 MoreArgs = list(bfc = bfc),
                 SIMPLIFY = FALSE
             )
