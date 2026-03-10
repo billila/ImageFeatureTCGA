@@ -1,4 +1,5 @@
-.BASE_URL <- "https://store.cancerdatasci.org"
+.BASE_URL <- "https://nyu1.osn.mghpcc.org"
+.OSN_BUCKET_NAME <- "waldronlab-image-features"
 .CATALOG_COL_TYPES <- "ccccccccccccccccccccccddc"
 
 #' @title Download the catalog of available HoVerNet and ProvGigaPath files
@@ -69,5 +70,5 @@ getCatalog <-
 #'     getFileURLs()
 #' @export
 getFileURLs <- function(catalog) {
-    paste(.BASE_URL, catalog[["fullpath"]], sep = "/")
+    paste(.BASE_URL, .OSN_BUCKET_NAME, catalog[["fullpath"]], sep = "/")
 }
