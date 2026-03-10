@@ -20,7 +20,7 @@ expect_true(all(vapply(pgl, function(x) is(x, "ProvGiga"), logical(1L))))
 paths <- path(pgl)
 expect_inherits(paths, "character")
 expect_equal(length(paths), 3)
-expect_true(all(grepl("^https://store.cancerdatasci.org", paths)))
+expect_true(all(grepl(imageFeatureTCGA:::.BASE_URL, paths)))
 
 # Test import method
 old <- options(BiocFileCache.cache = tempdir())
@@ -35,3 +35,4 @@ expect_true(
             names(S4Vectors::metadata(imported))
     )
 )
+
