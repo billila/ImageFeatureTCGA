@@ -6,6 +6,59 @@
     grepl("^https?://|^ftp://", url)
 }
 
+.SENTINEL_MULTI_DOWNLOAD_FRAME <- data.frame(
+    success = logical(),
+    status_code = integer(),
+    resumefrom = numeric(),
+    url = character(),
+    destfile = character(),
+    error = character(),
+    type = character(),
+    modified = character(),
+    time = numeric(),
+    headers = character(),
+    stringsAsFactors = FALSE
+)
+
+multi_download_retry <- function(urls, destfiles, max_tries = 3L) {
+    results <- .SENTINEL_MULTI_DOWNLOAD_FRAME[seq_along(urls), ]
+    results[["url"]] <- urls
+    results[["success"]] <- rep(FALSE, length(urls))
+    results[["destfile"]] <- destfiles
+    rownames(results) <- NULL
+
+    pending_idx <- seq_along(urls)
+    attempt <- 1
+
+    while (length(pending_idx) && attempt <= max_tries) {
+        res <- multi_download(urls[pending_idx], destfiles[pending_idx])
+        results[pending_idx, ] <- res
+
+        succeeded <- !is.na(res[["success"]]) & res[["success"]]
+        failed_mask <- !succeeded
+
+        pending_idx <- pending_idx[failed_mask]
+
+        if (length(pending_idx)) {
+            attempt <- attempt + 1
+            if (attempt <= max_tries) {
+                wait <- 2^attempt
+                Sys.sleep(wait)
+            }
+        }
+    }
+
+    if (length(pending_idx))
+        warning(
+            length(pending_idx),
+            " file(s) failed after ",
+            max_tries,
+            " attempts."
+        )
+
+    results
+}
+
 .cache_url_file <- function(url, redownload = FALSE, bfc) {
     if (missing(bfc))
         bfc <- BiocFileCache::BiocFileCache(
@@ -100,7 +153,7 @@
             destfiles <- file.path(cache, part_urls)
             .file_dirs_create(destfiles)
 
-            output <- curl::multi_download(
+            output <- multi_download_retry(
                 urls = urls,
                 destfiles = temppaths
             )
