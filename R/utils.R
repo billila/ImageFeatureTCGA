@@ -31,7 +31,7 @@ multi_download_retry <- function(urls, destfiles, max_tries = 3L) {
     attempt <- 1
 
     while (length(pending_idx) && attempt <= max_tries) {
-        res <- multi_download(urls[pending_idx], destfiles[pending_idx])
+        res <- curl::multi_download(urls[pending_idx], destfiles[pending_idx])
         results[pending_idx, ] <- res
 
         succeeded <- !is.na(res[["success"]]) & res[["success"]]
