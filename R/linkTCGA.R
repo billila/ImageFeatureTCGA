@@ -11,8 +11,10 @@
 #' @param redownload `logical(1)` whether to re-download cached files. Default
 #'   is `FALSE`.
 #'
-#' @param parallel `logical(1)` whether to use parallel processing. Default is
-#'   `TRUE`.
+#' @param parallel `logical(1)` whether to use parallel processing to
+#'   instantiate multiple `ProvGiga` objects. This can speed up the import
+#'   process when importing multiple files, but requires the `BiocParallel`
+#'   package to be installed. Default is `TRUE`.
 #'
 #' @return A `MultiAssayExperiment` object with two additional assays:
 #'   \describe{
@@ -21,7 +23,6 @@
 #'     \item{tile_assay}{A `SummarizedExperiment` containing tile-level
 #'       ProvGigaPath embeddings stored as a `BumpyMatrix`.}
 #'   }
-#'
 #'
 #' @importFrom S4Vectors DataFrame
 #'
@@ -50,7 +51,7 @@ linkTCGA <- function(
         levels = catalog[["level"]],
         parallel = parallel
     ) |>
-        import(redownload = redownload, parallel = parallel)
+        import(redownload = redownload)
     if (is(resdata, "SummarizedExperiment")) {
         assayname <- unique(catalog[["level"]]) |>
             gsub("level", "assay", x = _)

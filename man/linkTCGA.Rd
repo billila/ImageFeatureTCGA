@@ -15,8 +15,10 @@ metadata with TCGA barcodes.}
 \item{redownload}{\code{logical(1)} whether to re-download cached files. Default
 is \code{FALSE}.}
 
-\item{parallel}{\code{logical(1)} whether to use parallel processing. Default is
-\code{TRUE}.}
+\item{parallel}{\code{logical(1)} whether to use parallel processing to
+instantiate multiple \code{ProvGiga} objects. This can speed up the import
+process when importing multiple files, but requires the \code{BiocParallel}
+package to be installed. Default is \code{TRUE}.}
 }
 \value{
 A \code{MultiAssayExperiment} object with two additional assays:

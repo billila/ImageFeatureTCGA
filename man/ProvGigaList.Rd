@@ -26,8 +26,8 @@ list of these elements. For \code{import}, futher arguments are passed to the
 \item{levels}{\code{character()} the data levels for each resource. Default is
 \code{"slide_level"}.}
 
-\item{parallel}{\code{logical(1L)} whether to use parallel processing. Default is
-\code{FALSE}.}
+\item{parallel}{\code{logical(1L)} whether to use parallel processing to
+instantiate multiple \code{ProvGiga} objects. Default is \code{FALSE}.}
 
 \item{object}{A \code{ProvGigaList} object.}
 
@@ -88,7 +88,7 @@ old <- options(BiocFileCache.cache = tempdir())
 on.exit(options(BiocFileCache.cache = old))
 
 ProvGigaList(slide_urls) |>
-   import(redownload = FALSE, parallel = FALSE)
+   import(redownload = FALSE)
 
 ## tile level imports
 tile_urls <- getCatalog("provgigapath") |>
@@ -97,5 +97,5 @@ tile_urls <- getCatalog("provgigapath") |>
    getFileURLs()
 
 ProvGigaList(tile_urls) |>
-   import(redownload = FALSE, parallel = FALSE)
+   import(redownload = FALSE)
 }

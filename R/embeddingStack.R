@@ -22,8 +22,6 @@
 #' @param redownload `logical(1)` indicating whether to re-download cached
 #'   files.
 #'
-#' @param parallel `logical(1)` indicating whether to use parallel processing.
-#'
 #' @param ... Additional arguments passed to the slide and tile import
 #'   functions.
 #'
@@ -34,14 +32,13 @@
 #'     getFileURLs()
 #'
 #' ProvGigaList(slide_urls) |>
-#'    embeddingStack(redownload = FALSE, parallel = FALSE)
+#'    embeddingStack(redownload = FALSE)
 #' @export
 embeddingStack <- function(
     con,
     levels,
     layer = "last_layer_embed",
     redownload = FALSE,
-    parallel = FALSE,
     ...
 ) {
     prov_paths <- path(con)

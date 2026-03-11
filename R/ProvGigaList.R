@@ -46,8 +46,8 @@
 #' @param levels `character()` the data levels for each resource. Default is
 #'   `"slide_level"`.
 #'
-#' @param parallel `logical(1L)` whether to use parallel processing. Default is
-#'   `FALSE`.
+#' @param parallel `logical(1L)` whether to use parallel processing to
+#'   instantiate multiple `ProvGiga` objects. Default is `FALSE`.
 #'
 #' @returns * A `ProvGigaList` object containing multiple `ProvGiga` objects.
 #' * `import-ProvGigaList`: Either a single `SummarizedExperiment` (if all
@@ -68,7 +68,7 @@
 #' on.exit(options(BiocFileCache.cache = old))
 #'
 #' ProvGigaList(slide_urls) |>
-#'    import(redownload = FALSE, parallel = FALSE)
+#'    import(redownload = FALSE)
 #'
 #' ## tile level imports
 #' tile_urls <- getCatalog("provgigapath") |>
@@ -77,7 +77,7 @@
 #'    getFileURLs()
 #'
 #' ProvGigaList(tile_urls) |>
-#'    import(redownload = FALSE, parallel = FALSE)
+#'    import(redownload = FALSE)
 #' @export
 ProvGigaList <- function(
     ..., is_url = TRUE, levels = "slide_level", parallel = FALSE
@@ -139,16 +139,13 @@ setMethod("path", "ProvGigaList", function(object, ...) {
 setMethod("import", "ProvGigaList", function(con, format, text, ...) {
     args <- list(...)
     redownload <- args[["redownload"]] %||% FALSE
-    parallel <- args[["parallel"]] %||% FALSE
 
     levels <- vapply(
         con@listData, function(x) { x@level }, character(1L)
     )
     level <- unique(levels)
 
-    split_list <- embeddingStack(
-        con, levels = levels, redownload = redownload, parallel = parallel
-    )
+    split_list <- embeddingStack(con, levels = levels, redownload = redownload)
 
     result <- Map(
         function(data, lvl) {

@@ -9,7 +9,6 @@ embeddingStack(
   levels,
   layer = "last_layer_embed",
   redownload = FALSE,
-  parallel = FALSE,
   ...
 )
 }
@@ -27,8 +26,6 @@ ignored for "tile_level".}
 
 \item{redownload}{\code{logical(1)} indicating whether to re-download cached
 files.}
-
-\item{parallel}{\code{logical(1)} indicating whether to use parallel processing.}
 
 \item{...}{Additional arguments passed to the slide and tile import
 functions.}
@@ -51,6 +48,6 @@ slide_urls <- getCatalog("provgigapath") |>
     getFileURLs()
 
 ProvGigaList(slide_urls) |>
-   embeddingStack(redownload = FALSE, parallel = FALSE)
+   embeddingStack(redownload = FALSE)
 \dontshow{\}) # examplesIf}
 }
