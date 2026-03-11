@@ -47,7 +47,7 @@ embeddingStack <- function(
     prov_paths <- path(con)
 
     if (con@are_URLs)
-        prov_paths <- .cache_url_files(prov_paths, redownload, parallel)
+        prov_paths <- .cache_url_files(prov_paths, redownload)
 
     if (missing(levels))
         levels <- vapply(con@listData, function(x) { x@level }, character(1L))

@@ -216,7 +216,7 @@ setMethod("import", "HoverNetJSON", function(con, format, text, ...) {
     json_path <- path(con)
 
     if (con@is_url)
-        json_path <- .cache_url_file(json_path)
+        json_path <- .cache_url_files(json_path)
 
     jmespath_query_simple <- "nuc.*.{
         x: centroid[0],
@@ -297,7 +297,7 @@ setMethod("import", "HoverNetH5AD", function(con, format, text, ...) {
     h5ad_path <- path(con)
 
     if (con@is_url)
-        h5ad_path <- .cache_url_file(h5ad_path)
+        h5ad_path <- .cache_url_files(h5ad_path)
 
     BiocBaseUtils::checkInstalled("anndataR")
     res <- anndataR::read_h5ad(path = h5ad_path, as = "SingleCellExperiment")
@@ -347,7 +347,7 @@ setMethod("import", "HoverNetPNG", function(con, format, text, ...) {
     png_path <- path(con)
 
     if (con@is_url)
-        png_path <- .cache_url_file(png_path)
+        png_path <- .cache_url_files(png_path)
 
     BiocBaseUtils::checkInstalled("png")
     png::readPNG(png_path)

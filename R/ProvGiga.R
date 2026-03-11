@@ -186,7 +186,7 @@ setMethod("import", "ProvGigaCSV", function(con, format, text, ...) {
     args <- args[names(args) != "redownload"]
 
     if (con@is_url)
-        prov_path <- .cache_url_file(prov_path, redownload)
+        prov_path <- .cache_url_files(prov_path, redownload)
 
     .import_level <- switch(
         con@level,

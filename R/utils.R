@@ -59,44 +59,6 @@ multi_download_retry <- function(urls, destfiles, max_tries = 3L) {
     results
 }
 
-.cache_url_file <- function(url, redownload = FALSE, bfc) {
-    if (missing(bfc))
-        bfc <- BiocFileCache::BiocFileCache(
-            cache = getOption(
-                "BiocFileCache.cache", BiocFileCache::getBFCOption("CACHE")
-            )
-        )
-    bquery <- BiocFileCache::bfcquery(bfc, url, "rname", exact = TRUE)
-    cached <- identical(nrow(bquery), 1L)
-
-    if (!redownload && cached)
-        return(
-            BiocFileCache::bfcrpath(
-                bfc, rnames = url, exact = TRUE, download = TRUE, rtype = "web"
-            )
-        )
-
-    cache <- BiocFileCache::bfccache(bfc)
-    part_url <- gsub(paste0(.BASE_URL, "/"), "", url)
-    destfile <- file.path(cache, part_url)
-    destfolder <- dirname(destfile)
-    if (!dir.exists(destfolder))
-        dir.create(destfolder, recursive = TRUE, showWarnings = FALSE)
-    file <- curl::curl_download(url = url, destfile = destfile)
-    if (!cached)
-        BiocFileCache::bfcadd(
-            x = bfc,
-            rname = url,
-            fpath = file,
-            rtype = "local",
-            action = "asis",
-            fname = "exact",
-            exact = TRUE
-        )
-    else
-        file
-}
-
 .url_query <- function(bfc, urls) {
     lapply(
         urls,
@@ -131,89 +93,79 @@ multi_download_retry <- function(urls, destfiles, max_tries = 3L) {
         TRUE
 }
 
-.cache_url_files <- function(urls, redownload = FALSE, parallel = TRUE) {
+.cache_url_files <- function(urls, redownload = FALSE, parallel, bfc) {
     checkInstalled("curl")
     checkInstalled("BiocFileCache")
-    cache <- getOption(
-        "BiocFileCache.cache", BiocFileCache::getBFCOption("CACHE")
-    )
-    bfc <- BiocFileCache::BiocFileCache(cache = cache)
-    if (parallel) {
-        queries <- .url_query(bfc, urls)
-        cached <- .is_cached(queries)
-        locals <- vector("list", length(urls))
 
-        if (!redownload)
-            locals[cached] <- .rpath_cache(queries[cached])
-        urls <- urls[!cached | redownload]
-        if (length(urls)) {
-            part_urls <- gsub(paste0(.BASE_URL, "/"), "", urls)
-            temppaths <- file.path(tempfile(), part_urls)
-            .file_dirs_create(temppaths)
-            destfiles <- file.path(cache, part_urls)
-            .file_dirs_create(destfiles)
+    if (missing(bfc)) {
+        cache <- getOption(
+            "BiocFileCache.cache", BiocFileCache::getBFCOption("CACHE")
+        )
+        bfc <- BiocFileCache::BiocFileCache(cache = cache)
+    } else {
+        cache <- BiocFileCache::bfccache(bfc)
+    }
+    queries <- .url_query(bfc, urls)
+    cached <- .is_cached(queries)
+    locals <- vector("list", length(urls))
+    if (!redownload)
+        locals[cached] <- .rpath_cache(queries[cached])
+    urls <- urls[!cached | redownload]
+    if (length(urls)) {
+        part_urls <- gsub(paste0(.BASE_URL, "/"), "", urls)
+        temppaths <- file.path(tempfile(), part_urls)
+        .file_dirs_create(temppaths)
+        destfiles <- file.path(cache, part_urls)
+        .file_dirs_create(destfiles)
 
-            output <- multi_download_retry(
-                urls = urls,
-                destfiles = temppaths
-            )
-            success <- output[["success"]]
-            failed <- !success
-            if (any(failed)) {
-                warning(
-                    "Some downloads failed:\n  ",
-                    paste(urls[failed], collapse = "\n  "),
-                    "\n  Reasons: ",
-                    paste(output[failed, "error"], collapse = ";\n  ")
-                )
-            }
-            Map(
-                function(file, dest, success) {
-                    if (success)
-                        file.rename(file, dest)
-                },
-                file = output[["destfile"]],
-                dest = destfiles,
-                success = success
-            )
-
-            locals <- BiocParallel::bpmapply(
-                function(bfc, url, file, cached, success) {
-                    if (!cached && success)
-                        BiocFileCache::bfcadd(
-                            x = bfc,
-                            rname = url,
-                            fpath = file,
-                            rtype = "local",
-                            action = "asis",
-                            fname = "exact",
-                            exact = TRUE
-                        )
-                    else
-                        file
-                },
-                url = output[["url"]],
-                file = destfiles,
-                cached = cached,
-                success = output[["success"]],
-                MoreArgs = list(bfc = bfc),
-                SIMPLIFY = FALSE
+        output <- multi_download_retry(
+            urls = urls,
+            destfiles = temppaths
+        )
+        success <- output[["success"]]
+        failed <- !success
+        if (any(failed)) {
+            warning(
+                "Some downloads failed:\n  ",
+                paste(urls[failed], collapse = "\n  "),
+                "\n  Reasons: ",
+                paste(output[failed, "error"], collapse = ";\n  ")
             )
         }
-        unlist(locals)
-    } else {
-        vapply(
-            urls,
-            function(url) {
-                .cache_url_file(
-                    url = url,
-                    redownload = redownload,
-                    bfc = bfc
-                )
+        Map(
+            function(file, dest, success) {
+                if (success)
+                    file.rename(file, dest)
             },
-            character(1L)
+            file = output[["destfile"]],
+            dest = destfiles,
+            success = success
+        )
+
+        locals <- mapply(
+            function(bfc, url, file, cached, success) {
+                if (!cached && success)
+                    BiocFileCache::bfcadd(
+                        x = bfc,
+                        rname = url,
+                        fpath = file,
+                        rtype = "local",
+                        action = "asis",
+                        fname = "exact",
+                        exact = TRUE
+                    )
+                else
+                    file
+            },
+            url = output[["url"]],
+            file = destfiles,
+            cached = cached,
+            success = output[["success"]],
+            MoreArgs = list(bfc = bfc),
+            SIMPLIFY = FALSE
         )
     }
+    unlist(locals)
 }
 
 .import_slide_level <- function(
