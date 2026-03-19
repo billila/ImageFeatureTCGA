@@ -155,9 +155,9 @@ multi_download_retry <- function(urls, destfiles, max_tries = 3L) {
             SIMPLIFY = TRUE
         )
 
-        locals <- mapply(
-            function(bfc, url, file, cached, success) {
-                if (!cached && success)
+        locals[needed] <- mapply(
+            function(bfc, url, file, is_cached, success) {
+                if (!is_cached && success)
                     BiocFileCache::bfcadd(
                         x = bfc,
                         rname = url,
@@ -172,8 +172,8 @@ multi_download_retry <- function(urls, destfiles, max_tries = 3L) {
             },
             url = output[["url"]],
             file = destfiles,
-            cached = cached,
-            success = output[["success"]],
+            is_cached = cached[needed],
+            success = move_success,
             MoreArgs = list(bfc = bfc),
             SIMPLIFY = FALSE
         )
