@@ -93,6 +93,10 @@ multi_download_retry <- function(urls, destfiles, max_tries = 3L) {
         TRUE
 }
 
+.BASE_URLS_GREP <- paste0(
+    .BASE_URL, "/", "|", .CATALOG_BASE_URL, "/"
+)
+
 .cache_url_files <- function(urls, redownload = FALSE, parallel, bfc) {
     checkInstalled("curl")
     checkInstalled("BiocFileCache")
@@ -112,7 +116,7 @@ multi_download_retry <- function(urls, destfiles, max_tries = 3L) {
         locals[cached] <- .rpath_cache(queries[cached])
     urls <- urls[!cached | redownload]
     if (length(urls)) {
-        part_urls <- gsub(paste0(.BASE_URL, "/"), "", urls)
+        part_urls <- gsub(.BASE_URLS_GREP, "", urls)
         temppaths <- file.path(tempfile(), part_urls)
         .file_dirs_create(temppaths)
         destfiles <- file.path(cache, part_urls)

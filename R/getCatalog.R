@@ -42,9 +42,16 @@ getCatalog <-
     catalog[in_pipe & in_format, ]
 }
 
+.CATALOG_BASE_URL <- "https://zenodo.org"
+
 #' @importFrom httr2 request req_headers req_perform resp_body_json
 .download_catalog <- function(redownload) {
-    resp <- request("https://zenodo.org/api/records/17981132") |>
+    resp <- paste(
+        .CATALOG_BASE_URL,
+        "api/records/17981132",
+        sep = "/"
+    ) |>
+        request() |>
         req_headers(
             Accept = "application/json"
         ) |>
