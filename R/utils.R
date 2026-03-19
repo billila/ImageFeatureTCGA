@@ -97,6 +97,16 @@ multi_download_retry <- function(urls, destfiles, max_tries = 3L) {
     .BASE_URL, "/", "|", .CATALOG_BASE_URL, "/"
 )
 
+.move_file <- function(file, dest, success) {
+    if (!success) return(FALSE)
+    if (file.rename(file, dest)) return(TRUE)
+    if (file.copy(file, dest, overwrite = TRUE)) {
+        unlink(file)
+        return(TRUE)
+    }
+    FALSE
+}
+
 .cache_url_files <- function(urls, redownload = FALSE, parallel, bfc) {
     checkInstalled("curl")
     checkInstalled("BiocFileCache")
@@ -136,14 +146,12 @@ multi_download_retry <- function(urls, destfiles, max_tries = 3L) {
                 paste(output[failed, "error"], collapse = ";\n  ")
             )
         }
-        Map(
-            function(file, dest, success) {
-                if (success)
-                    file.rename(file, dest)
-            },
+        move_success <- mapply(
+            .move_file,
             file = output[["destfile"]],
             dest = destfiles,
-            success = success
+            success = success,
+            SIMPLIFY = TRUE
         )
 
         locals <- mapply(
