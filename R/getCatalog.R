@@ -59,7 +59,7 @@ getCatalog <-
         resp_body_json()
 
     .cache_url_files(
-        resp$files[[1L]]$links$self, redownload = redownload
+        resp[["files"]][[1L]][[c("links", "self")]], redownload = redownload
     )
 }
 
