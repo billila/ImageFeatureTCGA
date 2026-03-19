@@ -124,16 +124,17 @@ multi_download_retry <- function(urls, destfiles, max_tries = 3L) {
     locals <- vector("list", length(urls))
     if (!redownload)
         locals[cached] <- .rpath_cache(queries[cached])
-    urls <- urls[!cached | redownload]
-    if (length(urls)) {
-        part_urls <- gsub(.BASE_URLS_GREP, "", urls)
+    needed <- !cached | redownload
+    if (any(needed)) {
+        urls_to_download <- urls[needed]
+        part_urls <- gsub(.BASE_URLS_GREP, "", urls_to_download)
         temppaths <- file.path(tempfile(), part_urls)
         .file_dirs_create(temppaths)
         destfiles <- file.path(cache, part_urls)
         .file_dirs_create(destfiles)
 
         output <- multi_download_retry(
-            urls = urls,
+            urls = urls_to_download,
             destfiles = temppaths
         )
         success <- output[["success"]]
@@ -141,7 +142,7 @@ multi_download_retry <- function(urls, destfiles, max_tries = 3L) {
         if (any(failed)) {
             warning(
                 "Some downloads failed:\n  ",
-                paste(urls[failed], collapse = "\n  "),
+                paste(urls_to_download[failed], collapse = "\n  "),
                 "\n  Reasons: ",
                 paste(output[failed, "error"], collapse = ";\n  ")
             )
