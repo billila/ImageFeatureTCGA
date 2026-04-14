@@ -59,9 +59,10 @@ Suggests:
     rhdf5,
     rmarkdown,
     SpatialFeatureExperiment,
-    tinytest
+    tinytest,
+    yml
 VignetteBuilder: knitr
-biocViews: Infrastructure, DataImport, DataRepresentation
+biocViews: Software, Infrastructure, DataImport, DataRepresentation
 BugReports: https://github.com/waldronlab/imageFeatureTCGA/issues
 URL: https://github.com/waldronlab/imageFeatureTCGA
 License: Artistic-2.0
