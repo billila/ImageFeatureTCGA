@@ -61,7 +61,7 @@ Suggests:
     SpatialFeatureExperiment,
     tinytest
 VignetteBuilder: knitr
-biocViews: Software, Infrastructure, DataImport, DataRepresentation
+biocViews: Infrastructure, DataImport, DataRepresentation
 BugReports: https://github.com/waldronlab/imageFeatureTCGA/issues
 URL: https://github.com/waldronlab/imageFeatureTCGA
 License: Artistic-2.0
