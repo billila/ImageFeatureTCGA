@@ -60,7 +60,7 @@ Suggests:
     rmarkdown,
     SpatialFeatureExperiment,
     tinytest,
-    yml
+    yaml
 VignetteBuilder: knitr
 biocViews: Software, Infrastructure, DataImport, DataRepresentation
 BugReports: https://github.com/waldronlab/imageFeatureTCGA/issues
