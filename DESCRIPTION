@@ -45,6 +45,7 @@ Imports:
     tibble,
     utils
 Suggests:
+    AnnotationDbi,
     anndataR,
     BiocStyle,
     BiocParallel,
